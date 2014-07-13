@@ -2,15 +2,53 @@
   <head>
     <title>Origin</title>
     <style>
-    body {margin:0;padding:0;}
-    canvas { width: 600px; height: 400px; }
+
+body {margin:0;padding:0;}
+canvas { width: 400px; height: 400px; }
+svg { border:1px solid black;}
+#chart rect.qld {
+  fill: maroon;
+}
+#chart rect.nsw {
+  fill: steelblue;
+}
+.axis text {
+  font: 10px sans-serif;
+}
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.button {
+  display: inline-block;
+  height: 20px;
+  line-height: 20px;
+  padding:4px;
+  background: #ccc;
+  margin:4px;
+  cursor: pointer;
+}
+.button:hover {
+  background: #aaa;
+}
+
     </style>
   </head>
   <body>
-    <!--script src="js/three.min.js"></script-->
-    <button id='incremental'>Incremental</button>
-    <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.js"></script>
-    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/three.js/r67/three.min.js"></script>
+
+
+    <script type="text/javascript" src="lib/jquery-1.10.2.js"></script>
+    <script type="text/javascript" src="lib/three.min.js"></script>
+    <script type="text/javascript" src="lib/d3.min.js" charset="utf-8"></script>
+
+    <!--div id='chart'></div-->
+
+    <svg id="chart"></svg>
+    <br>
+
   </body>
 </html>
 
@@ -20,6 +58,213 @@
 var con = console;
 
 $(function() {
+
+  var stat = "incremental_matches";
+  stat = "points_per_series";
+  stat = "incremental_series";
+
+  var data;
+
+  var x, y;
+
+  var xAxis, yAxis;
+
+  var margin = {top: 20, right: 30, bottom: 30, left: 60},
+  width = 400 - margin.left - margin.right,
+  height = 400 - margin.top - margin.bottom;
+
+
+  function create2d() {
+
+    data = years;
+
+    var chart = d3.select("#chart")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    x = d3.scale.linear()
+    .domain([0, years.length])
+    .range([0, width]);
+
+    y = d3.scale.linear()
+    .domain([0, d3.max(data, function(d){ return Math.max(d[stat].QLD, d[stat].NSW); })])
+    .range([0, height]);
+
+    var unitWidth = x(1) / 2;
+
+
+    bar = chart.selectAll("g").data(data).enter()
+    .append("rect").attr("class", "team qld")
+    .attr("width", unitWidth)
+    .attr("height", function(d) { return x(d[stat].QLD); })
+    .attr("transform", function(d,i) { return "translate(" + x(i) + ",0)";});
+
+    /*
+    var bar = chart.selectAll("g").data(data).enter().append("g").
+    attr("class", "year")
+    .attr("transform", function(d,i) {
+      // con.log(i);
+      return "translate(0," + y(i) + ")";
+    });
+
+    var qld = bar.append("rect").attr("class", "team qld")
+    .attr("width", function(d) { return x(d[stat].QLD); })
+    .attr("height", unitHeight - 1)
+    // .text(function(d) {
+    //   return "QLD " + d.QLD;
+    // });
+
+    var nsw = bar.append("rect").attr("class", "team nsw")
+    .attr("y", unitHeight - 1)
+    .attr("width", function(d) { return x(d[stat].NSW); })
+    .attr("height", unitHeight - 1)
+    // .text(function(d) {
+    //     return "NSW " + d.NSW;
+    // });
+
+    */
+
+    xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom")
+    .ticks(years.length / 4)
+    .tickFormat(function(d){
+      // con.log(d);
+      // con.log(years[d].year);
+      return years[d].year;
+    })
+
+    chart.append("g")
+    .attr("class", "x axis")
+    .attr("transform", "translate(0," + height + ")")
+    .call(xAxis);
+
+
+    var years_list = years.map(function(a,b) { return a.year;})
+    // con.log(years_list);
+
+    yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left")
+    
+    chart.append("g")
+    .attr("class", "y axis")
+    .call(yAxis)
+    // .append("text")
+    // .attr("transform", "rotate(-90)")
+    // .attr("y", 6)
+    // .attr("dy", ".71em")
+    // .style("text-anchor", "end")
+    // .text("Frequency");
+
+
+  }
+
+
+
+
+
+
+
+  function toggle(_state, _stat) {
+    state = _state;
+    stat = _stat;
+
+    // x.domain(d3.extent(data, function(d) { return d.date; }));
+    // x.domain([0, d3.max(data, function(d){ return Math.max(d[stat].QLD, d[stat].NSW); })])
+    y.domain([0, d3.max(data, function(d){ return Math.max(d[stat].QLD, d[stat].NSW); })])
+    .range([0, height]);
+
+    d3.select(".y.axis") // change the y axis
+    .transition()
+    .duration(1750)
+    .call(yAxis);
+
+    bar
+    .transition()
+    .duration(750)
+    .attr("height", function(d,i) { return y(d[stat][state]); })
+
+  }
+
+
+  function initUI() {
+  // stat = "";
+  // // stat = "incremental_series";
+
+
+    var buttonNames = [
+      {
+        label: "QLD inc matches",
+        state: QLD,
+        stat: "incremental_matches"
+      },{
+        label: "NSW int matches",
+        state: NSW,
+        stat: "incremental_matches"
+      },{
+        label: "QLD series points",
+        state: QLD,
+        stat: "points_per_series"
+      },{
+        label: "NSW series points",
+        state: NSW,
+        stat: "points_per_series"
+      }
+    ];
+
+    d3.select("body").selectAll("div").data(buttonNames).enter().append("div").attr("class","button")
+    .html(function (d){return d.label;} )
+    .on("click", function(d) {
+      // con.log(d);
+      // incremental_matches = !incremental_matches;
+      toggle(d.state, d.stat);
+    })
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   var cube, renderer, scene, camera, cubes = [];
 
@@ -34,7 +279,7 @@ $(function() {
   var NSW = "NSW", regexNSW = /New South Wales/;
   var QLD = "QLD", regexQLD = /Queensland/;
 
-  var incremental = false;
+  var incremental_matches = false;
 
 
   var render = function () {
@@ -92,9 +337,9 @@ $(function() {
 
       var heightNSW = year.NSW;
       var heightQLD = year.QLD;
-      if (incremental) {
-        heightNSW = year.incremental.NSW;
-        heightQLD = year.incremental.QLD;
+      if (incremental_matches) {
+        heightNSW = year[stat].NSW;
+        heightQLD = year[stat].QLD;
       }
 
       renderTeam(0x4444ff, -1, heightNSW);
@@ -132,18 +377,12 @@ $(function() {
   }
 
 
-  function toggle() {
-
-  }
 
 
-  function initUI() {
 
-    $("#incremental").click(function() {
-      incremental = !incremental;
-      toggle();
-    })
-  }
+
+
+
 
 
 
@@ -225,11 +464,11 @@ $(function() {
           matches: [],
           NSW: 0,
           QLD: 0,
-          total: {
+          points_per_series: {
             NSW: 0,
             QLD: 0,
           },
-          incremental: {
+          incremental_matches: {
             NSW: 0,
             QLD: 0,
           }
@@ -238,30 +477,53 @@ $(function() {
 
       years[yearIndex].matches.push(formattedStat);
       years[yearIndex][winner.team]++;
-      years[yearIndex].total[winner.team] += winner.score;
-      years[yearIndex].total[loser.team] += loser.score;
+      years[yearIndex].points_per_series[winner.team] += winner.score;
+      years[yearIndex].points_per_series[loser.team] += loser.score;
 
     }
 
 
-    var incremental = {
+    var incremental_matches = {
+      NSW:0,
+      QLD:0
+    }
+    var incremental_series = {
       NSW:0,
       QLD:0
     }
 
+
     for (yearIndex = 0; yearIndex < years.length; yearIndex++) {
 
-      incremental.NSW += years[yearIndex].NSW;
-      incremental.QLD += years[yearIndex].QLD;
+      incremental_matches.NSW += years[yearIndex].NSW;
+      incremental_matches.QLD += years[yearIndex].QLD;
 
-      years[yearIndex].incremental.NSW = incremental.NSW;
-      years[yearIndex].incremental.QLD = incremental.QLD;
+      years[yearIndex].incremental_matches = {
+        NSW: incremental_matches.NSW,
+        QLD: incremental_matches.QLD
+      }
+
+      // con.log(years[yearIndex]);
+
+      years[yearIndex].winner = years[yearIndex].NSW > years[yearIndex].QLD ? NSW : QLD;
+
+      incremental_series.NSW += years[yearIndex].winner == NSW ? 1 : 0;
+      incremental_series.QLD += years[yearIndex].winner == QLD ? 1 : 0;
+
+      years[yearIndex].incremental_series = {
+        NSW: incremental_series.NSW,
+        QLD: incremental_series.QLD
+      }
     }
 
 
 
 
-    create3d();
+    // create3d();
+    create2d();
+
+    initUI();
+
   }
 
   parse();
@@ -269,6 +531,71 @@ $(function() {
 
 
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -660,7 +987,7 @@ var stats = [
   ],
   [
     "24 May 2000",
-    "New South Wales 28(S.Hill,D.Furner,S.Timmins,R.Girdler,B.Fittler tries R.Girdler 4 goals)\nQueensland 10 (G.Tallis try M.Rogers 3 goals)",
+    "New South Wales 28 (S.Hill,D.Furner,S.Timmins,R.Girdler,B.Fittler tries R.Girdler 4 goals)\nQueensland 10 (G.Tallis try M.Rogers 3 goals)",
     "B.Harrigan",
     "Lang Park",
     "38,796"
