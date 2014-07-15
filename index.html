@@ -113,11 +113,11 @@ $(function() {
 
     area = d3.svg.area()
     .x(function(d,i) {
-      // con.log("x", e);
+      // con.log("x", d);
       return x(i);
     })
-    .y0(height).y1(function(d) {
-      // con.log("y1", e);
+    .y0(height).y1(function(d, i) {
+      con.log("y1", i , y(d));
       return height - y(d);
     });
 
@@ -157,59 +157,47 @@ $(function() {
 
   }
 
-
-
-
-
-
-
   function toggle(data) {
 
     var nsw = data.map(function(d) { return d[0];})
     var qld = data.map(function(d) { return d[1];})
 
-    con.log(data[0]);
-
-
     y
     .domain([0, d3.max(data, function(d){ return Math.max(d[0], d[1]); })])
     .range([0, height]);
 
-    d3.select(".y.axis") // change the y axis
+    d3.select(".y.axis")
     .transition()
     .duration(1750)
     .call(yAxis);
 
-    // chart.data([nsw,qld]).attr("d", area);
+    chart.data([nsw,qld])
 
+    var svg = chart.transition();
 
-    d3
-    .select("path.area")
-    .data([nsw,qld])
-    .call(area)
+    svg.select("path.NSW")
+    .duration(750)
+    .attr("d", area);
 
-
-    // graphics
-    // .data([nsw,qld])
-    // .enter()
-    // .selectAll("path")
+    // svg.select("path.QLD")
+    // .duration(750)
     // .attr("d", area);
 
-    // bar
-    // // .data(function (d) {
-    // //   con.log(d);
-    // //   return [
-    // //     {state:NSW, column:0, stat:d[0]},
-    // //     {state:QLD, column:1, stat:d[1]}
-    // //   ]
-    // // })
-    // .attr("height", function(d) {
-    //   var h = y(d.stat);
-    //   return h;
-    // })
-
-
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   function initUI() {
@@ -898,7 +886,10 @@ var stats = [
     "B.Harrigan",
     "Lang Park",
     "40,665"
-  ],
+  ]
+
+/*
+  ,
   [
     "15 May 1995",
     "Queensland 2 (W.Bartrim goal)\nNew South Wales 0",
@@ -1319,6 +1310,8 @@ var stats = [
     "Stadium Australia",
     "83,421"
   ]
+
+  */
 ];
 
 </script>
