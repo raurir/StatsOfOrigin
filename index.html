@@ -68,16 +68,12 @@ $(function() {
   stat = "incremental_series";
 
   var data;
-
+  var chart;
   var x, y;
-
   var xAxis, yAxis;
-
   var margin = {top: 20, right: 30, bottom: 30, left: 60},
   width = 400 - margin.left - margin.right,
   height = 400 - margin.top - margin.bottom;
-
-
 
   var frog = {
     series_winner: [],
@@ -85,13 +81,13 @@ $(function() {
   }
 
 
-
-  var chart
-
   function create2d() {
 
-    data = frog.series_winner;
-    data = frog.matches_won;
+    data = years.map(function(){return [0,0];});
+
+    // data = frog.series_winner;
+
+    con.log(data);
 
     chart = d3.select("#chart")
     .attr("width", width + margin.left + margin.right)
@@ -106,10 +102,12 @@ $(function() {
     y = d3.scale.linear()
     // .domain([0, d3.max(data, function(d){ return Math.max(d[stat].QLD, d[stat].NSW); })])
     .domain([0, d3.max(data, function(d){ return Math.max(d[0], d[1]); })])
-    .range([0, height]);
+    .range([height,0]);
 
     var nsw = data.map(function(d) { return d[0];})
     var qld = data.map(function(d) { return d[1];})
+
+    con.log([nsw,qld]);
 
     area = d3.svg.area()
     .x(function(d,i) {
@@ -117,8 +115,8 @@ $(function() {
       return x(i);
     })
     .y0(height).y1(function(d, i) {
-      con.log("y1", i , y(d));
-      return height - y(d);
+      // con.log("y1", i , y(d));
+      return y(d);
     });
 
     graphics = chart
@@ -164,24 +162,32 @@ $(function() {
 
     y
     .domain([0, d3.max(data, function(d){ return Math.max(d[0], d[1]); })])
-    .range([0, height]);
+    .range([height, 0]);
 
     d3.select(".y.axis")
     .transition()
     .duration(1750)
     .call(yAxis);
 
-    chart.data([nsw,qld])
-
     var svg = chart.transition();
+
+    chart.data([nsw]);
 
     svg.select("path.NSW")
     .duration(750)
-    .attr("d", area);
+    .attr("d", function(d) {
+      con.log("area", d);
+      return area(d);
+    });
 
-    // svg.select("path.QLD")
-    // .duration(750)
-    // .attr("d", area);
+    chart.data([qld]);
+
+    svg.select("path.QLD")
+    .duration(750)
+    .attr("d", function(d) {
+      con.log("area", d);
+      return area(d);
+    });
 
   }
 
@@ -433,6 +439,9 @@ $(function() {
 
     var yearList = {};
 
+
+    
+
     for (var i = 0, il = stats.length; i < il; i++) {
       var stat = stats[i];
       var date = stat[0];
@@ -480,6 +489,9 @@ $(function() {
       years[yearIndex].points_per_series[loser.team] += loser.score;
 
     }
+
+    
+    // con.log(JSON.stringify(years, null, "\t"));
 
 
     var incremental_matches = {
@@ -540,11 +552,39 @@ $(function() {
 
   }
 
+  
+
   parse();
+
+  // d3.json("origin.json", function(json) {
+  //   //rendering logic here
+  // });
+
+
 
 
 
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -888,7 +928,6 @@ var stats = [
     "40,665"
   ]
 
-/*
   ,
   [
     "15 May 1995",
@@ -1311,7 +1350,7 @@ var stats = [
     "83,421"
   ]
 
-  */
+
 ];
 
 </script>

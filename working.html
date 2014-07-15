@@ -1,0 +1,369 @@
+<html>
+  <head>
+    <title>Origin</title>
+    <style>
+
+body {margin:0;padding:0;}
+canvas { width: 400px; height: 400px; }
+svg { border:1px solid black;}
+#chart rect.QLD, #chart path.QLD {
+  fill: rgba(200,0,50,0.8);
+}
+#chart rect.NSW, #chart path.NSW {
+  fill: rgba(0,0,200,0.8);
+}
+.axis text {
+  font: 10px sans-serif;
+}
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.button {
+  display: inline-block;
+  height: 20px;
+  line-height: 20px;
+  padding:4px;
+  background: #ccc;
+  margin:4px;
+  cursor: pointer;
+}
+.button:hover {
+  background: #aaa;
+}
+
+    </style>
+  </head>
+  <body>
+
+
+    <script type="text/javascript" src="lib/jquery-1.10.2.js"></script>
+    <script type="text/javascript" src="lib/three.min.js"></script>
+    <script type="text/javascript" src="lib/d3.min.js" charset="utf-8"></script>
+
+    <!--div id='chart'></div-->
+
+    <svg id="chart"></svg>
+    <br>
+
+  </body>
+</html>
+
+<script>
+
+var con = console;
+
+(function() {
+
+  var NSW = "NSW";
+  var QLD = "QLD";
+  var data, chart, x, y, xAxis, yAxis, years = [];
+  var margin = {top: 20, right: 30, bottom: 30, left: 60},
+  width = 400 - margin.left - margin.right,
+  height = 400 - margin.top - margin.bottom;
+
+  var frog = {
+    series_winner: [],
+    matches_won: []
+  }
+
+
+  function create2d() {
+
+    data = years.map(function(){return [0,0];});
+
+    chart = d3.select("#chart")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    x = d3.scale.linear()
+    .domain([0, years.length])
+    .range([0, width]);
+
+    y = d3.scale.linear()
+    .domain([0, d3.max(data, function(d){ return Math.max(d[0], d[1]); })])
+    .range([height,0]);
+
+    var nsw = data.map(function(d) { return d[0];})
+    var qld = data.map(function(d) { return d[1];})
+
+    area = d3.svg.area()
+    .x(function(d,i) {
+      // con.log("x", d);
+      return x(i);
+    })
+    .y0(height).y1(function(d, i) {
+      // con.log("y1", i , y(d));
+      return y(d);
+    });
+
+    graphics = chart
+    .selectAll("path.area")
+    .data([nsw,qld])
+    .enter()
+    .append("path")
+    .attr("class", function(d,i) { return [NSW,QLD][i]; })
+    .attr("d", area);
+
+    xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom")
+    .ticks(years.length / 4)
+    .tickFormat(function(d){
+      return years[d].year;
+    });
+
+    chart.append("g")
+    .attr("class", "x axis")
+    .attr("transform", "translate(0," + height + ")")
+    .call(xAxis);
+
+    yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left");
+
+    chart.append("g")
+    .attr("class", "y axis")
+    .call(yAxis)
+
+  }
+
+  function toggle(data) {
+
+    var nsw = data.map(function(d) { return d[0];})
+    var qld = data.map(function(d) { return d[1];})
+
+    y
+    .domain([0, d3.max(data, function(d){ return Math.max(d[0], d[1]); })])
+    .range([height, 0]);
+
+    d3.select(".y.axis")
+    .transition()
+    .duration(1750)
+    .call(yAxis);
+
+    var svg = chart.transition();
+
+    chart.data([nsw]);
+
+    svg.select("path.NSW")
+    .duration(750)
+    .attr("d", function(d) {return area(d); });
+
+    chart.data([qld]);
+
+    svg.select("path.QLD")
+    .duration(750)
+    .attr("d", function(d) { return area(d); });
+
+  }
+
+
+
+
+
+  function initUI() {
+    var buttonNames = [
+      {
+        label: "Series",
+        stat: frog.series_winner
+      },{
+        label: "Matches",
+        stat: frog.matches_won
+      }
+    ];
+
+    d3.select("body").selectAll("div").data(buttonNames).enter().append("div").attr("class","button")
+    .html(function (d){return d.label;} )
+    .on("click", function(d) {
+      toggle(d.stat);
+    })
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  var cube, renderer, scene, camera, cubes = [];
+
+
+  var incremental = true;
+
+  var incremental_matches = false;
+
+
+
+  var render = function () {
+    requestAnimationFrame(render);
+
+    // cube.rotation.x += 0.1;
+    group.rotation.y += 0.01;
+
+    renderer.render(scene, camera);
+  };
+
+  function create3d() {
+    scene = new THREE.Scene();
+    camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+
+    renderer = new THREE.WebGLRenderer();
+    renderer.setSize(600,400);
+    document.body.appendChild(renderer.domElement);
+
+    group = new THREE.Object3D();
+    scene.add( group );
+
+
+    // var material =  new THREE.MeshLambertMaterial(
+    // {
+    //   color: 0xCC0000
+    // });
+
+    var light = new THREE.AmbientLight( 0x40f040 ); // soft white light
+    scene.add( light );
+
+
+    var pointLight =  new THREE.PointLight(0xFFFFFF);
+
+    // set its position
+    pointLight.position.x = 10;
+    pointLight.position.y = 50;
+    pointLight.position.z = 130;
+
+    // add to the scene
+    scene.add(pointLight);
+
+    var heights = {NSW:0,QLD:0}
+
+    for (var yearIndex in years) {
+
+      var year = years[yearIndex];
+
+      // var material = new THREE.MeshBasicMaterial({color: 0x00ff00});
+
+      var heightNSW = year.NSW;
+      var heightQLD = year.QLD;
+
+      renderTeam(0x4444ff, -1, heightNSW);
+      renderTeam(0xa0163b, 1, heightQLD);
+
+      function renderTeam(colour, x, h) {
+
+        if ( h > 0 ){
+          var geometry = new THREE.BoxGeometry(1,h,1);
+          var material = new THREE.MeshPhongMaterial( {
+            ambient: 0x030303,
+            color: colour,
+            specular: 0x009900,
+            shininess: 30,
+            shading: THREE.SmoothShading
+          } )
+          cubes.push(cube = new THREE.Mesh(geometry, material));
+          group.add(cube);
+          cube.position.x = x
+          cube.position.y = h / 2;
+          cube.position.z = -years.length / 2 + yearIndex * 1.4;
+        }
+      }
+
+
+    }
+
+    camera.position.y = 20;
+    camera.position.z = 100;
+
+    render();
+
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  function parse() {
+
+    var incremental_matches = {
+      NSW:0,
+      QLD:0
+    }
+    var incremental_series = {
+      NSW:0,
+      QLD:0
+    }
+
+    for (var yearIndex = 0; yearIndex < years.length; yearIndex++) {
+
+      incremental_matches.NSW += years[yearIndex].NSW;
+      incremental_matches.QLD += years[yearIndex].QLD;
+
+      years[yearIndex].incremental_matches = {
+        NSW: incremental_matches.NSW,
+        QLD: incremental_matches.QLD
+      }
+
+      // con.log(years[yearIndex]);
+
+      years[yearIndex].winner = years[yearIndex].NSW > years[yearIndex].QLD ? NSW : QLD;
+
+      incremental_series.NSW += years[yearIndex].winner == NSW ? 1 : 0;
+      incremental_series.QLD += years[yearIndex].winner == QLD ? 1 : 0;
+
+      years[yearIndex].incremental_series = {
+        NSW: incremental_series.NSW,
+        QLD: incremental_series.QLD
+      }
+
+      frog.series_winner.push([incremental_series.NSW, incremental_series.QLD]);
+      frog.matches_won.push([incremental_matches.NSW, incremental_matches.QLD]);
+
+    }
+
+    // create3d();
+    create2d();
+    initUI();
+
+  }
+
+
+  // entry point
+
+  d3.json("origin.json", function(json) {
+    years = json;
+    parse();
+  });
+
+})()
+
+
+</script>
