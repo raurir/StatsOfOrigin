@@ -6,11 +6,11 @@
 body {margin:0;padding:0;}
 canvas { width: 400px; height: 400px; }
 svg { border:1px solid black;}
-#chart rect.QLD {
-  fill: maroon;
+#chart rect.QLD, #chart path.QLD {
+  fill: rgba(200,0,50,0.8);
 }
-#chart rect.NSW {
-  fill: steelblue;
+#chart rect.NSW, #chart path.NSW {
+  fill: rgba(0,0,200,0.8);
 }
 .axis text {
   font: 10px sans-serif;
@@ -90,19 +90,8 @@ $(function() {
 
   function create2d() {
 
-    data = years;
-
-    data = [
-      [0,3],
-      [1,5],
-      [2,5],
-      [3,5],
-      [4,5]
-    ]
-
     data = frog.series_winner;
-
-
+    data = frog.matches_won;
 
     chart = d3.select("#chart")
     .attr("width", width + margin.left + margin.right)
@@ -119,51 +108,30 @@ $(function() {
     .domain([0, d3.max(data, function(d){ return Math.max(d[0], d[1]); })])
     .range([0, height]);
 
-    var unitWidth = x(1) / 2;
+    var nsw = data.map(function(d) { return d[0];})
+    var qld = data.map(function(d) { return d[1];})
 
-
-    // data = data.map(function(d) { con.log(d);return d;})
-
-
-
-
-    // con.log("data", data)
-
-    bar = chart.selectAll("g").data(data).enter()
-    .append("g")
-    .attr("transform", function(d,i) { return "translate(" + x(i) + ",0)";});
-
-
-    // var seriesData = data.map()
-
-    bar.selectAll("rect")
-    .data(function (d) {
-      // con.log(d);
-      return [
-        {state:NSW, column:0, stat:d[0]},
-        {state:QLD, column:1, stat:d[1]}
-      ]
-      // return [d;
-      // var series = [
-      //   {state:NSW, column:0, stat:d[stat].NSW},
-      //   {state:QLD, column:1, stat:d[stat].QLD}
-      // ];
-      // con.log("series", series);
-      // return series;
+    area = d3.svg.area()
+    .x(function(d,i) {
+      // con.log("x", e);
+      return x(i);
     })
-    .enter().append("rect")
-    .attr("class", function(d) {
-      // con.log("d", d);
-      return "team " + d.state;
+    .y0(height).y1(function(d) {
+      // con.log("y1", e);
+      return height - y(d);
+    });
+
+    graphics = chart
+    .selectAll("path.area")
+    .data([nsw,qld])
+    .enter()
+    .append("path")
+    .attr("class", function(d,i) {
+      if ( i == 0) return "NSW";
+      if ( i == 1) return "QLD";
+      return "rgba(0,0,0,0.5)";
     })
-    .attr("x", function(d) {
-      return d.column * unitWidth;
-    })
-    .attr("width", unitWidth)
-    .attr("height", function(d) {
-      var h = y(d.stat);
-      return h;
-    })
+    .attr("d", area);
 
 
     xAxis = d3.svg.axis()
@@ -197,10 +165,12 @@ $(function() {
 
   function toggle(data) {
 
-    con.log(data);
+    var nsw = data.map(function(d) { return d[0];})
+    var qld = data.map(function(d) { return d[1];})
 
-    // x.domain(d3.extent(data, function(d) { return d.date; }));
-    // x.domain([0, d3.max(data, function(d){ return Math.max(d[stat].QLD, d[stat].NSW); })])
+    con.log(data[0]);
+
+
     y
     .domain([0, d3.max(data, function(d){ return Math.max(d[0], d[1]); })])
     .range([0, height]);
@@ -210,27 +180,33 @@ $(function() {
     .duration(1750)
     .call(yAxis);
 
+    // chart.data([nsw,qld]).attr("d", area);
+
+
+    d3
+    .select("path.area")
+    .data([nsw,qld])
+    .call(area)
+
+
+    // graphics
+    // .data([nsw,qld])
+    // .enter()
+    // .selectAll("path")
+    // .attr("d", area);
+
     // bar
-    // .transition()
-    // .duration(750)
-    // .attr("height", function(d,i) { return y(d[stat][state]); })
-
-
-    // con.log(chart)
-    chart.data(data)
-
-    bar
-    // .data(function (d) {
-    //   con.log(d);
-    //   return [
-    //     {state:NSW, column:0, stat:d[0]},
-    //     {state:QLD, column:1, stat:d[1]}
-    //   ]
+    // // .data(function (d) {
+    // //   con.log(d);
+    // //   return [
+    // //     {state:NSW, column:0, stat:d[0]},
+    // //     {state:QLD, column:1, stat:d[1]}
+    // //   ]
+    // // })
+    // .attr("height", function(d) {
+    //   var h = y(d.stat);
+    //   return h;
     // })
-    .attr("height", function(d) {
-      var h = y(d.stat);
-      return h;
-    })
 
 
   }
