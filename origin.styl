@@ -1,0 +1,65 @@
+body 
+  margin 0
+  padding 0
+
+canvas 
+  width 400px 
+  height 400px
+svg 
+  border:1px solid black;
+
+#chart rect.QLD, #chart path.QLD
+  fill: rgba(200,0,50,0.8);
+
+#chart rect.NSW, #chart path.NSW 
+  fill: rgba(0,0,200,0.8);
+
+.axis text 
+  font: 10px sans-serif;
+
+.axis path, .axis line
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+
+
+.button 
+  display: inline-block;
+  height: 20px;
+  line-height: 20px;
+  padding:4px;
+  background: #ccc;
+  margin:4px;
+  cursor: pointer;
+  &:hover 
+    background: #aaa;
+
+circle
+  &.NSW
+    fill cyan
+    &:hover
+      fill blue
+  &.QLD
+    fill pink
+    &:hover
+      fill red
+  stroke black
+  stroke-width 1
+  cursor pointer
+  &:hover
+    stroke-width 4
+
+.tooltip
+  position absolute
+  z-index 10
+  visibility hidden
+  padding 10px
+  background white
+  border-radius 2px
+  border 2px solid #333
+
+
+
+
+
+

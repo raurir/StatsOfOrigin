@@ -1,46 +1,11 @@
 <html>
   <head>
     <title>Origin</title>
-    <style>
-
-body {margin:0;padding:0;}
-canvas { width: 400px; height: 400px; }
-svg { border:1px solid black;}
-#chart rect.QLD, #chart path.QLD {
-  fill: rgba(200,0,50,0.8);
-}
-#chart rect.NSW, #chart path.NSW {
-  fill: rgba(0,0,200,0.8);
-}
-.axis text {
-  font: 10px sans-serif;
-}
-.axis path,
-.axis line {
-  fill: none;
-  stroke: #000;
-  shape-rendering: crispEdges;
-}
-
-.button {
-  display: inline-block;
-  height: 20px;
-  line-height: 20px;
-  padding:4px;
-  background: #ccc;
-  margin:4px;
-  cursor: pointer;
-}
-.button:hover {
-  background: #aaa;
-}
-
-    </style>
+    <link rel="stylesheet" type="text/css" href='css/origin.css'/>
   </head>
   <body>
 
 
-    <script type="text/javascript" src="lib/jquery-1.10.2.js"></script>
     <script type="text/javascript" src="lib/three.min.js"></script>
     <script type="text/javascript" src="lib/d3.min.js" charset="utf-8"></script>
 
@@ -60,7 +25,7 @@ var con = console;
 
   var NSW = "NSW";
   var QLD = "QLD";
-  var data, chart, x, y, xAxis, yAxis, years = [];
+  var data, chart, area, x, y, xAxis, yAxis, years = [];
   var margin = {top: 20, right: 30, bottom: 30, left: 60},
   width = 400 - margin.left - margin.right,
   height = 400 - margin.top - margin.bottom;
@@ -102,13 +67,14 @@ var con = console;
       return y(d);
     });
 
-    graphics = chart
+    chart
     .selectAll("path.area")
     .data([nsw,qld])
     .enter()
     .append("path")
     .attr("class", function(d,i) { return [NSW,QLD][i]; })
     .attr("d", area);
+
 
     xAxis = d3.svg.axis()
     .scale(x)
@@ -129,7 +95,48 @@ var con = console;
 
     chart.append("g")
     .attr("class", "y axis")
-    .call(yAxis)
+    .call(yAxis);
+
+
+    pointsNSW = point(NSW, nsw);
+    pointsQLD = point(QLD, qld);
+
+    function point(state, data) {
+
+      var g = chart.selectAll(".point." + state)
+      .data(data)
+      .enter()
+      .append("svg:circle")
+      .attr("class", state)
+      .attr("cx", function(d, i) { return x(i); })
+      .attr("cy", function(d, i) { return y(d); })
+      .attr("r", 5);
+
+      g.on("mouseover", function(d,i){
+        // con.log(this);
+        var state = this.attributes.class.value;
+        tooltip.text([state, years[i].year, "value", d].join(" "))
+        tooltip.style("visibility", "visible");
+      })
+      .on("mousemove", function(d,i){
+
+        var x = margin.left + Number(this.attributes.cx.value) + "px",
+          y = 10 + margin.top + Number(this.attributes.cy.value) + "px";
+
+          // con.log(x,y);
+        return tooltip.style("left", x).style("top", y);
+        // return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");
+      })
+      .on("mouseout", function(){return tooltip.style("visibility", "hidden");});
+
+      return g;
+    }
+
+    var tooltip = d3.select("body")
+    .append("div")
+    .attr("class", "tooltip")
+    .text("a simple tooltip");
+
 
   }
 
@@ -161,6 +168,19 @@ var con = console;
     .duration(750)
     .attr("d", function(d) { return area(d); });
 
+    function updatePoints(banana, data) {
+      banana
+      .data(data)
+      .transition()
+      .duration(750)
+      .attr("cy", function(d, i) { return y(d) })
+    }
+    updatePoints(pointsNSW, nsw);
+    updatePoints(pointsQLD, qld);
+
+
+
+
   }
 
 
@@ -178,8 +198,13 @@ var con = console;
       }
     ];
 
+    con.log(d3.select("body").selectAll("div").data(buttonNames));
+
     d3.select("body").selectAll("div").data(buttonNames).enter().append("div").attr("class","button")
-    .html(function (d){return d.label;} )
+    .html(function (d){
+      con.log(d);
+      return d.label;
+    })
     .on("click", function(d) {
       toggle(d.stat);
     })
@@ -196,7 +221,7 @@ var con = console;
 
 
 
-
+/*
 
   var cube, renderer, scene, camera, cubes = [];
 
@@ -291,7 +316,7 @@ var con = console;
   }
 
 
-
+*/
 
 
 
@@ -348,6 +373,8 @@ var con = console;
       frog.matches_won.push([incremental_matches.NSW, incremental_matches.QLD]);
 
     }
+
+    // con.log(years);
 
     // create3d();
     create2d();
