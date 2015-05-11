@@ -6,47 +6,47 @@ canvas
   width 400px 
   height 400px
 svg 
-  border:1px solid black;
+  border 1px solid black
 
 #chart rect.QLD, #chart path.QLD
-  fill: rgba(200,0,50,0.8);
+  fill rgba(200,0,50,0.8)
 
 #chart rect.NSW, #chart path.NSW 
-  fill: rgba(0,0,200,0.8);
+  fill rgba(0,0,200,0.8)
 
 .axis text 
-  font: 10px sans-serif;
+  font 10px sans-serif
 
 .axis path, .axis line
-  fill: none;
-  stroke: #000;
-  shape-rendering: crispEdges;
+  fill none
+  stroke #000
+  shape-rendering crispEdges
 
 
 .button 
-  display: inline-block;
-  height: 20px;
-  line-height: 20px;
-  padding:4px;
-  background: #ccc;
-  margin:4px;
-  cursor: pointer;
-  &:hover 
-    background: #aaa;
+  display inline-block
+  height 20px
+  line-height 20px
+  padding 4px
+  background #ccc
+  margin 4px
+  cursor pointer
+  & hover 
+    background #aaa
 
 circle
   &.NSW
     fill cyan
-    &:hover
+    & hover
       fill blue
   &.QLD
     fill pink
-    &:hover
+    & hover
       fill red
   stroke black
   stroke-width 1
   cursor pointer
-  &:hover
+  & hover
     stroke-width 4
 
 .tooltip

@@ -35,7 +35,7 @@ svg {
   margin: 4px;
   cursor: pointer;
 }
-.button:hover {
+.button hover {
   background: #aaa;
 }
 circle {
@@ -46,16 +46,16 @@ circle {
 circle.NSW {
   fill: #0ff;
 }
-circle.NSW:hover {
+circle.NSW hover {
   fill: #00f;
 }
 circle.QLD {
   fill: #ffc0cb;
 }
-circle.QLD:hover {
+circle.QLD hover {
   fill: #f00;
 }
-circle:hover {
+circle hover {
   stroke-width: 4;
 }
 .tooltip {
@@ -66,9 +66,4 @@ circle:hover {
   background: #fff;
   border-radius: 2px;
   border: 2px solid #333;
-}
-.line {
-  fill: none;
-  stroke: #000;
-  stroke-width: 2;
 }
