@@ -4,8 +4,12 @@
     <link rel="stylesheet" type="text/css" href='css/origin.css'/>
   </head>
   <body>
+    <script type="text/javascript" src="data.js"></script>
     <script type="text/javascript" src="lib/three.min.js"></script>
-    <script type="text/javascript" src="lib/d3.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="lib/d3.min.js"></script>
+    <script type="text/javascript" src="svg.js"></script>
+    <script type="text/javascript" src="webgl.js"></script>
+    <script src="helvetiker_regular.typeface.js"></script>
     <svg id="chart"></svg>
     <div id="buttons"></buttons>
   </body>
@@ -14,15 +18,15 @@
 <script>
 
 var con = console;
+var NSW = "NSW", QLD = "QLD";
+var data;
+var margin = {top: 20, right: 30, bottom: 30, left: 60},
+  width = 400 - margin.left - margin.right, 
+  height = 400 - margin.top - margin.bottom;
 
 (function() {
 
-  var NSW = "NSW";
-  var QLD = "QLD";
-  var data, chart, area, x, y, xAxis, yAxis, years = [];
-  var margin = {top: 20, right: 30, bottom: 30, left: 60},
-  width = 400 - margin.left - margin.right,
-  height = 400 - margin.top - margin.bottom;
+  var webgl, graph2;
 
   // sup with frog? just wanted an easy searchable keyword. eat it. not the frog, but the legs are good to go.
   var frog = {
@@ -32,183 +36,14 @@ var con = console;
     tries_scored: [],
   }
 
-
-  function create2d() {
-
-    data = years.map(function(){return [0,0];});
-
-    chart = d3.select("#chart")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-    .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-    x = d3.scale.linear()
-    .domain([0, years.length])
-    .range([0, width]);
-
-    y = d3.scale.linear()
-    .domain([0, d3.max(data, function(d){ return Math.max(d[0], d[1]); })])
-    .range([height,0]);
-
-    var nsw = data.map(function(d) { return d[0];})
-    var qld = data.map(function(d) { return d[1];})
-
-    area = d3.svg.area()
-    .x(function(d,i) {
-      // con.log("x", d);
-      return x(i);
-    })
-    .y0(height).y1(function(d, i) {
-      // con.log("y1", i , y(d));
-      return y(d);
-    });
-
-    var line = d3.svg.line()
-    .x(function(d,i) {
-      return x(i);
-    })
-    .y(function(d, i) {
-      con.log(d,y(d))
-      return y(d);
-    });
-
-
-
-
-    chart
-    .selectAll("path.area")
-    .data([nsw,qld])
-    .enter()
-    .append("path")
-    .attr("class", function(d,i) { return [NSW,QLD][i]; })
-    .attr("d", area);
-
-    // chart
-    // .selectAll("path")
-    // .data([nsw,qld])
-    // .enter()
-    // .append("path")
-    // // .attr("class", function(d,i) { return [NSW,QLD][i]; })
-    // .attr("d", line);
-
-    // chart.append("path")
-    // .attr("class", "line")
-    // .attr("d", line(data));
-
-
-
-    xAxis = d3.svg.axis()
-    .scale(x)
-    .orient("bottom")
-    .ticks(years.length / 4)
-    .tickFormat(function(d){
-      return years[d].year;
-    });
-
-    chart.append("g")
-    .attr("class", "x axis")
-    .attr("transform", "translate(0," + height + ")")
-    .call(xAxis);
-
-    yAxis = d3.svg.axis()
-    .scale(y)
-    .orient("left");
-
-    chart.append("g")
-    .attr("class", "y axis")
-    .call(yAxis);
-
-
-    pointsNSW = point(NSW, nsw);
-    pointsQLD = point(QLD, qld);
-
-    function point(state, data) {
-
-      var g = chart.selectAll(".point." + state)
-      .data(data)
-      .enter()
-      .append("svg:circle")
-      .attr("class", state)
-      .attr("cx", function(d, i) { return x(i); })
-      .attr("cy", function(d, i) { return y(d); })
-      .attr("r", 5);
-
-      g.on("mouseover", function(d,i){
-        // con.log(this);
-
-        // con.log(years[i])
-        var m = years[i].matches.map(function(match,i) {
-          // con.log(match)
-          return [
-            match.winner.team,
-            " defeated ",
-            match.loser.team,
-            " (",
-            match.winner.score,
-            "-",
-            match.loser.score
-          ].join("");
-        })
-
-        var state = this.attributes.class.value;
-        tooltip.text([state, years[i].year, "value", d, m].join(" "))
-        tooltip.style("visibility", "visible");
-      })
-      .on("mousemove", function(d,i){
-
-        var x = margin.left + Number(this.attributes.cx.value) + "px",
-          y = 10 + margin.top + Number(this.attributes.cy.value) + "px";
-
-          // con.log(x,y);
-        return tooltip.style("left", x).style("top", y);
-        // return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");
-      })
-      .on("mouseout", function(){return tooltip.style("visibility", "hidden");});
-
-      return g;
-    }
-
-    var tooltip = d3.select("body")
-    .append("div")
-    .attr("class", "tooltip");;
-
-
-  }
-
   function toggle(data) {
-
     var nsw = data.map(function(d) { return d[0];})
     var qld = data.map(function(d) { return d[1];})
-
-    y
-    .domain([0, d3.max(data, function(d){ return Math.max(d[0], d[1]); })])
-    .range([height, 0]);
-
-    d3.select(".y.axis")
-    .transition()
-    .duration(1750)
-    .call(yAxis);
-
-    chart
-    .selectAll("path")
-    .data([nsw,qld])
-    .transition()
-    .duration(750)
-    .attr("d", function(d) { return area(d); });
-
-    function updatePoints(banana, data) {
-      banana
-      .data(data)
-      .transition()
-      // .duration(750)
-      .attr("cy", function(d, i) { return y(d); })
-      .duration(function(d, i) { return i * 40;} )
-    }
-    updatePoints(pointsNSW, nsw);
-    updatePoints(pointsQLD, qld);
-
-
+    var max = d3.max(data, function(d){ return Math.max(d[0], d[1]); })
+    svg.update(nsw, qld, max);
+    setTimeout(function() {
+      webgl.update(nsw, qld, max);
+    }, 500);
   }
 
 
@@ -238,131 +73,6 @@ var con = console;
       })
     }
   }
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-
-  var cube, renderer, scene, camera, cubes = [];
-
-
-  var incremental = true;
-
-  var incremental_matches = false;
-
-
-
-  var render = function () {
-    requestAnimationFrame(render);
-
-    // cube.rotation.x += 0.1;
-    group.rotation.y += 0.01;
-
-    renderer.render(scene, camera);
-  };
-
-  function create3d() {
-    scene = new THREE.Scene();
-    camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
-
-    renderer = new THREE.WebGLRenderer();
-    renderer.setSize(600,400);
-    document.body.appendChild(renderer.domElement);
-
-    group = new THREE.Object3D();
-    scene.add( group );
-
-
-    // var material =  new THREE.MeshLambertMaterial(
-    // {
-    //   color: 0xCC0000
-    // });
-
-    var light = new THREE.AmbientLight( 0x40f040 ); // soft white light
-    scene.add( light );
-
-
-    var pointLight =  new THREE.PointLight(0xFFFFFF);
-
-    // set its position
-    pointLight.position.x = 10;
-    pointLight.position.y = 50;
-    pointLight.position.z = 130;
-
-    // add to the scene
-    scene.add(pointLight);
-
-    var heights = {NSW:0,QLD:0}
-
-    for (var yearIndex in years) {
-
-      var year = years[yearIndex];
-
-      // var material = new THREE.MeshBasicMaterial({color: 0x00ff00});
-
-      var heightNSW = year.NSW;
-      var heightQLD = year.QLD;
-
-      renderTeam(0x4444ff, -1, heightNSW);
-      renderTeam(0xa0163b, 1, heightQLD);
-
-      function renderTeam(colour, x, h) {
-
-        if ( h > 0 ){
-          var geometry = new THREE.BoxGeometry(1,h,1);
-          var material = new THREE.MeshPhongMaterial( {
-            ambient: 0x030303,
-            color: colour,
-            specular: 0x009900,
-            shininess: 30,
-            shading: THREE.SmoothShading
-          } )
-          cubes.push(cube = new THREE.Mesh(geometry, material));
-          group.add(cube);
-          cube.position.x = x
-          cube.position.y = h / 2;
-          cube.position.z = -years.length / 2 + yearIndex * 1.4;
-        }
-      }
-
-
-    }
-
-    camera.position.y = 20;
-    camera.position.z = 100;
-
-    render();
-
-  }
-
-
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
   function parse() {
@@ -463,21 +173,18 @@ var con = console;
 
     // con.log(years);
 
-    // create3d();
-    create2d();
+    var zero = years.map(function(){return [0,0];});
+    data = zero;
+
+    webgl = create3d();
+    svg = create2d();
     initUI();
+    toggle(frog.points_scored);
 
   }
 
+  parse();
 
-  // entry point
-
-  d3.json("origin.json", function(json) {
-    years = json;
-    parse();
-  });
-
-})()
-
+})();
 
 </script>

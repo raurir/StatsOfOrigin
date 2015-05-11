@@ -67,3 +67,8 @@ circle:hover {
   border-radius: 2px;
   border: 2px solid #333;
 }
+.line {
+  fill: none;
+  stroke: #000;
+  stroke-width: 2;
+}
