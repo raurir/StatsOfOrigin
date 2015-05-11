@@ -77,7 +77,7 @@ function create3d() {
 
   function update(nsw, qld, max) {
 
-    TweenMax.to(groupTicks, 0.5, {alpha: 0});
+    // TweenMax.to(groupTicks, 0.5, {alpha: 0});
 
     function renderYear(colour, teamIndex, height, yearIndex) {
 
