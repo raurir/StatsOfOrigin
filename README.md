@@ -4,3 +4,8 @@
 All games ever.
 
 PS. Maroon rhymes with moon, not own.
+
+
+
+- remove jquery
+- move lib into js/lib
