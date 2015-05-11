@@ -24,7 +24,7 @@ grunt.initConfig(
 
   uglify:
     options:
-      banner: '/*! State or Origin Graph <%= grunt.template.today("dd-mm-yyyy") %> */\n'
+      banner: '/*! State of Origin Graph <%= grunt.template.today("dd-mm-yyyy") %> */\n'
       # mangle: false, compress: false, beautify: true # dev
       mangle: false, compress: true, beautify: false # production
     dist:
@@ -38,7 +38,7 @@ grunt.initConfig(
       expand: true,
       flatten: true,
       src: 'css/*.css', # // -> src/css/file1.css, src/css/file2.css
-      dest: 'deploy/css/' # // -> dest/css/file1.css, dest/css/file2.css
+      dest: 'css/autoprefixed/' # // -> dest/css/file1.css, dest/css/file2.css
     }
 
   stylus:
