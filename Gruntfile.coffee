@@ -19,34 +19,18 @@ grunt.initConfig(
     javascript:
       files: [
         "#{__dirname}/js/*.js"
-        "#{__dirname}/deploy/experiments/*.js"
       ]
-      tasks: ['jshint', 'uglify']
-      # tasks: ['jshint']
+      tasks: ['uglify']
 
   uglify:
     options:
-      banner: '/*! Infinite Print <%= grunt.template.today("dd-mm-yyyy") %> */\n'
-      mangle: false
-      compress: false
-      beautify: true
+      banner: '/*! State or Origin Graph <%= grunt.template.today("dd-mm-yyyy") %> */\n'
+      # mangle: false, compress: false, beautify: true # dev
+      mangle: false, compress: true, beautify: false # production
     dist:
       files:
-        'deploy/js/infinite.min.js': [
-
-          'deploy/experiments/rand.js'
-          'deploy/experiments/dom.js'
-          'deploy/experiments/colours.js'
-          'deploy/experiments/geom.js'
-          'deploy/experiments/experiments_infinite.js'
-          'deploy/experiments/experiments_progress.js'
-
-          # 'deploy/experiments/hexagon_tile.js'
-          # 'deploy/experiments/bezier_flow.js'
-          # 'deploy/experiments/maze.js'
-
+        'origin.min.js': [
           'js/*.js'
-
         ]
 
   autoprefixer:

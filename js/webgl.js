@@ -2,11 +2,14 @@ function create3d() {
 
   var renderer, scene, camera, cubes = [[],[]];
 
+  var sw = window.innerWidth - 20,
+    sh = window.innerHeight - 60;
+
   scene = new THREE.Scene();
-  camera = new THREE.PerspectiveCamera(35, window.innerWidth/window.innerHeight, 0.1, 1000);
+  camera = new THREE.PerspectiveCamera(35, sw / sh, 0.1, 1000);
 
   renderer = new THREE.WebGLRenderer();
-  renderer.setSize(600,400);
+  renderer.setSize(sw, sh);
   document.body.appendChild(renderer.domElement);
 
   group = new THREE.Object3D();
@@ -70,17 +73,22 @@ function create3d() {
     return tick;
   }
 
+  var gap = 2;
+
   function update(nsw, qld, max) {
+
+    TweenMax.to(groupTicks, 0.5, {alpha: 0});
 
     function renderYear(colour, teamIndex, height, yearIndex) {
 
       var cube;
 
       var h = height / max * maxHeight;
+      if (h == 0) h = 0.01;
 
       var x = (teamIndex ? 1 : -1),
         y = h / 2,
-        z = (-years.length / 2 + yearIndex) * 1.4;
+        z = (-years.length / 2 + yearIndex + (teamIndex ? 0.25 : 0)) * gap;
 
 
       if (cubes[teamIndex][yearIndex]) { // already exists, let's re use it!
@@ -89,32 +97,34 @@ function create3d() {
 
       } else {
 
-        if ( h > 0 ) {
-          var geometry = new THREE.BoxGeometry(1,1,1);
-          var material = new THREE.MeshPhongMaterial( {
-            ambient: 0x030303,
-            color: colour,
-            specular: 0x404040,
-            shininess: 1,
-            shading: THREE.SmoothShading
-          } )
-          cube = new THREE.Mesh(geometry, material);
-          cubes[teamIndex][yearIndex] = cube;
-          group.add(cube);
-        }
+        var geometry = new THREE.BoxGeometry(1,1,1);
+        var material = new THREE.MeshPhongMaterial( {
+          ambient: 0x030303,
+          color: colour,
+          specular: 0x404040,
+          shininess: 1,
+          shading: THREE.SmoothShading
+        } )
+        cube = new THREE.Mesh(geometry, material);
+        cubes[teamIndex][yearIndex] = cube;
+        group.add(cube);
 
       }
 
-      if (cube) {
-        cube.position.x = x;
-        cube.position.y = y;
-        cube.position.z = z;
-        cube.scale.y = h;
-      } else {
-        con.warn("could not render cube!", x,y,z,h)
-      }
+      cube.position.x = x;
+      cube.position.z = z;
+
+      // cube.position.y = 0;
+      // cube.scale.y = h ? h : 0.01;
+
+      var delay = 0 + i * 0.02, ease = Bounce.easeOut;
+
+      TweenMax.to(cube.scale, 1.5, {y: h, ease: ease, delay: delay});
+      TweenMax.to(cube.position, 1.5, {x: x, y: y, z: z, ease: ease, delay: delay});
 
     }
+
+
 
     for (var i = 0, il = nsw.length; i < il; i++) {
       renderYear(0x4444ff, 0, nsw[i], i);
@@ -147,7 +157,7 @@ function create3d() {
     }
 
     groupTicks.position.x = 0;
-    groupTicks.position.z = years.length / 2 * 1.4;
+    groupTicks.position.z = years.length / 2 * gap;
 
 
     // con.log("ticks", ticks)
@@ -158,8 +168,8 @@ function create3d() {
   var render = function () {
 
     // cube.rotation.x += 0.1;
-    group.rotation.y += 0.01;
-
+    // group.rotation.y += 0.01;
+    group.rotation.y = 90;
     groupTicks.rotation.y = -group.rotation.y;
 
     renderer.render(scene, camera);
