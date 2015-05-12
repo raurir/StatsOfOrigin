@@ -1,41 +1,15 @@
-<html>
-  <head>
-    <title>Origin</title>
-    <link rel="stylesheet" type="text/css" href='css/origin.css'/>
-  </head>
-  <body>
-
-    <script src="lib/three.min.js"></script>
-    <script src="lib/d3.min.js"></script>
-    <script src="lib/helvetiker_regular.typeface.js"></script>
-
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenMax.min.js"></script>
-
-    <!--script src="data.js"></script>
-    <script src="svg.js"></script>
-    <script src="webgl.js"></script-->
-    
-    <script src="origin.min.js"></script>
-
-    <svg id="chart"></svg>
-    <div id="buttons"></buttons>
-  </body>
-</html>
-
-<script>
-
 var con = console;
 var NSW = "NSW", QLD = "QLD";
 var data;
 var margin = {top: 20, right: 30, bottom: 30, left: 60},
-  width = 400 - margin.left - margin.right, 
+  width = 400 - margin.left - margin.right,
   height = 400 - margin.top - margin.bottom;
 
 (function() {
 
   var webgl, graph2;
 
-  // sup with frog? just wanted an easy searchable keyword. eat it. not the frog, but the legs are good to go.
+  // rename frog to whatever it actually is.
   var frog = {
     series_winner: [],
     matches_won: [],
@@ -55,6 +29,34 @@ var margin = {top: 20, right: 30, bottom: 30, left: 60},
 
 
   function initUI() {
+
+
+    var mouseDown = false;
+    var position = {x: 0, y: 0};
+    var start = {x: 0, y: 0}
+
+    function onDown(e) {
+      mouseDown = true;
+      position = {x: e.x, y: e.y};
+      start.x = position.x; start.y = position.y;
+    }
+    function onUp(e) {
+      mouseDown = false;
+    }
+    function onMove(e) {
+      position = {x: e.x, y: e.y};
+      if (mouseDown) webgl.interact({x: position.x - start.x, y: position.y - start.y});
+    }
+
+    addEventListener("mousedown", onDown);
+    addEventListener("touchstart", onDown);
+    addEventListener("mouseup", onUp);
+    addEventListener("touchend", onUp);
+    addEventListener("mousemove", onMove);
+    addEventListener("touchdrag", onMove);
+
+
+
     var buttonNames = [
       {
         label: "Series",
@@ -193,5 +195,3 @@ var margin = {top: 20, right: 30, bottom: 30, left: 60},
   parse();
 
 })();
-
-</script>

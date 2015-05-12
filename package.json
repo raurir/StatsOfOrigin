@@ -1,0 +1,30 @@
+{
+  "name": "StateOfOrigin",
+  "version": "1.0.0",
+  "description": "3d visualiser for the State of Origin",
+  "main": "origin.min.js",
+  "dependencies": {
+    "grunt": "^0.4.5",
+    "grunt-autoprefixer": "^3.0.0",
+    "grunt-cli": "^0.1.13",
+    "grunt-contrib-stylus": "^0.21.0"
+  },
+  "devDependencies": {
+    "grunt-contrib-uglify": "^0.9.1",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-sync": "^0.2.3"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/raurir/state-of-origin-visualiser.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/raurir/state-of-origin-visualiser/issues"
+  },
+  "homepage": "https://github.com/raurir/state-of-origin-visualiser"
+}

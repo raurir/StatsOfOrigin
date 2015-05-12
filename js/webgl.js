@@ -18,7 +18,7 @@ function create3d() {
   var groupTicks = new THREE.Object3D();
   group.add(groupTicks);
 
-  var light = new THREE.AmbientLight( 0x40f040 ); // soft white light
+  var light = new THREE.AmbientLight( 0x404040 ); // soft white light
   scene.add( light );
 
   var pointLight =  new THREE.PointLight(0xFFFFFF);
@@ -35,19 +35,19 @@ function create3d() {
   function generateTick(label) {
 
     // make dash
-    var dashGeometry = new THREE.BoxGeometry(2, 0.3, 0.3);
+    var dashGeometry = new THREE.BoxGeometry(1, 0.3, 0.3);
     var dashMaterial = new THREE.MeshPhongMaterial({
-      ambient: 0xffffff,
-      color: 0xffffff,
-      specular: 0xffffff,
+      ambient: 0xa0a0a0,
+      color: 0xa0a0a0,
+      specular: 0xa0a0a0,
       shininess: 1,
       shading: THREE.SmoothShading
     } )
     var dash = new THREE.Mesh(dashGeometry, dashMaterial);
 
     var textMaterial = new THREE.MeshFaceMaterial([
-      new THREE.MeshPhongMaterial({color: 0xffffff, shading: THREE.FlatShading}), // front
-      new THREE.MeshPhongMaterial({color: 0xffffff, shading: THREE.SmoothShading}) // side
+      new THREE.MeshPhongMaterial({color: 0xa0a0a0, shading: THREE.FlatShading}), // front
+      new THREE.MeshPhongMaterial({color: 0x505050, shading: THREE.SmoothShading}) // side
     ] );
     var textGeometry = new THREE.TextGeometry(label, {
       size: 2,
@@ -86,9 +86,10 @@ function create3d() {
       var h = height / max * maxHeight;
       if (h == 0) h = 0.01;
 
-      var x = (teamIndex ? 1 : -1),
+      // var x = (-years.length / 2 + yearIndex + (teamIndex ? 0.25 : 0)) * gap,
+      var x = (-years.length / 2 + yearIndex) * gap,
         y = h / 2,
-        z = (-years.length / 2 + yearIndex + (teamIndex ? 0.25 : 0)) * gap;
+        z = (teamIndex ? 1 : -1);
 
 
       if (cubes[teamIndex][yearIndex]) { // already exists, let's re use it!
@@ -156,20 +157,24 @@ function create3d() {
       }
     }
 
-    groupTicks.position.x = 0;
-    groupTicks.position.z = years.length / 2 * gap;
+    groupTicks.position.x = years.length / 2 * gap;
 
 
     // con.log("ticks", ticks)
 
   }
 
+  var rotation = 0;
 
-  var render = function () {
+  function interact(delta) {
+    rotation = delta.x * 0.01;
+  }
+
+  function render() {
 
     // cube.rotation.x += 0.1;
     // group.rotation.y += 0.01;
-    group.rotation.y = 90;
+    group.rotation.y = rotation;
     groupTicks.rotation.y = -group.rotation.y;
 
     renderer.render(scene, camera);
@@ -180,6 +185,7 @@ function create3d() {
 
 
   return {
+    interact: interact,
     update: update
   }
 
