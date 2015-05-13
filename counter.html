@@ -1,0 +1,209 @@
+<html>
+  <head>
+    <title>Origin</title>
+    <link rel="stylesheet" type="text/css" href='css/origin.css'/>
+
+    <script src="lib/three.min.js"></script>
+    <script src="lib/d3.min.js"></script>
+    <script src="lib/helvetiker_regular.typeface.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenMax.min.js"></script>
+
+
+  </head>
+  <body>
+    <div id='countdown'></div>
+  </body>
+</html>
+<script>
+
+var con = console;
+var countdown = document.getElementById('countdown');
+var end = new Date(2015, 04, 27, 20, 0 );
+
+var _second = 1000;
+var _minute = _second * 60;
+var _hour = _minute * 60;
+var _day = _hour * 24;
+
+var lastSecond = null, lastArray = [];
+
+
+function getNumeral(num) {
+  for (var i = 0, il = numerals[num].length; i < il;i++) {
+    if (numerals[num][i].used == false) {
+      numerals[num][i].used = true;
+      return numerals[num][i];
+    }
+  }
+}
+
+var existing = [];
+
+function showRemaining() {
+  var now = new Date();
+  var distance = end - now;
+  if (distance < 0) {
+    clearInterval(timer);
+    countdown.innerHTML = 'Event closed!';
+    return;
+  }
+
+  function pad(n) { return (String(n).length === 1) ? "0" + n : n; }
+
+  var days = pad(Math.floor(distance / _day));
+  var hours = pad(Math.floor((distance % _day) / _hour));
+  var minutes = pad(Math.floor((distance % _hour) / _minute));
+  var seconds = pad(Math.floor((distance % _minute) / _second));
+
+
+  // days = r(), hours = r(), minutes = r(), seconds = r();
+
+
+
+
+  if (lastSecond !== seconds ) {
+    countdown.innerHTML = days + ' days ' + hours + ' hours ' + minutes + ' minutes ' + seconds + 'secs';
+
+    var arr = (days + ":" + hours + ":" + minutes + ":" + seconds).split("");
+
+
+    function remove(num) {
+      TweenMax.to(num.position, 0.3, {y: -15, ease: Quad.easeIn, onComplete: function() {
+        // con.log("this", num);
+        num.used = false;
+      }});
+    }
+
+    for (var i = 0, il = arr.length; i < il; i++) {
+      var numeral = arr[i];
+
+      if (lastArray[i] !== arr[i]) {
+
+        if (existing[i]) {
+          remove(existing[i]);
+        }
+
+        var num = getNumeral(numeral === ":" ? 10 : numeral);
+        existing[i] = num;
+        TweenMax.fromTo(num.position, 0.3, {x: (i - 5) * 3, y: 15}, {y: 0, delay: 0.4, ease: Bounce.easeOut })
+
+      }
+
+      lastArray[i] = arr[i];
+
+    }
+
+
+  }
+  lastSecond = seconds;
+
+}
+
+
+
+
+
+
+
+var sw = 800, sh = 600;
+
+var scene = new THREE.Scene();
+var camera = new THREE.PerspectiveCamera(35, sw / sh, 0.1, 1000);
+
+var renderer = new THREE.WebGLRenderer();
+renderer.setSize(sw, sh);
+document.body.appendChild(renderer.domElement);
+
+var group = new THREE.Object3D();
+scene.add(group);
+
+var light = new THREE.AmbientLight(0x202020); // soft white light
+scene.add( light );
+
+var pointLight =  new THREE.PointLight(0xa00030);
+pointLight.position.y = 50;
+scene.add(pointLight);
+
+var pointLight2 =  new THREE.PointLight(0x000090);
+pointLight2.position.y = 50;
+scene.add(pointLight2);
+
+camera.position.z = 40;
+camera.position.y = 14;
+camera.lookAt(new THREE.Vector3(0, 0, 0));
+
+
+function generateNumber(glyph) {
+  var material = new THREE.MeshFaceMaterial([
+    new THREE.MeshPhongMaterial({color: 0xd0d0d0, shading: THREE.FlatShading}), // front
+    new THREE.MeshPhongMaterial({color: 0x505050, shading: THREE.SmoothShading}) // side
+  ] );
+  if (glyph === 10) glyph = ":";
+  var geometry = new THREE.TextGeometry(glyph, {
+    size: 3,
+    height: 2,
+    curveSegments: 3,
+    font: 'helvetiker',
+    // weight: "bold",
+    // style: style,
+    material: 0,
+    extrudeMaterial: 1
+  });
+  geometry.computeBoundingBox();
+  geometry.computeVertexNormals();
+
+  var text = new THREE.Mesh(geometry, material);
+/*  text.position.x = 1;
+  text.position.y = -1;*/
+
+  return text;
+}
+
+var numerals = [];
+var used = [];
+
+for (var n = 0; n < 11; n++) {
+  numerals[n] = [];
+  used[n] = [];
+  for (var i = 0; i < 6; i++) {
+    var num = generateNumber(n);
+    numerals[n][i] = num;
+    num.position.set(0,20,0);
+    group.add(num);
+
+    numerals[n][i].used = false;
+  }
+
+
+
+};
+
+// group.add(numerals[0][4]);
+
+
+function render(time) {
+  // con.log(t)
+  showRemaining();
+  // group.rotation.y = 0;
+
+  var t = time * 0.001;
+
+  pointLight.position.x = Math.sin(t) * 15;
+  pointLight.position.z = Math.cos(t) * 15;
+  pointLight2.position.x = -Math.sin(t *.9) * 15;
+  pointLight2.position.z = -Math.cos(t *.9) * 15;
+
+  // con.log(pointLight.position.x,pointLight.position.z)
+  // pointLight.lookAt(new THREE.Vector3(0, 0, 0));
+
+  renderer.render(scene, camera);
+  requestAnimationFrame(render);
+};
+
+render();
+
+
+
+
+</script>
+
