@@ -15,8 +15,11 @@ function create3d() {
   group = new THREE.Object3D();
   scene.add(group);
 
-  var groupTicks = new THREE.Object3D();
-  group.add(groupTicks);
+  var groupAxisY = new THREE.Object3D();
+  group.add(groupAxisY);
+
+  var groupAxisX = new THREE.Object3D();
+  group.add(groupAxisX);
 
   var light = new THREE.AmbientLight( 0x404040 ); // soft white light
   scene.add( light );
@@ -31,11 +34,24 @@ function create3d() {
   camera.position.y = maxHeight / 2;
   camera.position.z = 100;
 
+  var uniforms = {};
+  uniforms = {
+    time: { type: "f", value: 1.0 },
+    resolution: { type: "v2", value: new THREE.Vector2() }
+  };
 
-  function generateTick(label) {
+  var material1 = new THREE.ShaderMaterial( {
+    uniforms: uniforms,
+    vertexShader: document.getElementById( 'vertexShader' ).textContent,
+    fragmentShader: document.getElementById( 'fragment_shader5' ).textContent
+  });
+
+
+
+  function generateTick(label, xd, yd, zd, x, y, z) {
 
     // make dash
-    var dashGeometry = new THREE.BoxGeometry(1, 0.3, 0.3);
+    var dashGeometry = new THREE.BoxGeometry(xd, yd, zd);
     var dashMaterial = new THREE.MeshPhongMaterial({
       ambient: 0xa0a0a0,
       color: 0xa0a0a0,
@@ -63,8 +79,9 @@ function create3d() {
     textGeometry.computeVertexNormals();
 
     var text = new THREE.Mesh(textGeometry, textMaterial);
-    text.position.x = 1;
-    text.position.y = -1;
+    text.position.x = x;
+    text.position.y = y;
+    text.position.z = z;
 
     var tick = new THREE.Object3D();
     tick.add(dash);
@@ -73,11 +90,22 @@ function create3d() {
     return tick;
   }
 
+  function generateTickX(label) {
+    return generateTick(label, 0.3, 1, 0.3, -3, -3, 0);
+  }
+
+  function generateTickY(label) {
+    return generateTick(label, 1, 0.3, 0.3, 1, -1, 0);
+  }
+
   var gap = 2;
+  var ticksX = [];
+  var yearJump = 5;
+
 
   function update(nsw, qld, max) {
 
-    // TweenMax.to(groupTicks, 0.5, {alpha: 0});
+    // TweenMax.to(groupAxisY, 0.5, {alpha: 0});
 
     function renderYear(colour, teamIndex, height, yearIndex) {
 
@@ -89,7 +117,7 @@ function create3d() {
       // var x = (-years.length / 2 + yearIndex + (teamIndex ? 0.25 : 0)) * gap,
       var x = (-years.length / 2 + yearIndex) * gap,
         y = h / 2,
-        z = (teamIndex ? 1 : -1);
+        z = (teamIndex ? 1 : -1) * 2;
 
 
       if (cubes[teamIndex][yearIndex]) { // already exists, let's re use it!
@@ -98,15 +126,21 @@ function create3d() {
 
       } else {
 
-        var geometry = new THREE.BoxGeometry(1,1,1);
-        var material = new THREE.MeshPhongMaterial( {
+
+
+   
+        // con.log(document.getElementById( 'vertexShader' ).textContent);
+        // con.log(document.getElementById( 'fragment_shader2' ).textContent);
+
+        var geometry = new THREE.BoxGeometry(1,1,3);
+        var material2 = new THREE.MeshPhongMaterial( {
           ambient: 0x030303,
           color: colour,
           specular: 0x404040,
-          shininess: 1,
+          shininess: 3,
           shading: THREE.SmoothShading
         } )
-        cube = new THREE.Mesh(geometry, material);
+        cube = new THREE.Mesh(geometry, material1);
         cubes[teamIndex][yearIndex] = cube;
         group.add(cube);
 
@@ -135,15 +169,14 @@ function create3d() {
       renderYear(0xa0163b, 1, qld[i], i);
     }
 
-    for (var i = groupTicks.children.length - 1; i > -1; i--) {
-      groupTicks.remove(groupTicks.children[i]);
+    for (var i = groupAxisY.children.length - 1; i > -1; i--) {
+      groupAxisY.remove(groupAxisY.children[i]);
     }
 
-
-    var ticks = document.getElementsByClassName("y axis")[0].childNodes;
-    for (i = 0, il = ticks.length; i < il; i++) {
-      var tick = ticks[i];
-      var tick3d;
+    /*
+    var ticksVertical = document.getElementsByClassName("y axis")[0].childNodes;
+    for (i = 0, il = ticksVertical.length; i < il; i++) {
+      var tick = ticksVertical[i];
       if (tick.className.baseVal === "tick") { // filter out the other svg elements.
 
         var transform = tick.getAttribute("transform");
@@ -151,16 +184,36 @@ function create3d() {
         var text = tick.childNodes[1].innerHTML;
 
         var tickMesh = generateTick(text);
-        groupTicks.add(tickMesh);
+        groupAxisY.add(tickMesh);
         tickMesh.position.y = (height - y) / height * maxHeight;
 
       }
     }
+    */
 
-    groupTicks.position.x = years.length / 2 * gap;
+    var ticksVertical = 5;
+    for (i = 0, il = ticksVertical; i < il; i++) {
+      var y = i / (il - 1);
+      var text = y * max;
+      var tickMesh = generateTickY(text);
+      groupAxisY.add(tickMesh);
+      tickMesh.position.y = y * maxHeight;
+    }
+
+    for (i = 0, il = years.length / yearJump; i < il; i++) {
+      var yearIndex = i * yearJump;
+      var text = years[yearIndex].year;
+      var tickMesh = generateTickX(text);
+      groupAxisX.add(tickMesh);
+      tickMesh.position.x = (-years.length / 2 + yearIndex) * gap;
+      ticksX[i] = tickMesh;
+    }
+
+    groupAxisX.position.y = -2;
+    groupAxisY.position.x = years.length / 2 * gap;
 
 
-    // con.log("ticks", ticks)
+    // con.log("ticksVertical", ticksVertical)
 
   }
 
@@ -170,18 +223,24 @@ function create3d() {
     rotation = delta.x * 0.01;
   }
 
-  function render() {
+  function render(time) {
+
+    if (uniforms.time) uniforms.time.value = time * 0.01;
 
     // cube.rotation.x += 0.1;
     // group.rotation.y += 0.01;
     group.rotation.y = rotation;
-    groupTicks.rotation.y = -group.rotation.y;
+    groupAxisY.rotation.y = -group.rotation.y;
+
+    for (var i = 0, il = years.length / yearJump; i < il; i++) {
+      if (ticksX[i]) ticksX[i].rotation.y = -rotation;
+    }
 
     renderer.render(scene, camera);
     requestAnimationFrame(render);
   };
 
-  render();
+  render(0);
 
 
   return {

@@ -25,8 +25,8 @@ grunt.initConfig(
   uglify:
     options:
       banner: '/*! State of Origin Graph <%= grunt.template.today("dd-mm-yyyy") %> */\n'
-      # mangle: false, compress: false, beautify: true # dev
-      mangle: false, compress: true, beautify: false # production
+      mangle: false, compress: false, beautify: true # dev
+      # mangle: false, compress: true, beautify: false # production
     dist:
       files:
         'origin.min.js': [

@@ -63,8 +63,8 @@ function showRemaining() {
 
 
   if (lastSecond !== seconds ) {
-    frame++;
-    if (frame < 2) return;
+    // frame++;
+    // if (frame < 50) return;
 
     // countdown.innerHTML = days + ' days ' + hours + ' hours ' + minutes + ' minutes ' + seconds + 'secs';
 
@@ -80,19 +80,23 @@ function showRemaining() {
       seconds.split("")
     )
     var xPositions = [1,1,4,1,1,3,1,1,3.5,1,1];
+    // arr = seconds.split("")
+    // xPositions = [1,1];
 
     if (xPositions.length !== arr.length) throw new Error("wrong length:" + xPositions.length + " v " + arr.length);
 
     function remove(symbol) {
-      TweenMax.to(symbol.mesh.position, 0.3, {y: -20, ease: Quad.easeIn, onComplete: function() {
+      con.log("remove", symbol, new Date().getTime());
+      TweenMax.to(symbol.mesh.position, 0.3, {y: -20, delay: 0.1, ease: Quad.easeIn, onComplete: function() {
         // con.log("this", mesh);
         symbol.used = false;
       }});
     }
 
     function drop(symbol, x) {
+      con.log("drop", symbol, new Date().getTime());
       var mesh = symbol.mesh;
-      TweenMax.fromTo(mesh.position, 0.3, {x: x, y: 15}, {y: 0, delay: 0.4, ease: Bounce.easeOut })
+      TweenMax.fromTo(mesh.position, 0.3, {x: x, y: 15}, {y: 0, ease: Bounce.easeOut })
     }
 
     var xp = -9;
@@ -154,6 +158,7 @@ scene.add(pointLight2);
 
 var pointLight3=  new THREE.PointLight(0xf0f0f0);
 pointLight3.position.y = 50;
+pointLight3.position.z = 50;
 scene.add(pointLight3);
 
 camera.position.z = 60;
@@ -229,7 +234,7 @@ for (var n = 0; n < symbols.length; n++) {
 
 function render(time) {
   // con.log(t)
-  showRemaining();
+  if (time > 200) showRemaining();
   // group.rotation.y = 0;
 
   var t = time * 0.002;
@@ -245,10 +250,13 @@ function render(time) {
   // pointLight.lookAt(new THREE.Vector3(0, 0, 0));
 
   renderer.render(scene, camera);
+
+  // con.log(time);
+  //if (time < 3000) 
   requestAnimationFrame(render);
 };
 
-render();
+render(0);
 
 
 
