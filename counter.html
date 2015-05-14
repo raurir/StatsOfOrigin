@@ -28,11 +28,13 @@ var _day = _hour * 24;
 var lastSecond = null, lastArray = [];
 
 
-function getNumeral(num) {
-  for (var i = 0, il = numerals[num].length; i < il;i++) {
-    if (numerals[num][i].used == false) {
-      numerals[num][i].used = true;
-      return numerals[num][i];
+function getSymbol(symbol) {
+  // for (var i = 0, il = meshes[symbol].length; i < il;i++) {
+  for (var i in meshes[symbol]) {
+    // con.log("i", meshes[symbol][i])
+    if (meshes[symbol][i].used == false) {
+      meshes[symbol][i].used = true;
+      return meshes[symbol][i];
     }
   }
 }
@@ -48,7 +50,7 @@ function showRemaining() {
     return;
   }
 
-  function pad(n) { return (String(n).length === 1) ? "0" + n : n; }
+  function pad(n) { return String((String(n).length === 1) ? "0" + n : n); }
 
   var days = pad(Math.floor(distance / _day));
   var hours = pad(Math.floor((distance % _day) / _hour));
@@ -56,26 +58,38 @@ function showRemaining() {
   var seconds = pad(Math.floor((distance % _minute) / _second));
 
 
-  // days = r(), hours = r(), minutes = r(), seconds = r();
-
-
 
 
   if (lastSecond !== seconds ) {
-    countdown.innerHTML = days + ' days ' + hours + ' hours ' + minutes + ' minutes ' + seconds + 'secs';
+    // countdown.innerHTML = days + ' days ' + hours + ' hours ' + minutes + ' minutes ' + seconds + 'secs';
 
-    var arr = (days + ":" + hours + ":" + minutes + ":" + seconds).split("");
+    // var arr = (days + ":" + hours + ":" + minutes + ":" + seconds).split("");
+    // var arr = (days + "" + hours + "" + minutes + "" + seconds).split("");
+    var arr = [].concat(
+      days.split("")
+    ).concat("days").concat(
+      hours.split("")
+    ).concat("hrs").concat(
+      minutes.split("")
+    ).concat("mins").concat(
+      seconds.split("")
+    )
+    var xPositions = [1,1,4,1,1,3,1,1,3.5,1,1];
 
+    if (xPositions.length !== arr.length) throw new Error("wrong length:" + xPositions.length + " v " + arr.length);
 
-    function remove(num) {
-      TweenMax.to(num.position, 0.3, {y: -15, ease: Quad.easeIn, onComplete: function() {
-        // con.log("this", num);
-        num.used = false;
+    function remove(symbol) {
+      TweenMax.to(symbol.mesh.position, 0.3, {y: -20, ease: Quad.easeIn, onComplete: function() {
+        // con.log("this", mesh);
+        symbol.used = false;
       }});
     }
 
+    var xp = -9;
     for (var i = 0, il = arr.length; i < il; i++) {
-      var numeral = arr[i];
+      var symbol = arr[i];
+
+
 
       if (lastArray[i] !== arr[i]) {
 
@@ -83,13 +97,16 @@ function showRemaining() {
           remove(existing[i]);
         }
 
-        var num = getNumeral(numeral === ":" ? 10 : numeral);
-        existing[i] = num;
-        TweenMax.fromTo(num.position, 0.3, {x: (i - 5) * 3, y: 15}, {y: 0, delay: 0.4, ease: Bounce.easeOut })
+        var symbol = getSymbol(symbol);
+        existing[i] = symbol;
+        var mesh = symbol.mesh;
+        TweenMax.fromTo(mesh.position, 0.3, {x: xp * 3, y: 15}, {y: 0, delay: 0.4, ease: Bounce.easeOut })
 
       }
 
       lastArray[i] = arr[i];
+
+      xp += xPositions[i];
 
     }
 
@@ -105,10 +122,10 @@ function showRemaining() {
 
 
 
-var sw = 800, sh = 500;
+var sw = 800, sh = 300;
 
 var scene = new THREE.Scene();
-var camera = new THREE.PerspectiveCamera(35, sw / sh, 0.1, 1000);
+var camera = new THREE.PerspectiveCamera(25, sw / sh, 0.1, 1000);
 
 var renderer = new THREE.WebGLRenderer();
 renderer.setSize(sw, sh);
@@ -128,12 +145,16 @@ var pointLight2 =  new THREE.PointLight(0x000090);
 pointLight2.position.y = 50;
 scene.add(pointLight2);
 
-camera.position.z = 40;
+var pointLight3=  new THREE.PointLight(0xf0f0f0);
+pointLight3.position.y = 50;
+scene.add(pointLight3);
+
+camera.position.z = 60;
 camera.position.y = 14;
 camera.lookAt(new THREE.Vector3(0, 0, 0));
 
 
-function generateNumber(glyph) {
+function generateCharacter(glyph) {
   var material = new THREE.MeshFaceMaterial([
     new THREE.MeshPhongMaterial({color: 0xd0d0d0, shading: THREE.FlatShading}), // front
     new THREE.MeshPhongMaterial({color: 0x505050, shading: THREE.SmoothShading}) // side
@@ -159,26 +180,44 @@ function generateNumber(glyph) {
   return text;
 }
 
-var numerals = [];
-var used = [];
 
-for (var n = 0; n < 11; n++) {
-  numerals[n] = [];
-  used[n] = [];
+var symbols = [
+  "0",
+  "1",
+  "2",
+  "3",
+  "4",
+  "5",
+  "6",
+  "7",
+  "8",
+  "9",
+  ":",
+  "days",
+  "hrs",
+  "mins",
+  "secs",
+]
+var meshes = {};
+
+for (var n = 0; n < symbols.length; n++) {
+  var str = symbols[n];
+  meshes[str] = [];
   for (var i = 0; i < 6; i++) {
-    var num = generateNumber(n);
-    numerals[n][i] = num;
-    num.position.set(0,20,0);
-    group.add(num);
-
-    numerals[n][i].used = false;
+    var mesh = generateCharacter(str);
+    meshes[str][i] = {
+      chr: str,
+      mesh: mesh,
+      used: false
+    };
+    mesh.position.set(0,20,0);
+    group.add(mesh);
   }
-
 
 
 };
 
-// group.add(numerals[0][4]);
+// group.add(meshes[0][4]);
 
 
 function render(time) {
@@ -186,12 +225,14 @@ function render(time) {
   showRemaining();
   // group.rotation.y = 0;
 
-  var t = time * 0.001;
+  var t = time * 0.002;
 
   pointLight.position.x = Math.sin(t) * 15;
   pointLight.position.z = Math.cos(t) * 15;
   pointLight2.position.x = -Math.sin(t *.9) * 15;
   pointLight2.position.z = -Math.cos(t *.9) * 15;
+  pointLight3.position.x = -Math.sin(t *.8) * 15;
+  pointLight3.position.z = -Math.cos(t *.8) * 15;
 
   // con.log(pointLight.position.x,pointLight.position.z)
   // pointLight.lookAt(new THREE.Vector3(0, 0, 0));
