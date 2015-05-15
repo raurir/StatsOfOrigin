@@ -4,15 +4,18 @@ function create3d() {
 
   var renderer, scene, camera, cubes = [[],[]];
 
-  var sw = window.innerWidth - 20,
-    sh = window.innerHeight - 60;
+  var sw = window.innerWidth - 50,
+    sh = window.innerHeight - 100;
+
+  if (sw < 400) sw = 400;
+  if (sh < 400) sh = 400;
 
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera(35, sw / sh, 0.1, 1000);
 
   renderer = new THREE.WebGLRenderer();
   renderer.setSize(sw, sh);
-  document.body.appendChild(renderer.domElement);
+  document.getElementById("webglcontainer").appendChild(renderer.domElement);
 
   group = new THREE.Object3D();
   scene.add(group);
@@ -111,6 +114,45 @@ function create3d() {
   var yearJump = 5;
 
 
+
+
+      fixMaxY = function(largest, ticks) {
+        var goodTick, num, roundNumbers, tick, _j, _len;
+        roundNumbers = [
+          1, 2, 5, 
+          10, 20, 30, 40, 50, 75,
+          100, 200, 300, 400, 500, 750, 800, 
+          1000, 1250, 1500, 1750, 
+          2000, 3000, 4000, 5000, 6000, 7500, 
+          1e4, 2e4, 5e4, 1e5, 2e5, 5e5];
+        tick = largest / ticks;
+        goodTick = null;
+        for (_j = 0, _len = roundNumbers.length; _j < _len; _j++) {
+          num = roundNumbers[_j];
+          if (tick < num) {
+            goodTick = num;
+          }
+          if (goodTick !== null) {
+            break;
+          }
+        }
+        return goodTick * ticks;
+      };
+      var rand = Math.random() * 1e4; var maxY = fixMaxY(rand, 5); con.log(rand,maxY);
+      var rand = Math.random() * 1e4; var maxY = fixMaxY(rand, 5); con.log(rand,maxY);
+      var rand = Math.random() * 1e4; var maxY = fixMaxY(rand, 5); con.log(rand,maxY);
+      var rand = Math.random() * 1e4; var maxY = fixMaxY(rand, 5); con.log(rand,maxY);
+
+
+
+
+
+
+
+
+
+
+
   function update(nsw, qld, max) {
 
     // TweenMax.to(groupAxisY, 0.5, {alpha: 0});
@@ -199,13 +241,21 @@ function create3d() {
     }
     */
 
-    var ticksVertical = 5;
+    var maxY = fixMaxY(max, 5);
+
+    var ticksVertical = 6;
     for (i = 0, il = ticksVertical; i < il; i++) {
-      var y = i / (il - 1);
-      var text = y * max;
+      var perc = i / (il - 1);
+      var text = perc * maxY;
       var tickMesh = generateTickY(text);
       groupAxisY.add(tickMesh);
-      tickMesh.position.y = y * maxHeight;
+      tickMesh.position.y = perc * maxHeight * maxY / max;
+
+      // var y = i / (il - 1);
+      // var text = y * max;
+      // var tickMesh = generateTickY(text);
+      // groupAxisY.add(tickMesh);
+      // tickMesh.position.y = y * maxHeight;
     }
 
     for (i = 0, il = years.length / yearJump; i < il; i++) {
@@ -279,7 +329,10 @@ function create3d() {
     groupAxisX.position.z -= (groupAxisX.position.z - (qldSide ? -1 : 1) * 3) * 0.2;
 
     for (var i = 0, il = years.length / yearJump; i < il; i++) {
-      if (ticksX[i]) ticksX[i].rotation.y = -rotationY;
+      if (ticksX[i]) {
+        ticksX[i].rotation.x = -rotationX;
+        ticksX[i].rotation.y = -rotationY;
+      }
     }
 
     renderer.render(scene, camera);

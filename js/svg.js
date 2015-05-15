@@ -1,6 +1,6 @@
 function create2d() {
 
-  var chart = d3.select("#chart")
+  var chart = d3.select("#svgcontainer")
   .attr("width", width + margin.left + margin.right)
   .attr("height", height + margin.top + margin.bottom)
   .append("g")

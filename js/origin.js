@@ -9,22 +9,46 @@ var margin = {top: 20, right: 30, bottom: 30, left: 60},
 
   var webgl, graph2;
 
-  // rename frog to whatever it actually is.
-  var frog = {
+  // rename criteria to whatever it actually is.
+  var criteria = {
     series_winner: [],
     matches_won: [],
     points_scored: [],
     tries_scored: [],
   }
 
-  function toggle(data) {
+
+  var buttonNames = [
+    {
+      label: "Series",
+      title: "Total series won",
+      data: criteria.series_winner
+    },{
+      label: "Matches",
+      title: "Total matches won",
+      data: criteria.matches_won
+    },{
+      label: "Points",
+      title: "Total points scored",
+      data: criteria.points_scored
+    }
+  ];
+
+
+
+
+
+
+  function toggle(b) {
+    var data = b.data;
     var nsw = data.map(function(d) { return d[0];})
     var qld = data.map(function(d) { return d[1];})
     var max = d3.max(data, function(d){ return Math.max(d[0], d[1]); })
     svg.update(nsw, qld, max);
-    setTimeout(function() {
-      webgl.update(nsw, qld, max);
-    }, 500);
+    // setTimeout(function() {
+    webgl.update(nsw, qld, max);
+    // }, 500);
+    document.getElementById("stat").innerHTML = b.title;
   }
 
 
@@ -62,31 +86,21 @@ var margin = {top: 20, right: 30, bottom: 30, left: 60},
     addEventListener("touchend", onUp);
     addEventListener("touchmove", onMove);
 
-
-
-    var buttonNames = [
-      {
-        label: "Series",
-        stat: frog.series_winner
-      },{
-        label: "Matches",
-        stat: frog.matches_won
-      },{
-        label: "Points",
-        stat: frog.points_scored
-      }
-    ];
     var buttons = document.getElementById("buttons");
-    for ( var b in buttonNames) {
-      b = buttonNames[b];
+
+    function createButton(b) {
       var button = document.createElement("div");
-      button.stat = b.stat;
       button.innerHTML = b.label;
       button.className = "button";
       buttons.appendChild(button);
       button.addEventListener("click", function() {
-        toggle(this.stat);
+        toggle(b);
       })
+    }
+
+
+    for ( var b in buttonNames) {
+      createButton(buttonNames[b]);
     }
   }
 
@@ -120,7 +134,7 @@ var margin = {top: 20, right: 30, bottom: 30, left: 60},
       //   QLD: incremental_series.QLD
       // }
 
-      frog.series_winner.push([incremental_series.NSW, incremental_series.QLD]);
+      criteria.series_winner.push([incremental_series.NSW, incremental_series.QLD]);
 
 
 
@@ -135,7 +149,7 @@ var margin = {top: 20, right: 30, bottom: 30, left: 60},
       //   QLD: incremental_matches.QLD
       // }
 
-      frog.matches_won.push([incremental_matches.NSW, incremental_matches.QLD]);
+      criteria.matches_won.push([incremental_matches.NSW, incremental_matches.QLD]);
 
 
       // start match stats
@@ -181,9 +195,9 @@ var margin = {top: 20, right: 30, bottom: 30, left: 60},
       //   QLD: incremental_points.QLD
       // }
 
-      frog.points_scored.push([incremental_points.NSW, incremental_points.QLD]);
+      criteria.points_scored.push([incremental_points.NSW, incremental_points.QLD]);
 
-      // frog.tries_scored.push([incremental_matches.NSW, incremental_matches.QLD]);
+      // criteria.tries_scored.push([incremental_matches.NSW, incremental_matches.QLD]);
 
     }
 
@@ -195,7 +209,7 @@ var margin = {top: 20, right: 30, bottom: 30, left: 60},
     webgl = create3d();
     svg = create2d();
     initUI();
-    toggle(frog.points_scored);
+    toggle(buttonNames[0]);
 
   }
 

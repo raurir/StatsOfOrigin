@@ -1,3 +1,17 @@
+makeTransition(transition)
+  -webkit-transition transition
+  -moz-transition transition
+  -o-transition transition
+  transition transition
+makeShadow(shadow)
+  -moz-box-shadow shadow
+  -webkit-box-shadow shadow
+  box-shadow shadow
+shadow()
+  makeShadow(0 0 14px rgba(0, 250, 0, 1))
+
+
+
 body
   margin 0
   padding 0
@@ -5,10 +19,30 @@ body
   font-family 'Roboto', sans-serif
   color white
 
-#container
+h1,h2,h3,h4,h5
+  shadow()
+
+
+#container-countdown
   width 800px
   margin 20px auto 0 auto
   text-align center
+
+#container
+  margin 0 auto
+  text-align center
+
+#header
+  position absolute
+  width 100%
+  // background rgba(0,0,200,0.5)
+  
+#buttons
+  position absolute
+  bottom 0
+  width 100%
+  // background rgba(0,0,200,0.5)
+  
 
 svg
   // border 1px solid black
@@ -29,15 +63,20 @@ svg
   shape-rendering crispEdges
 
 .button
+  background rgba(50,50,50,0.5)
+  border 1px solid rgba(255,255,255,0.2)
+  border-radius 5px
+  cursor pointer
   display inline-block
   height 20px
   line-height 20px
-  padding 4px
-  background #ccc
+  makeTransition(all 0.2s ease-in-out)
   margin 4px
-  cursor pointer
-  & hover
-    background #aaa
+  padding 4px
+  shadow()
+  &:hover
+    border 1px solid rgba(255,255,255,0.8)
+    background rgba(50,50,50,0.9)
 
 circle
   &.NSW

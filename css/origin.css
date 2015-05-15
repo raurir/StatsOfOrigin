@@ -5,10 +5,32 @@ body {
   font-family: 'Roboto', sans-serif;
   color: #fff;
 }
-#container {
+h1,
+h2,
+h3,
+h4,
+h5 {
+  -moz-box-shadow: 0 0 14px #00fa00;
+  -webkit-box-shadow: 0 0 14px #00fa00;
+  box-shadow: 0 0 14px #00fa00;
+}
+#container-countdown {
   width: 800px;
   margin: 20px auto 0 auto;
   text-align: center;
+}
+#container {
+  margin: 0 auto;
+  text-align: center;
+}
+#header {
+  position: absolute;
+  width: 100%;
+}
+#buttons {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
 }
 svg {
   display: none;
@@ -31,16 +53,26 @@ svg {
   shape-rendering: crispEdges;
 }
 .button {
+  background: rgba(50,50,50,0.5);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 5px;
+  cursor: pointer;
   display: inline-block;
   height: 20px;
   line-height: 20px;
-  padding: 4px;
-  background: #ccc;
+  -webkit-transition: all 0.2s ease-in-out;
+  -moz-transition: all 0.2s ease-in-out;
+  -o-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
   margin: 4px;
-  cursor: pointer;
+  padding: 4px;
+  -moz-box-shadow: 0 0 14px #00fa00;
+  -webkit-box-shadow: 0 0 14px #00fa00;
+  box-shadow: 0 0 14px #00fa00;
 }
-.button hover {
-  background: #aaa;
+.button:hover {
+  border: 1px solid rgba(255,255,255,0.8);
+  background: rgba(50,50,50,0.9);
 }
 circle {
   stroke: #000;
