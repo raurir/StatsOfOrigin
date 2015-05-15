@@ -1,21 +1,26 @@
-body 
+body
   margin 0
   padding 0
+  background black
+  font-family 'Roboto', sans-serif
+  color white
 
-// canvas 
-  // width 400px 
-  // height 400px
-svg 
+#container
+  width 800px
+  margin 20px auto 0 auto
+  text-align center
+
+svg
   // border 1px solid black
   display none
 
 #chart rect.QLD, #chart path.QLD
   fill rgba(200,0,50,0.8)
 
-#chart rect.NSW, #chart path.NSW 
+#chart rect.NSW, #chart path.NSW
   fill rgba(0,0,200,0.8)
 
-.axis text 
+.axis text
   font 10px sans-serif
 
 .axis path, .axis line
@@ -23,7 +28,7 @@ svg
   stroke #000
   shape-rendering crispEdges
 
-.button 
+.button
   display inline-block
   height 20px
   line-height 20px
@@ -31,7 +36,7 @@ svg
   background #ccc
   margin 4px
   cursor pointer
-  & hover 
+  & hover
     background #aaa
 
 circle

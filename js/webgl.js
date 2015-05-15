@@ -40,10 +40,16 @@ function create3d() {
     resolution: { type: "v2", value: new THREE.Vector2() }
   };
 
-  var material1 = new THREE.ShaderMaterial( {
+  var materialNSW = new THREE.ShaderMaterial( {
     uniforms: uniforms,
     vertexShader: document.getElementById( 'vertexShader' ).textContent,
-    fragmentShader: document.getElementById( 'fragment_shader5' ).textContent
+    fragmentShader: document.getElementById( 'fragment_shader_nsw' ).textContent
+  });
+
+  var materialQLD = new THREE.ShaderMaterial( {
+    uniforms: uniforms,
+    vertexShader: document.getElementById( 'vertexShader' ).textContent,
+    fragmentShader: document.getElementById( 'fragment_shader_qld' ).textContent
   });
 
 
@@ -107,7 +113,7 @@ function create3d() {
 
     // TweenMax.to(groupAxisY, 0.5, {alpha: 0});
 
-    function renderYear(colour, teamIndex, height, yearIndex) {
+    function renderYear(fragmentShader, teamIndex, height, yearIndex) {
 
       var cube;
 
@@ -128,19 +134,19 @@ function create3d() {
 
 
 
-   
+
         // con.log(document.getElementById( 'vertexShader' ).textContent);
         // con.log(document.getElementById( 'fragment_shader2' ).textContent);
 
         var geometry = new THREE.BoxGeometry(1,1,3);
-        var material2 = new THREE.MeshPhongMaterial( {
-          ambient: 0x030303,
-          color: colour,
-          specular: 0x404040,
-          shininess: 3,
-          shading: THREE.SmoothShading
-        } )
-        cube = new THREE.Mesh(geometry, material1);
+        // var material2 = new THREE.MeshPhongMaterial( {
+        //   ambient: 0x030303,
+        //   color: colour,
+        //   specular: 0x404040,
+        //   shininess: 3,
+        //   shading: THREE.SmoothShading
+        // } )
+        cube = new THREE.Mesh(geometry, fragmentShader);
         cubes[teamIndex][yearIndex] = cube;
         group.add(cube);
 
@@ -162,11 +168,11 @@ function create3d() {
 
 
     for (var i = 0, il = nsw.length; i < il; i++) {
-      renderYear(0x4444ff, 0, nsw[i], i);
+      renderYear(materialNSW, 0, nsw[i], i);
     }
 
     for (i = 0, il = qld.length; i < il; i++) {
-      renderYear(0xa0163b, 1, qld[i], i);
+      renderYear(materialQLD, 1, qld[i], i);
     }
 
     for (var i = groupAxisY.children.length - 1; i > -1; i--) {
@@ -201,12 +207,14 @@ function create3d() {
     }
 
     for (i = 0, il = years.length / yearJump; i < il; i++) {
-      var yearIndex = i * yearJump;
-      var text = years[yearIndex].year;
-      var tickMesh = generateTickX(text);
-      groupAxisX.add(tickMesh);
-      tickMesh.position.x = (-years.length / 2 + yearIndex) * gap;
-      ticksX[i] = tickMesh;
+      if (ticksX[i] == undefined) {
+        var yearIndex = i * yearJump;
+        var text = years[yearIndex].year;
+        var tickMesh = generateTickX(text);
+        groupAxisX.add(tickMesh);
+        tickMesh.position.x = (-years.length / 2 + yearIndex) * gap;
+        ticksX[i] = tickMesh;
+      }
     }
 
     groupAxisX.position.y = -2;
