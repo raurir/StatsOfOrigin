@@ -1,5 +1,7 @@
 function create3d() {
 
+  var tau = Math.PI * 2;
+
   var renderer, scene, camera, cubes = [[],[]];
 
   var sw = window.innerWidth - 20,
@@ -101,7 +103,7 @@ function create3d() {
   }
 
   function generateTickY(label) {
-    return generateTick(label, 1, 0.3, 0.3, 1, -1, 0);
+    return generateTick(label, 3, 0.3, 0.3, 2, -1, 0);
   }
 
   var gap = 2;
@@ -217,7 +219,7 @@ function create3d() {
       }
     }
 
-    groupAxisX.position.y = -2;
+    groupAxisX.position.y = -0.5;
     groupAxisY.position.x = years.length / 2 * gap;
 
 
@@ -228,6 +230,10 @@ function create3d() {
   var rotationY = 0, rotationX = 0;
   var interacting = false;
 
+  function clampRotation(r) {
+    return r < 0 ? r + tau : r > tau ? r - tau : r;
+  }
+
   function interactStart() {
     interacting = true;
   }
@@ -235,6 +241,7 @@ function create3d() {
   function interactMove(delta) {
     rotationY += delta.x * 0.01;
     rotationX += delta.y * 0.01;
+    rotationY = clampRotation(rotationY);
   }
 
   function interactStop() {
@@ -253,20 +260,23 @@ function create3d() {
 
     var quarter = rotationY //Math.round( (( Math.PI * 2 + rotationY + Math.PI / 2) % (Math.PI * 2)) );
 
-    debug.innerHTML = quarter;
 
     var qldSide = (quarter > Math.PI / 2 && quarter < Math.PI * 2 * 3 / 4);
 
-    if (qldSide) {
-      debug.style.background = "blue";
-    } else {
-      debug.style.background = "red";
-    }
+    // debug.innerHTML = quarter;
+    // if (qldSide) {
+    //   debug.style.background = "blue";
+    // } else {
+    //   debug.style.background = "red";
+    // }
 
     // cube.rotation.x += 0.1;
     group.rotation.x = rotationX;
     group.rotation.y = rotationY;
+
     groupAxisY.rotation.y = -group.rotation.y;
+
+    groupAxisX.position.z -= (groupAxisX.position.z - (qldSide ? -1 : 1) * 3) * 0.2;
 
     for (var i = 0, il = years.length / yearJump; i < il; i++) {
       if (ticksX[i]) ticksX[i].rotation.y = -rotationY;
