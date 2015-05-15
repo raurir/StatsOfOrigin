@@ -225,23 +225,51 @@ function create3d() {
 
   }
 
-  var rotation = 0;
+  var rotationY = 0, rotationX = 0;
+  var interacting = false;
 
-  function interact(delta) {
-    rotation = delta.x * 0.01;
+  function interactStart() {
+    interacting = true;
+  }
+
+  function interactMove(delta) {
+    rotationY += delta.x * 0.01;
+    rotationX += delta.y * 0.01;
+  }
+
+  function interactStop() {
+    interacting = false;
   }
 
   function render(time) {
 
-    if (uniforms.time) uniforms.time.value = time * 0.01;
+    if (interacting) {
+
+    } else {
+      rotationX -= (rotationX - 0) * 0.1;
+    }
+
+    uniforms.time.value = time * 0.01;
+
+    var quarter = rotationY //Math.round( (( Math.PI * 2 + rotationY + Math.PI / 2) % (Math.PI * 2)) );
+
+    debug.innerHTML = quarter;
+
+    var qldSide = (quarter > Math.PI / 2 && quarter < Math.PI * 2 * 3 / 4);
+
+    if (qldSide) {
+      debug.style.background = "blue";
+    } else {
+      debug.style.background = "red";
+    }
 
     // cube.rotation.x += 0.1;
-    // group.rotation.y += 0.01;
-    group.rotation.y = rotation;
+    group.rotation.x = rotationX;
+    group.rotation.y = rotationY;
     groupAxisY.rotation.y = -group.rotation.y;
 
     for (var i = 0, il = years.length / yearJump; i < il; i++) {
-      if (ticksX[i]) ticksX[i].rotation.y = -rotation;
+      if (ticksX[i]) ticksX[i].rotation.y = -rotationY;
     }
 
     renderer.render(scene, camera);
@@ -252,7 +280,9 @@ function create3d() {
 
 
   return {
-    interact: interact,
+    interactStart: interactStart,
+    interactStop: interactStop,
+    interactMove: interactMove,
     update: update
   }
 

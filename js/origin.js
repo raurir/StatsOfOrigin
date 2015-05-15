@@ -41,15 +41,18 @@ var margin = {top: 20, right: 30, bottom: 30, left: 60},
       // con.log("e.changedTouches", e)
       position = {x: e.clientX, y: e.clientY};
       start.x = position.x; start.y = position.y;
+      webgl.interactStart();
     }
     function onUp(e) {
       mouseDown = false;
+      webgl.interactStop();
     }
     function onMove(e) {
       if (e.changedTouches) e = e.changedTouches[0];
       // con.log("e.changedTouches", e)
       position = {x: e.clientX, y: e.clientY};
-      if (mouseDown) webgl.interact({x: position.x - start.x, y: position.y - start.y});
+      if (mouseDown) webgl.interactMove({x: position.x - start.x, y: position.y - start.y});
+      start.x = position.x; start.y = position.y;
     }
 
     addEventListener("mousedown", onDown);
