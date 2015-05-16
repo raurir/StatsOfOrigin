@@ -5,6 +5,11 @@ var margin = {top: 20, right: 30, bottom: 30, left: 60},
   width = 400 - margin.left - margin.right,
   height = 400 - margin.top - margin.bottom;
 
+var EVENT_STAT_SELECTED = "EVENT_STAT_SELECTED";
+var EVENT_INTERACT_START = "EVENT_INTERACT_START";
+var EVENT_INTERACT_STOP = "EVENT_INTERACT_STOP";
+var EVENT_INTERACT_MOVE = "EVENT_INTERACT_MOVE";
+
 (function() {
 
   var webgl, graph2;
@@ -16,93 +21,13 @@ var margin = {top: 20, right: 30, bottom: 30, left: 60},
     points_scored: [],
     tries_scored: [],
   }
-
-
-  var buttonNames = [
-    {
-      label: "Series",
-      title: "Total series won",
-      data: criteria.series_winner
-    },{
-      label: "Matches",
-      title: "Total matches won",
-      data: criteria.matches_won
-    },{
-      label: "Points",
-      title: "Total points scored",
-      data: criteria.points_scored
-    }
-  ];
-
-
-
-
-
-
-  function toggle(b) {
-    var data = b.data;
-    var nsw = data.map(function(d) { return d[0];})
-    var qld = data.map(function(d) { return d[1];})
-    var max = d3.max(data, function(d){ return Math.max(d[0], d[1]); })
-    svg.update(nsw, qld, max);
-    // setTimeout(function() {
-    webgl.update(nsw, qld, max);
-    // }, 500);
-    document.getElementById("stat").innerHTML = b.title;
+  var titles = {
+    series_winner: "Total series won",
+    matches_won: "Total matches won",
+    points_scored: "Total points scored"
+    // tries_scored: [],
   }
 
-
-  function initUI() {
-    con.log("initUI!")
-
-    var mouseDown = false;
-    var position = {x: 0, y: 0};
-    var start = {x: 0, y: 0}
-
-    function onDown(e) {
-      mouseDown = true;
-      if (e.changedTouches) e = e.changedTouches[0];
-      // con.log("e.changedTouches", e)
-      position = {x: e.clientX, y: e.clientY};
-      start.x = position.x; start.y = position.y;
-      webgl.interactStart();
-    }
-    function onUp(e) {
-      mouseDown = false;
-      webgl.interactStop();
-    }
-    function onMove(e) {
-      if (e.changedTouches) e = e.changedTouches[0];
-      // con.log("e.changedTouches", e)
-      position = {x: e.clientX, y: e.clientY};
-      if (mouseDown) webgl.interactMove({x: position.x - start.x, y: position.y - start.y});
-      start.x = position.x; start.y = position.y;
-    }
-
-    addEventListener("mousedown", onDown);
-    addEventListener("mouseup", onUp);
-    addEventListener("mousemove", onMove);
-    addEventListener("touchstart", onDown);
-    addEventListener("touchend", onUp);
-    addEventListener("touchmove", onMove);
-
-    var buttons = document.getElementById("buttons");
-
-    function createButton(b) {
-      var button = document.createElement("div");
-      button.innerHTML = b.label;
-      button.className = "button";
-      buttons.appendChild(button);
-      button.addEventListener("click", function() {
-        toggle(b);
-      })
-    }
-
-
-    for ( var b in buttonNames) {
-      createButton(buttonNames[b]);
-    }
-  }
 
 
   function parse() {
@@ -208,8 +133,33 @@ var margin = {top: 20, right: 30, bottom: 30, left: 60},
 
     webgl = create3d();
     svg = create2d();
-    initUI();
-    toggle(buttonNames[0]);
+    ui = initUI();
+
+    function showCriteria(id) {
+      var data = criteria[id];
+      var nsw = data.map(function(d) { return d[0];})
+      var qld = data.map(function(d) { return d[1];})
+      var max = d3.max(data, function(d){ return Math.max(d[0], d[1]); })
+      svg.update(nsw, qld, max);
+      webgl.update(nsw, qld, max);
+      dispatchEvent(new CustomEvent("fnarg", {detail: id}));
+      document.getElementById("stat").innerHTML = titles[id];
+    }
+
+    addEventListener(EVENT_STAT_SELECTED, function(e) {
+      showCriteria(e.detail);
+    })
+    addEventListener(EVENT_INTERACT_STOP, function(e) {
+      webgl.interactStop();
+    });
+    addEventListener(EVENT_INTERACT_START, function(e) {
+      webgl.interactStart();
+    });
+    addEventListener(EVENT_INTERACT_MOVE, function(e) {
+      webgl.interactMove(e.detail);
+    });
+
+    showCriteria("series_winner");
 
   }
 

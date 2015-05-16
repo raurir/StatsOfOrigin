@@ -39,42 +39,53 @@ function create3d() {
   camera.position.y = maxHeight / 2;
   camera.position.z = 100;
 
-  var uniforms = {};
-  uniforms = {
+  var uniformsNSW = {
     time: { type: "f", value: 1.0 },
-    resolution: { type: "v2", value: new THREE.Vector2() }
+    resolution: { type: "v2", value: new THREE.Vector2() },
+    red: { type: "f", value: 0.0 },
+    green: { type: "f", value: 0.0 },
+    blue: { type: "f", value: 1.0 },
+  };
+  var uniformsQLD = {
+    time: { type: "f", value: 1.0 },
+    resolution: { type: "v2", value: new THREE.Vector2() },
+    red: { type: "f", value: 1.0 },
+    green: { type: "f", value: 0.0 },
+    blue: { type: "f", value: 0.4 },
   };
 
   var materialNSW = new THREE.ShaderMaterial( {
-    uniforms: uniforms,
+    uniforms: uniformsNSW,
     vertexShader: document.getElementById( 'vertexShader' ).textContent,
-    fragmentShader: document.getElementById( 'fragment_shader_nsw' ).textContent
+    fragmentShader: document.getElementById( 'fragmentShader' ).textContent
   });
 
   var materialQLD = new THREE.ShaderMaterial( {
-    uniforms: uniforms,
+    uniforms: uniformsQLD,
     vertexShader: document.getElementById( 'vertexShader' ).textContent,
-    fragmentShader: document.getElementById( 'fragment_shader_qld' ).textContent
+    fragmentShader: document.getElementById( 'fragmentShader' ).textContent
   });
 
 
 
-  function generateTick(label, xd, yd, zd, x, y, z) {
+  function generateTick(label, major, xd, yd, zd, x, y, z) {
+
+    var colours = major ? [0xc0c0c0, 0x505050] : [0x808080, 0x505050];
 
     // make dash
     var dashGeometry = new THREE.BoxGeometry(xd, yd, zd);
     var dashMaterial = new THREE.MeshPhongMaterial({
-      ambient: 0xa0a0a0,
-      color: 0xa0a0a0,
-      specular: 0xa0a0a0,
+      ambient: colours[1],
+      color: colours[0],
+      specular: colours[0],
       shininess: 1,
       shading: THREE.SmoothShading
     } )
     var dash = new THREE.Mesh(dashGeometry, dashMaterial);
 
     var textMaterial = new THREE.MeshFaceMaterial([
-      new THREE.MeshPhongMaterial({color: 0xa0a0a0, shading: THREE.FlatShading}), // front
-      new THREE.MeshPhongMaterial({color: 0x505050, shading: THREE.SmoothShading}) // side
+      new THREE.MeshPhongMaterial({color: colours[0], shading: THREE.FlatShading}), // front
+      new THREE.MeshPhongMaterial({color: colours[1], shading: THREE.SmoothShading}) // side
     ] );
     var textGeometry = new THREE.TextGeometry(label, {
       size: 2,
@@ -101,12 +112,12 @@ function create3d() {
     return tick;
   }
 
-  function generateTickX(label) {
-    return generateTick(label, 0.3, 1, 0.3, -3, -3, 0);
+  function generateTickX(label, major) {
+    return generateTick(label, major, 0.3, 1, 0.3, -3, -3, 0);
   }
 
-  function generateTickY(label) {
-    return generateTick(label, 3, 0.3, 0.3, 2, -1, 0);
+  function generateTickY(label, major) {
+    return generateTick(label, major, 3, 0.3, 0.3, 2, -1, 0);
   }
 
   var gap = 2;
@@ -120,7 +131,7 @@ function create3d() {
         var goodTick, num, roundNumbers, tick, _j, _len;
         roundNumbers = [
           1, 2, 5, 
-          10, 20, 30, 40, 50, 75,
+          10, 20, 30, 40, 50, 60, 75, 80,
           100, 200, 300, 400, 500, 750, 800, 
           1000, 1250, 1500, 1750, 
           2000, 3000, 4000, 5000, 6000, 7500, 
@@ -223,46 +234,31 @@ function create3d() {
       groupAxisY.remove(groupAxisY.children[i]);
     }
 
-    /*
-    var ticksVertical = document.getElementsByClassName("y axis")[0].childNodes;
-    for (i = 0, il = ticksVertical.length; i < il; i++) {
-      var tick = ticksVertical[i];
-      if (tick.className.baseVal === "tick") { // filter out the other svg elements.
+    var maxY = fixMaxY(max, 5); // thanks Airtasker!
 
-        var transform = tick.getAttribute("transform");
-        var y = Number(transform.replace(/[^0-9,.]/g, "").split(",")[1]);
-        var text = tick.childNodes[1].innerHTML;
-
-        var tickMesh = generateTick(text);
-        groupAxisY.add(tickMesh);
-        tickMesh.position.y = (height - y) / height * maxHeight;
-
-      }
-    }
-    */
-
-    var maxY = fixMaxY(max, 5);
+    var tickMesh = generateTickY(max, true);
+    groupAxisY.add(tickMesh);
+    tickMesh.position.y = maxHeight;
 
     var ticksVertical = 6;
     for (i = 0, il = ticksVertical; i < il; i++) {
       var perc = i / (il - 1);
       var text = perc * maxY;
-      var tickMesh = generateTickY(text);
-      groupAxisY.add(tickMesh);
-      tickMesh.position.y = perc * maxHeight * maxY / max;
-
-      // var y = i / (il - 1);
-      // var text = y * max;
-      // var tickMesh = generateTickY(text);
-      // groupAxisY.add(tickMesh);
-      // tickMesh.position.y = y * maxHeight;
+      var y = perc * maxHeight * maxY / max;
+      if (Math.abs(y - maxHeight) > 4) { // don't draw tick near major tick
+        var tickMesh = generateTickY(text, false);
+        groupAxisY.add(tickMesh);
+        tickMesh.position.y = y;        
+      }
     }
+
+
 
     for (i = 0, il = years.length / yearJump; i < il; i++) {
       if (ticksX[i] == undefined) {
         var yearIndex = i * yearJump;
         var text = years[yearIndex].year;
-        var tickMesh = generateTickX(text);
+        var tickMesh = generateTickX(text, false);
         groupAxisX.add(tickMesh);
         tickMesh.position.x = (-years.length / 2 + yearIndex) * gap;
         ticksX[i] = tickMesh;
@@ -306,10 +302,10 @@ function create3d() {
       rotationX -= (rotationX - 0) * 0.1;
     }
 
-    uniforms.time.value = time * 0.01;
+    uniformsQLD.time.value = time * 0.0012;
+    uniformsNSW.time.value = time * 0.0011;
 
-    var quarter = rotationY //Math.round( (( Math.PI * 2 + rotationY + Math.PI / 2) % (Math.PI * 2)) );
-
+    var quarter = rotationY;// //Math.round( (( Math.PI * 2 + rotationY + Math.PI / 2) % (Math.PI * 2)) );
 
     var qldSide = (quarter > Math.PI / 2 && quarter < Math.PI * 2 * 3 / 4);
 
@@ -327,6 +323,7 @@ function create3d() {
     groupAxisY.rotation.y = -group.rotation.y;
 
     groupAxisX.position.z -= (groupAxisX.position.z - (qldSide ? -1 : 1) * 3) * 0.2;
+    groupAxisY.position.z = groupAxisX.position.z;
 
     for (var i = 0, il = years.length / yearJump; i < il; i++) {
       if (ticksX[i]) {

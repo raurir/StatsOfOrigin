@@ -27,7 +27,7 @@ h5 {
 }
 #buttons {
   position: absolute;
-  bottom: 0;
+  bottom: 20px;
   width: 100%;
 }
 svg {
@@ -62,15 +62,20 @@ svg {
   -moz-transition: all 0.2s ease-in-out;
   -o-transition: all 0.2s ease-in-out;
   transition: all 0.2s ease-in-out;
+  min-width: 100px;
   margin: 4px;
   padding: 4px;
-  -moz-box-shadow: 0 0 14px #00fa00;
-  -webkit-box-shadow: 0 0 14px #00fa00;
-  box-shadow: 0 0 14px #00fa00;
+  -moz-box-shadow: 0 0 8px rgba(255,255,255,0.5);
+  -webkit-box-shadow: 0 0 8px rgba(255,255,255,0.5);
+  box-shadow: 0 0 8px rgba(255,255,255,0.5);
 }
 .button:hover {
   border: 1px solid rgba(255,255,255,0.8);
   background: rgba(50,50,50,0.9);
+}
+.button.selected {
+  background: rgba(255,255,255,0.9);
+  color: #000;
 }
 circle {
   stroke: #000;

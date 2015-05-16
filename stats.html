@@ -4,10 +4,12 @@
     <link rel="stylesheet" type="text/css" href='css/origin.css'/>
     <link href='http://fonts.googleapis.com/css?family=Roboto:900,400' rel='stylesheet' type='text/css'>
 
+<!--
     <script src="lib/three.min.js"></script>
     <script src="lib/d3.min.js"></script>
     <script src="lib/helvetiker_regular.typeface.js"></script>
     <script src="lib/TweenMax.min.js"></script>
+-->
 
     <!--script src="data.js"></script>
     <script src="svg.js"></script>
@@ -15,12 +17,10 @@
     <script src="origin.js"></script-->
 
 
-<!--
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r71/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
     <script src="http://threejs.org/examples/fonts/helvetiker_regular.typeface.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenMax.min.js"></script>
--->
 
 
 
@@ -29,7 +29,7 @@
     <div id='container'>
       <section id='header'>
         <div id='debug'></div>
-        <h1>Stats</h1>
+        <h1>Origin Stats</h1>
         <h3>State of Origin Statistics</h3>
         <h4 id='stat'></h4>
       </section>
@@ -57,48 +57,31 @@
 
     </script>
 
-    <script id="fragment_shader_nsw" type="x-shader/x-fragment">
+    <script id="fragmentShader" type="x-shader/x-fragment">
 
       uniform float time;
-      uniform vec2 resolution;
+      uniform float red;
+      uniform float green;
+      uniform float blue;
+      uniform vec2 resolution; 
 
       varying vec2 vUv;
 
       void main( void ) {
 
-        vec2 position = -1.0 + 2.0 * vUv;
+        vec2 position = abs(-1.0 + 2.0 * vUv);
 
-        float perc = abs( (pow(position.y, 5.0) + pow(position.x, 5.0)) / 2.0);
+        float perc = abs(sin(time)) * 0.1 + 0.2 + 0.7 * abs( (pow(position.y, 5.0) + pow(position.x, 5.0)) / 2.0);
 
-        float red = 0.0;
-        float green = 0.0;
-        float blue = perc;
-        gl_FragColor = vec4( red, green, blue, 1.0 );
-
-      }
-
-    </script>
-    <script id="fragment_shader_qld" type="x-shader/x-fragment">
-
-      uniform float time;
-      uniform vec2 resolution;
-
-      varying vec2 vUv;
-
-      void main( void ) {
-
-        vec2 position = -1.0 + 2.0 * vUv;
-
-        float perc = abs( (pow(position.y, 5.0) + pow(position.x, 5.0)) / 2.0);
-
-        float red = perc;
-        float green = 0.0;
-        float blue = 0.4 * perc;
-        gl_FragColor = vec4( red, green, blue, 1.0 );
+        float r = red * perc;
+        float g = green * perc;
+        float b = blue * perc;
+        gl_FragColor = vec4( r, g, b, 1.0 );
 
       }
 
     </script>
+
 
     <script src="origin.min.js"></script>
 

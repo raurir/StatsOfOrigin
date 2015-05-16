@@ -8,7 +8,7 @@ makeShadow(shadow)
   -webkit-box-shadow shadow
   box-shadow shadow
 shadow()
-  makeShadow(0 0 14px rgba(0, 250, 0, 1))
+  makeShadow(0 0 8px rgba(255,255,255,0.5))
 
 shadowText()
   text-shadow 0px 0px 8px rgba(255,255,255,1)
@@ -37,14 +37,11 @@ h1,h2,h3,h4,h5
 #header
   position absolute
   width 100%
-  // background rgba(0,0,200,0.5)
   
 #buttons
   position absolute
-  bottom 0
+  bottom 20px
   width 100%
-  // background rgba(0,0,200,0.5)
-  
 
 svg
   // border 1px solid black
@@ -73,12 +70,16 @@ svg
   height 20px
   line-height 20px
   makeTransition(all 0.2s ease-in-out)
+  min-width 100px
   margin 4px
   padding 4px
   shadow()
   &:hover
     border 1px solid rgba(255,255,255,0.8)
     background rgba(50,50,50,0.9)
+  &.selected
+    background rgba(255,255,255,0.9)
+    color black
 
 circle
   &.NSW
