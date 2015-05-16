@@ -2,6 +2,11 @@ function create3d() {
 
   var tau = Math.PI * 2;
 
+  var gap = 2;
+  var ticksX = [];
+  var yearJump = 5;
+  var unis = [];
+
   var renderer, scene, camera, cubes = [[],[]];
 
   var sw = window.innerWidth - 50,
@@ -39,34 +44,6 @@ function create3d() {
   camera.position.y = maxHeight / 2;
   camera.position.z = 100;
 
-  var uniformsNSW = {
-    time: { type: "f", value: 1.0 },
-    resolution: { type: "v2", value: new THREE.Vector2() },
-    red: { type: "f", value: 0.0 },
-    green: { type: "f", value: 0.0 },
-    blue: { type: "f", value: 1.0 },
-  };
-  var uniformsQLD = {
-    time: { type: "f", value: 1.0 },
-    resolution: { type: "v2", value: new THREE.Vector2() },
-    red: { type: "f", value: 1.0 },
-    green: { type: "f", value: 0.0 },
-    blue: { type: "f", value: 0.4 },
-  };
-
-  var materialNSW = new THREE.ShaderMaterial( {
-    uniforms: uniformsNSW,
-    vertexShader: document.getElementById( 'vertexShader' ).textContent,
-    fragmentShader: document.getElementById( 'fragmentShader' ).textContent
-  });
-
-  var materialQLD = new THREE.ShaderMaterial( {
-    uniforms: uniformsQLD,
-    vertexShader: document.getElementById( 'vertexShader' ).textContent,
-    fragmentShader: document.getElementById( 'fragmentShader' ).textContent
-  });
-
-
 
   function generateTick(label, major, xd, yd, zd, x, y, z) {
 
@@ -90,7 +67,7 @@ function create3d() {
     var textGeometry = new THREE.TextGeometry(label, {
       size: 2,
       height: 1,
-      curveSegments: 1,
+      curveSegments: 4,
       font: 'helvetiker',
       // weight: weight,
       // style: style,
@@ -120,66 +97,47 @@ function create3d() {
     return generateTick(label, major, 3, 0.3, 0.3, 2, -1, 0);
   }
 
-  var gap = 2;
-  var ticksX = [];
-  var yearJump = 5;
-
-
-
-
-      fixMaxY = function(largest, ticks) {
-        var goodTick, num, roundNumbers, tick, _j, _len;
-        roundNumbers = [
-          1, 2, 5, 
-          10, 20, 30, 40, 50, 60, 75, 80,
-          100, 200, 300, 400, 500, 750, 800, 
-          1000, 1250, 1500, 1750, 
-          2000, 3000, 4000, 5000, 6000, 7500, 
-          1e4, 2e4, 5e4, 1e5, 2e5, 5e5];
-        tick = largest / ticks;
-        goodTick = null;
-        for (_j = 0, _len = roundNumbers.length; _j < _len; _j++) {
-          num = roundNumbers[_j];
-          if (tick < num) {
-            goodTick = num;
-          }
-          if (goodTick !== null) {
-            break;
-          }
-        }
-        return goodTick * ticks;
-      };
-      var rand = Math.random() * 1e4; var maxY = fixMaxY(rand, 5); con.log(rand,maxY);
-      var rand = Math.random() * 1e4; var maxY = fixMaxY(rand, 5); con.log(rand,maxY);
-      var rand = Math.random() * 1e4; var maxY = fixMaxY(rand, 5); con.log(rand,maxY);
-      var rand = Math.random() * 1e4; var maxY = fixMaxY(rand, 5); con.log(rand,maxY);
-
-
-
-
-
-
-
-
-
+   // thanks Airtasker! - wrote this function for airtasker payment history.
+  var fixMaxY = function(largest, ticks) {
+    var goodTick, num, roundNumbers, tick, _j, _len;
+    roundNumbers = [
+      1, 2, 5, 
+      10, 20, 30, 40, 50, 60, 75, 80,
+      100, 200, 300, 400, 500, 750, 800, 
+      1000, 1250, 1500, 1750, 
+      2000, 3000, 4000, 5000, 6000, 7500, 
+      1e4, 2e4, 5e4, 1e5, 2e5, 5e5];
+    tick = largest / ticks;
+    goodTick = null;
+    for (_j = 0, _len = roundNumbers.length; _j < _len; _j++) {
+      num = roundNumbers[_j];
+      if (tick < num) {
+        goodTick = num;
+      }
+      if (goodTick !== null) {
+        break;
+      }
+    }
+    return goodTick * ticks;
+  };
 
 
   function update(nsw, qld, max) {
 
+    unis = [];
+
     // TweenMax.to(groupAxisY, 0.5, {alpha: 0});
 
-    function renderYear(fragmentShader, teamIndex, height, yearIndex) {
+    function renderYear(teamIndex, height, yearIndex, red, green, blue) {
 
       var cube;
 
       var h = height / max * maxHeight;
       if (h == 0) h = 0.01;
 
-      // var x = (-years.length / 2 + yearIndex + (teamIndex ? 0.25 : 0)) * gap,
       var x = (-years.length / 2 + yearIndex) * gap,
         y = h / 2,
         z = (teamIndex ? 1 : -1) * 2;
-
 
       if (cubes[teamIndex][yearIndex]) { // already exists, let's re use it!
 
@@ -187,23 +145,27 @@ function create3d() {
 
       } else {
 
+        var uniforms = {
+          time: { type: "f", value: 1.0 },
+          index: { type: "f", value: i / il},
+          resolution: { type: "v2", value: new THREE.Vector2() },
+          red: { type: "f", value: red },
+          green: { type: "f", value: green},
+          blue: { type: "f", value: blue },
+        };
 
-
-
-        // con.log(document.getElementById( 'vertexShader' ).textContent);
-        // con.log(document.getElementById( 'fragment_shader2' ).textContent);
+        var material = new THREE.ShaderMaterial( {
+          uniforms: uniforms,
+          vertexShader: document.getElementById( 'vertexShader' ).textContent,
+          fragmentShader: document.getElementById( 'fragmentShader' ).textContent
+        });
 
         var geometry = new THREE.BoxGeometry(1,1,3);
-        // var material2 = new THREE.MeshPhongMaterial( {
-        //   ambient: 0x030303,
-        //   color: colour,
-        //   specular: 0x404040,
-        //   shininess: 3,
-        //   shading: THREE.SmoothShading
-        // } )
-        cube = new THREE.Mesh(geometry, fragmentShader);
+        cube = new THREE.Mesh(geometry, material);
         cubes[teamIndex][yearIndex] = cube;
         group.add(cube);
+
+        
 
       }
 
@@ -218,23 +180,24 @@ function create3d() {
       TweenMax.to(cube.scale, 1.5, {y: h, ease: ease, delay: delay});
       TweenMax.to(cube.position, 1.5, {x: x, y: y, z: z, ease: ease, delay: delay});
 
+      unis.push(uniforms);
     }
 
-
+    
 
     for (var i = 0, il = nsw.length; i < il; i++) {
-      renderYear(materialNSW, 0, nsw[i], i);
+      renderYear(0, nsw[i], i, 0.3, 0.3, 1);
     }
 
     for (i = 0, il = qld.length; i < il; i++) {
-      renderYear(materialQLD, 1, qld[i], i);
+      renderYear(1, qld[i], i, 1, 0, 0.4);
     }
 
     for (var i = groupAxisY.children.length - 1; i > -1; i--) {
       groupAxisY.remove(groupAxisY.children[i]);
     }
 
-    var maxY = fixMaxY(max, 5); // thanks Airtasker!
+    var maxY = fixMaxY(max, 5);
 
     var tickMesh = generateTickY(max, true);
     groupAxisY.add(tickMesh);
@@ -251,8 +214,6 @@ function create3d() {
         tickMesh.position.y = y;        
       }
     }
-
-
 
     for (i = 0, il = years.length / yearJump; i < il; i++) {
       if (ticksX[i] == undefined) {
@@ -302,8 +263,9 @@ function create3d() {
       rotationX -= (rotationX - 0) * 0.1;
     }
 
-    uniformsQLD.time.value = time * 0.0012;
-    uniformsNSW.time.value = time * 0.0011;
+    for (var i = 0, il = unis.length; i < il; i++) {
+      unis[i].time.value = time * 0.0012;
+    }
 
     var quarter = rotationY;// //Math.round( (( Math.PI * 2 + rotationY + Math.PI / 2) % (Math.PI * 2)) );
 
