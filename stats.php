@@ -3,7 +3,10 @@
     <title>State of Origin Statistics</title>
     <link rel="stylesheet" type="text/css" href='css/origin.css'/>
     <link href='http://fonts.googleapis.com/css?family=Roboto:900,400' rel='stylesheet' type='text/css'>
-
+<?
+$host = $_SERVER['HTTP_HOST'];
+$local = (preg_match("/local/", $host)); # include dev or production files
+if ($local) { ?>
     <script src="lib/three.min.js"></script>
     <script src="lib/d3.min.js"></script>
     <script src="lib/helvetiker_regular.typeface.js"></script>
@@ -12,14 +15,12 @@
     <script src="js/ui.js"></script>
     <script src="js/svg.js"></script>
     <script src="js/webgl.js"></script>
-
-<!--
+<? } else { ?>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r71/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
     <script src="http://threejs.org/examples/fonts/helvetiker_regular.typeface.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenMax.min.js"></script>
--->
-
+<? } ?>
   </head>
   <body>
     <div id='container'>
@@ -92,9 +93,11 @@
       ga('send', 'pageview');
 
     </script>
-
-    <!--script src="origin.min.js"></script-->
+<?
+if ($local) { ?>
     <script src="js/origin.js"></script>
-
+<? } else { ?>
+    <script src="origin.min.js"></script>
+<? } ?>
   </body>
 </html>

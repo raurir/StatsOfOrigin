@@ -153,7 +153,9 @@ function create3d() {
           green: { type: "f", value: green},
           blue: { type: "f", value: blue },
         };
-
+        
+        unis.push(uniforms);
+        
         var material = new THREE.ShaderMaterial( {
           uniforms: uniforms,
           vertexShader: document.getElementById( 'vertexShader' ).textContent,
@@ -164,8 +166,6 @@ function create3d() {
         cube = new THREE.Mesh(geometry, material);
         cubes[teamIndex][yearIndex] = cube;
         group.add(cube);
-
-        
 
       }
 
@@ -180,7 +180,6 @@ function create3d() {
       TweenMax.to(cube.scale, 1.5, {y: h, ease: ease, delay: delay});
       TweenMax.to(cube.position, 1.5, {x: x, y: y, z: z, ease: ease, delay: delay});
 
-      unis.push(uniforms);
     }
 
     
