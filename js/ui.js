@@ -17,7 +17,7 @@ function initUI() {
   ];
 
   var selectedButton = null;
-  addEventListener(EVENT_SHOW_CRITERIA, function(e) {
+  addEventListener(EVENT_SHOW, function(e) {
     var b = e.detail;
     if (selectedButton === b) return;
     selectedButton = b;

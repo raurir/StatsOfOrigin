@@ -7,7 +7,7 @@ var margin = {top: 20, right: 30, bottom: 30, left: 60},
 
 var EVENT_COUNTDOWN_SELECTED = "EVENT_COUNTDOWN_SELECTED";
 var EVENT_STAT_SELECTED = "EVENT_STAT_SELECTED";
-var EVENT_SHOW_CRITERIA = "EVENT_SHOW_CRITERIA";
+var EVENT_SHOW = "EVENT_SHOW";
 var EVENT_INTERACT_START = "EVENT_INTERACT_START";
 var EVENT_INTERACT_STOP = "EVENT_INTERACT_STOP";
 var EVENT_INTERACT_MOVE = "EVENT_INTERACT_MOVE";
@@ -137,6 +137,11 @@ var EVENT_INTERACT_MOVE = "EVENT_INTERACT_MOVE";
     svg = create2d();
     ui = initUI();
 
+    function showCountdown() {
+      dispatchEvent(new CustomEvent(EVENT_SHOW, {detail: "countdown"}));
+      webgl.showCount(true);
+    }
+
     function showCriteria(id) {
       var data = criteria[id];
       var nsw = data.map(function(d) { return d[0];})
@@ -144,16 +149,22 @@ var EVENT_INTERACT_MOVE = "EVENT_INTERACT_MOVE";
       var max = d3.max(data, function(d){ return Math.max(d[0], d[1]); })
       svg.update(nsw, qld, max);
       webgl.update(nsw, qld, max);
-      dispatchEvent(new CustomEvent(EVENT_SHOW_CRITERIA, {detail: id}));
+
+      webgl.showCount(false);
 
       var finalStat = data[data.length - 1];
       var title = [titles[id], "-", "NSW:", finalStat[0], "QLD:", finalStat[1]].join(" ");
       document.getElementById("stat").innerHTML = title;
+
+      dispatchEvent(new CustomEvent(EVENT_SHOW, {detail: id}));
     }
 
     addEventListener(EVENT_STAT_SELECTED, function(e) {
       showCriteria(e.detail);
-    })
+    });    
+    addEventListener(EVENT_COUNTDOWN_SELECTED, function(e) {
+      showCountdown();
+    });
     addEventListener(EVENT_INTERACT_STOP, function(e) {
       webgl.interactStop();
     });

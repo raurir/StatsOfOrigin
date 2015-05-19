@@ -245,10 +245,10 @@ function create3d() {
 
   function interactStart() {
     interacting = true;
-    showAxis(false);
   }
 
   function interactMove(delta) {
+    if (mode === "count") return;
     rotationY += delta.x * 0.01;
     rotationX += delta.y * 0.01;
     rotationY = clampRotation(rotationY);
@@ -256,15 +256,25 @@ function create3d() {
 
   function interactStop() {
     interacting = false;
-    showAxis(true);
   }
 
-  function showAxis(showOrHide) {
-    var doShow = function ( object ) {
+  function doShow(group, showOrHide) {
+    group.traverse(function(object) {
       object.visible = showOrHide;
-    };
-    groupAxisX.traverse(doShow);
-    groupAxisY.traverse(doShow);
+    });
+  };
+
+  function showAxis(showOrHide) {
+    doShow(groupAxisX, showOrHide);
+    doShow(groupAxisY, showOrHide);
+  }
+
+  var mode = "notb";
+  function showCount(showOrHide) {
+    mode = showOrHide ? "count" : "notb";
+    showAxis(!showOrHide);
+    // showAxis(showOrHide);
+    doShow(countdown.group, showOrHide);
   }
 
 
@@ -319,7 +329,8 @@ function create3d() {
     interactStart: interactStart,
     interactStop: interactStop,
     interactMove: interactMove,
-    update: update
+    update: update,
+    showCount: showCount
   }
 
 }
