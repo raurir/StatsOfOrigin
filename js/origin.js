@@ -5,7 +5,9 @@ var margin = {top: 20, right: 30, bottom: 30, left: 60},
   width = 400 - margin.left - margin.right,
   height = 400 - margin.top - margin.bottom;
 
+var EVENT_COUNTDOWN_SELECTED = "EVENT_COUNTDOWN_SELECTED";
 var EVENT_STAT_SELECTED = "EVENT_STAT_SELECTED";
+var EVENT_SHOW_CRITERIA = "EVENT_SHOW_CRITERIA";
 var EVENT_INTERACT_START = "EVENT_INTERACT_START";
 var EVENT_INTERACT_STOP = "EVENT_INTERACT_STOP";
 var EVENT_INTERACT_MOVE = "EVENT_INTERACT_MOVE";
@@ -142,8 +144,11 @@ var EVENT_INTERACT_MOVE = "EVENT_INTERACT_MOVE";
       var max = d3.max(data, function(d){ return Math.max(d[0], d[1]); })
       svg.update(nsw, qld, max);
       webgl.update(nsw, qld, max);
-      dispatchEvent(new CustomEvent("fnarg", {detail: id}));
-      document.getElementById("stat").innerHTML = titles[id];
+      dispatchEvent(new CustomEvent(EVENT_SHOW_CRITERIA, {detail: id}));
+
+      var finalStat = data[data.length - 1];
+      var title = [titles[id], "-", "NSW:", finalStat[0], "QLD:", finalStat[1]].join(" ");
+      document.getElementById("stat").innerHTML = title;
     }
 
     addEventListener(EVENT_STAT_SELECTED, function(e) {

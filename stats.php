@@ -14,6 +14,7 @@ if ($local) { ?>
     <script src="js/data.js"></script>
     <script src="js/ui.js"></script>
     <script src="js/svg.js"></script>
+    <script src="js/countdown.js"></script>
     <script src="js/webgl.js"></script>
 <? } else { ?>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r71/three.min.js"></script>
@@ -26,13 +27,14 @@ if ($local) { ?>
     <div id='container'>
       <section id='header'>
         <div id='debug'></div>
-        <h1>Origin Stats</h1>
-        <h3>State of Origin Statistics</h3>
+        <h1>OriginStats - State of Origin Statistics 1982 - 2015</h1>
         <h4 id='stat'></h4>
       </section>
       <div id='webglcontainer'></div>
       <svg id="svgcontainer"></svg>
-      <div id="buttons"></buttons>
+      <div id="buttons">
+        <h4>Drag the graph to explore or Select an option below</h4>
+      </div>
     </div>
 
     <script type="text/javascript">
@@ -81,8 +83,11 @@ if ($local) { ?>
 
     </script>
 
-
-
+<?
+if ($local) { ?>
+    <script src="js/origin.js"></script>
+<? } else { ?>
+    <script src="origin.min.js"></script>
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -93,11 +98,6 @@ if ($local) { ?>
       ga('send', 'pageview');
 
     </script>
-<?
-if ($local) { ?>
-    <script src="js/origin.js"></script>
-<? } else { ?>
-    <script src="origin.min.js"></script>
 <? } ?>
   </body>
 </html>

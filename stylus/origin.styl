@@ -1,3 +1,5 @@
+colourGlow = rgba(102,43,222,1)
+
 makeTransition(transition)
   -webkit-transition transition
   -moz-transition transition
@@ -8,10 +10,10 @@ makeShadow(shadow)
   -webkit-box-shadow shadow
   box-shadow shadow
 shadow()
-  makeShadow(0 0 8px rgba(255,255,255,0.5))
+  makeShadow(0 0 8px colourGlow)
 
 shadowText()
-  text-shadow 0px 0px 8px rgba(255,255,255,1)
+  text-shadow 0px 0px 8px colourGlow
 
 
 body
@@ -37,7 +39,7 @@ h1,h2,h3,h4,h5
 #header
   position absolute
   width 100%
-  
+
 #buttons
   position absolute
   bottom 20px
@@ -63,7 +65,7 @@ svg
 
 .button
   background rgba(50,50,50,0.5)
-  border 1px solid rgba(255,255,255,0.2)
+  border 1px solid colourGlow
   border-radius 5px
   cursor pointer
   display inline-block
@@ -80,6 +82,7 @@ svg
   &.selected
     background rgba(255,255,255,0.9)
     color black
+    border 1px solid white
 
 circle
   &.NSW

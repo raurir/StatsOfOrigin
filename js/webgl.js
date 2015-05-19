@@ -44,6 +44,9 @@ function create3d() {
   camera.position.y = maxHeight / 2;
   camera.position.z = 100;
 
+  var countdown = initCountdown();
+  scene.add(countdown.group);
+  countdown.group.position.z = 10;
 
   function generateTick(label, major, xd, yd, zd, x, y, z) {
 
@@ -101,11 +104,11 @@ function create3d() {
   var fixMaxY = function(largest, ticks) {
     var goodTick, num, roundNumbers, tick, _j, _len;
     roundNumbers = [
-      1, 2, 5, 
+      1, 2, 5,
       10, 20, 30, 40, 50, 60, 75, 80,
-      100, 200, 300, 400, 500, 750, 800, 
-      1000, 1250, 1500, 1750, 
-      2000, 3000, 4000, 5000, 6000, 7500, 
+      100, 200, 300, 400, 500, 750, 800,
+      1000, 1250, 1500, 1750,
+      2000, 3000, 4000, 5000, 6000, 7500,
       1e4, 2e4, 5e4, 1e5, 2e5, 5e5];
     tick = largest / ticks;
     goodTick = null;
@@ -153,9 +156,9 @@ function create3d() {
           green: { type: "f", value: green},
           blue: { type: "f", value: blue },
         };
-        
+
         unis.push(uniforms);
-        
+
         var material = new THREE.ShaderMaterial( {
           uniforms: uniforms,
           vertexShader: document.getElementById( 'vertexShader' ).textContent,
@@ -182,10 +185,10 @@ function create3d() {
 
     }
 
-    
+
 
     for (var i = 0, il = nsw.length; i < il; i++) {
-      renderYear(0, nsw[i], i, 0.3, 0.3, 1);
+      renderYear(0, nsw[i], i, 0.0, 0.6, 1);
     }
 
     for (i = 0, il = qld.length; i < il; i++) {
@@ -210,7 +213,7 @@ function create3d() {
       if (Math.abs(y - maxHeight) > 4) { // don't draw tick near major tick
         var tickMesh = generateTickY(text, false);
         groupAxisY.add(tickMesh);
-        tickMesh.position.y = y;        
+        tickMesh.position.y = y;
       }
     }
 
@@ -242,6 +245,7 @@ function create3d() {
 
   function interactStart() {
     interacting = true;
+    showAxis(false);
   }
 
   function interactMove(delta) {
@@ -252,9 +256,21 @@ function create3d() {
 
   function interactStop() {
     interacting = false;
+    showAxis(true);
   }
 
+  function showAxis(showOrHide) {
+    var doShow = function ( object ) {
+      object.visible = showOrHide;
+    };
+    groupAxisX.traverse(doShow);
+    groupAxisY.traverse(doShow);
+  }
+
+
   function render(time) {
+
+    countdown.update(time);
 
     if (interacting) {
 
@@ -288,7 +304,7 @@ function create3d() {
 
     for (var i = 0, il = years.length / yearJump; i < il; i++) {
       if (ticksX[i]) {
-        ticksX[i].rotation.x = -rotationX;
+        // ticksX[i].rotation.x = -rotationX;
         ticksX[i].rotation.y = -rotationY;
       }
     }
@@ -298,7 +314,6 @@ function create3d() {
   };
 
   render(0);
-
 
   return {
     interactStart: interactStart,

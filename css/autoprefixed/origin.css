@@ -10,7 +10,7 @@ h2,
 h3,
 h4,
 h5 {
-  text-shadow: 0px 0px 8px #fff;
+  text-shadow: 0px 0px 8px #662bde;
 }
 #container-countdown {
   width: 800px;
@@ -52,7 +52,7 @@ svg {
 }
 .button {
   background: rgba(50,50,50,0.5);
-  border: 1px solid rgba(255,255,255,0.2);
+  border: 1px solid #662bde;
   border-radius: 5px;
   cursor: pointer;
   display: inline-block;
@@ -63,7 +63,7 @@ svg {
   min-width: 100px;
   margin: 4px;
   padding: 4px;
-  box-shadow: 0 0 8px rgba(255,255,255,0.5);
+  box-shadow: 0 0 8px #662bde;
 }
 .button:hover {
   border: 1px solid rgba(255,255,255,0.8);
@@ -72,6 +72,7 @@ svg {
 .button.selected {
   background: rgba(255,255,255,0.9);
   color: #000;
+  border: 1px solid #fff;
 }
 circle {
   stroke: #000;

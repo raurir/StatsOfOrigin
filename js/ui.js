@@ -1,8 +1,4 @@
-
 function initUI() {
-  con.log("initUI!")
-
-
 
   var buttonNames = [
     {
@@ -14,11 +10,14 @@ function initUI() {
     },{
       id: "points_scored",
       label: "Points",
+    },{
+      id: "countdown",
+      label: "Countdown",
     }
   ];
 
   var selectedButton = null;
-  addEventListener("fnarg", function(e) {
+  addEventListener(EVENT_SHOW_CRITERIA, function(e) {
     var b = e.detail;
     if (selectedButton === b) return;
     selectedButton = b;
@@ -71,7 +70,11 @@ function initUI() {
     button.className = "button";
     buttons.appendChild(button);
     button.addEventListener("click", function() {
-      dispatchEvent(new CustomEvent(EVENT_STAT_SELECTED, {detail:b.id}));
+      if (b.id === "countdown") {
+        dispatchEvent(new CustomEvent(EVENT_COUNTDOWN_SELECTED));
+      } else {
+        dispatchEvent(new CustomEvent(EVENT_STAT_SELECTED, {detail:b.id}));
+      }
     })
   }
   for (var b in buttonNames) {
