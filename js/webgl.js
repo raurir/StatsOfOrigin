@@ -31,13 +31,11 @@ function create3d() {
   var groupAxisX = new THREE.Object3D();
   group.add(groupAxisX);
 
-  var light = new THREE.AmbientLight( 0x404040 ); // soft white light
+  var light = new THREE.AmbientLight(0x404040);
   scene.add( light );
 
-  var pointLight =  new THREE.PointLight(0xFFFFFF);
-  pointLight.position.x = 10;
+  var pointLight =  new THREE.PointLight(0xffffff);//0x662BDE);
   pointLight.position.y = 50;
-  pointLight.position.z = 130;
   scene.add(pointLight);
 
   var maxHeight = 40;
@@ -46,6 +44,7 @@ function create3d() {
 
   var countdown = initCountdown();
   scene.add(countdown.group);
+  countdown.group.position.y = camera.position.y;
   countdown.group.position.z = 10;
 
   function generateTick(label, major, xd, yd, zd, x, y, z) {
@@ -258,15 +257,15 @@ function create3d() {
     interacting = false;
   }
 
-  function doShow(group, showOrHide) {
+  function showGroup(group, showOrHide) {
     group.traverse(function(object) {
       object.visible = showOrHide;
     });
   };
 
   function showAxis(showOrHide) {
-    doShow(groupAxisX, showOrHide);
-    doShow(groupAxisY, showOrHide);
+    showGroup(groupAxisX, showOrHide);
+    showGroup(groupAxisY, showOrHide);
   }
 
   var mode = "notb";
@@ -274,11 +273,17 @@ function create3d() {
     mode = showOrHide ? "count" : "notb";
     showAxis(!showOrHide);
     // showAxis(showOrHide);
-    doShow(countdown.group, showOrHide);
+    if (showOrHide) rotationY = 0;
+    showGroup(countdown.group, showOrHide);
   }
 
 
   function render(time) {
+
+    var t = time * 0.001;
+    pointLight.position.x = Math.sin(t) * 45;
+    pointLight.position.z = Math.cos(t) * 45;
+
 
     countdown.update(time);
 

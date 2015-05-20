@@ -3,7 +3,7 @@
     <title>State of Origin Statistics</title>
     <link rel="stylesheet" type="text/css" href='css/origin.css'/>
     <link href='http://fonts.googleapis.com/css?family=Roboto:900,400' rel='stylesheet' type='text/css'>
-<?
+<?PHP
 $host = $_SERVER['HTTP_HOST'];
 $local = (preg_match("/local/", $host)); # include dev or production files
 if ($local) { ?>
@@ -12,16 +12,25 @@ if ($local) { ?>
     <script src="lib/helvetiker_regular.typeface.js"></script>
     <script src="lib/TweenMax.min.js"></script>
     <script src="js/data.js"></script>
+    <script src="js/parser.js"></script>
     <script src="js/ui.js"></script>
     <script src="js/svg.js"></script>
     <script src="js/countdown.js"></script>
     <script src="js/webgl.js"></script>
-<? } else { ?>
+<?PHP } else { ?>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r71/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
     <script src="http://threejs.org/examples/fonts/helvetiker_regular.typeface.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenMax.min.js"></script>
-<? } ?>
+<?PHP } ?>
+
+<!--
+Made by Rauri Rochford
+Unbiased Queenslander
+Contact: twitter.com/raurir
+Open source at: https://github.com/raurir/originstats
+-->
+
   </head>
   <body>
     <div id='container'>
@@ -33,7 +42,7 @@ if ($local) { ?>
       <div id='webglcontainer'></div>
       <svg id="svgcontainer"></svg>
       <div id="buttons">
-        <h4>Drag the graph to explore or Select an option below</h4>
+        <h4 id='buttons-help'>Drag the graph to explore or Select an option below</h4>
       </div>
     </div>
 
@@ -83,10 +92,9 @@ if ($local) { ?>
 
     </script>
 
-<?
-if ($local) { ?>
+<?PHP if ($local) { ?>
     <script src="js/origin.js"></script>
-<? } else { ?>
+<?PHP } else { ?>
     <script src="origin.min.js"></script>
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -98,6 +106,6 @@ if ($local) { ?>
       ga('send', 'pageview');
 
     </script>
-<? } ?>
+<?PHP } ?>
   </body>
 </html>

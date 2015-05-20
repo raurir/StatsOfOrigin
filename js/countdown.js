@@ -1,5 +1,13 @@
 function initCountdown() {
 
+  /*
+
+  Origin Game One: NSW vs Queensland – Wednesday, 27 May 2015, 8.00pm AEST – ANZ Stadium, Sydney
+  Origin Game Two: NSW vs Queensland – Wednesday, 17 June 2015, 8.00pm AEST – Melbourne Cricket Ground
+  Origin Game Three: Queensland vs NSW – Wednesday 8 July 2015, 8.00pm AEST – Suncorp Stadium, Brisbane
+
+  */
+
   var end = new Date(2015, 04, 27, 20, 0 );
 
   var _second = 1000;
@@ -9,7 +17,7 @@ function initCountdown() {
 
   var lastSecond = null, lastArray = [];
 
-  var offScreenTop = 50
+  var offScreenY = 40
 
   function getSymbol(symbol) {
     // for (var i = 0, il = meshes[symbol].length; i < il;i++) {
@@ -62,7 +70,7 @@ function initCountdown() {
 
       function remove(symbol) {
         // con.log("remove", symbol, new Date().getTime());
-        TweenMax.to(symbol.mesh.position, 0.3, {y: -20, delay: 0.1, ease: Quad.easeIn, onComplete: function() {
+        TweenMax.to(symbol.mesh.position, 0.3, {y: -offScreenY, delay: 0.1, ease: Quad.easeIn, onComplete: function() {
           // con.log("this", mesh);
           symbol.used = false;
         }});
@@ -71,7 +79,7 @@ function initCountdown() {
       function drop(symbol, x) {
         // con.log("drop", symbol, new Date().getTime());
         var mesh = symbol.mesh;
-        TweenMax.fromTo(mesh.position, 0.3, {x: x, y: offScreenTop}, {y: 0, ease: Bounce.easeOut })
+        TweenMax.fromTo(mesh.position, 0.3, {x: x, y: offScreenY}, {y: 0, ease: Bounce.easeOut })
       }
 
       var xp = -9;
@@ -141,13 +149,13 @@ function initCountdown() {
 
   function generateCharacter(glyph) {
     var material = new THREE.MeshFaceMaterial([
-      new THREE.MeshPhongMaterial({color: 0xd0d0d0, shading: THREE.FlatShading}), // front
-      new THREE.MeshPhongMaterial({color: 0x505050, shading: THREE.SmoothShading}) // side
+      new THREE.MeshPhongMaterial({color: 0xffffff, shading: THREE.FlatShading}), // front
+      new THREE.MeshPhongMaterial({color: 0x505050, shading: THREE.MeshLambertMaterial}) // side
     ] );
     if (glyph === 10) glyph = ":";
     var geometry = new THREE.TextGeometry(glyph, {
       size: 3,
-      height: 2,
+      height: 4,
       curveSegments: 3,
       font: 'helvetiker',
       // weight: "bold",
@@ -193,7 +201,7 @@ function initCountdown() {
         mesh: mesh,
         used: false
       };
-      mesh.position.set(0, offScreenTop, 0);
+      mesh.position.set(0, offScreenY, 0);
       group.add(mesh);
     }
 

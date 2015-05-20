@@ -1,9 +1,7 @@
 var con = console;
 var NSW = "NSW", QLD = "QLD";
 var data;
-var margin = {top: 20, right: 30, bottom: 30, left: 60},
-  width = 400 - margin.left - margin.right,
-  height = 400 - margin.top - margin.bottom;
+
 
 var EVENT_COUNTDOWN_SELECTED = "EVENT_COUNTDOWN_SELECTED";
 var EVENT_STAT_SELECTED = "EVENT_STAT_SELECTED";
@@ -17,12 +15,7 @@ var EVENT_INTERACT_MOVE = "EVENT_INTERACT_MOVE";
   var webgl, graph2;
 
   // rename criteria to whatever it actually is.
-  var criteria = {
-    series_winner: [],
-    matches_won: [],
-    points_scored: [],
-    tries_scored: [],
-  }
+  var criteria = parse();
   var titles = {
     series_winner: "Total series won",
     matches_won: "Total matches won",
@@ -30,103 +23,7 @@ var EVENT_INTERACT_MOVE = "EVENT_INTERACT_MOVE";
     // tries_scored: [],
   }
 
-
-
-  function parse() {
-
-    var incremental_matches = {
-      NSW:0,
-      QLD:0
-    }
-    var incremental_series = {
-      NSW:0,
-      QLD:0
-    }
-    var incremental_points = {
-      NSW:0,
-      QLD:0
-    }
-
-    for (var yearIndex = 0; yearIndex < years.length; yearIndex++) {
-
-      // start series
-
-      years[yearIndex].winner = years[yearIndex].NSW > years[yearIndex].QLD ? NSW : QLD;
-
-      incremental_series.NSW += years[yearIndex].winner == NSW ? 1 : 0;
-      incremental_series.QLD += years[yearIndex].winner == QLD ? 1 : 0;
-
-      // years[yearIndex].incremental_series = {
-      //   NSW: incremental_series.NSW,
-      //   QLD: incremental_series.QLD
-      // }
-
-      criteria.series_winner.push([incremental_series.NSW, incremental_series.QLD]);
-
-
-
-
-      // start matches
-
-      incremental_matches.NSW += years[yearIndex].NSW;
-      incremental_matches.QLD += years[yearIndex].QLD;
-
-      // years[yearIndex].incremental_matches = {
-      //   NSW: incremental_matches.NSW,
-      //   QLD: incremental_matches.QLD
-      // }
-
-      criteria.matches_won.push([incremental_matches.NSW, incremental_matches.QLD]);
-
-
-      // start match stats
-      for (var matchIndex = 0, matches = years[yearIndex].matches.length; matchIndex < matches; matchIndex++) {
-
-        var match = years[yearIndex].matches[matchIndex];
-
-        var nswPoints = (match.winner.team == NSW) ? match.winner.score : match.loser.score;
-        var qldPoints = (match.winner.team == QLD) ? match.winner.score : match.loser.score;
-
-        incremental_points.NSW += nswPoints;
-        incremental_points.QLD += qldPoints;
-
-        /*
-        var details = match.details;
-        details = details.split("\n");
-
-        // con.log(match)
-
-        function extr(i) {
-          var r =  details[i];
-          // r = r.replace(/Queensland/g, "").replace(/New South Wales/g, "")
-          r = r.split("(")
-          return r[1];
-        }
-
-        if (match.winner.team == NSW) {
-          // details
-
-          var nsw = extr(0);
-
-
-          con.log(yearIndex, matchIndex, nsw)
-        }
-        */
-
-        // con.log(yearIndex, matchIndex, details)
-
-      }
-
-      // years[yearIndex].incremental_points = {
-      //   NSW: incremental_points.NSW,
-      //   QLD: incremental_points.QLD
-      // }
-
-      criteria.points_scored.push([incremental_points.NSW, incremental_points.QLD]);
-
-      // criteria.tries_scored.push([incremental_matches.NSW, incremental_matches.QLD]);
-
-    }
+  function initOrigin() {
 
     // con.log(years);
 
@@ -138,8 +35,10 @@ var EVENT_INTERACT_MOVE = "EVENT_INTERACT_MOVE";
     ui = initUI();
 
     function showCountdown() {
-      dispatchEvent(new CustomEvent(EVENT_SHOW, {detail: "countdown"}));
       webgl.showCount(true);
+      document.getElementById("buttons-help").innerHTML = "Select an option below to see historical results";
+      document.getElementById("stat").innerHTML = "Countdown to next match";
+      dispatchEvent(new CustomEvent(EVENT_SHOW, {detail: "countdown"}));
     }
 
     function showCriteria(id) {
@@ -152,6 +51,8 @@ var EVENT_INTERACT_MOVE = "EVENT_INTERACT_MOVE";
 
       webgl.showCount(false);
 
+      document.getElementById("buttons-help").innerHTML = "Drag the graph to explore or Select an option below";
+
       var finalStat = data[data.length - 1];
       var title = [titles[id], "-", "NSW:", finalStat[0], "QLD:", finalStat[1]].join(" ");
       document.getElementById("stat").innerHTML = title;
@@ -161,7 +62,7 @@ var EVENT_INTERACT_MOVE = "EVENT_INTERACT_MOVE";
 
     addEventListener(EVENT_STAT_SELECTED, function(e) {
       showCriteria(e.detail);
-    });    
+    });
     addEventListener(EVENT_COUNTDOWN_SELECTED, function(e) {
       showCountdown();
     });
@@ -175,10 +76,12 @@ var EVENT_INTERACT_MOVE = "EVENT_INTERACT_MOVE";
       webgl.interactMove(e.detail);
     });
 
-    showCriteria("series_winner");
+    webgl.update(zero, zero, 0);
+
+    showCountdown();
 
   }
 
-  parse();
+  initOrigin();
 
 })();

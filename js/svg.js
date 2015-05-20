@@ -1,5 +1,9 @@
 function create2d() {
 
+  var margin = {top: 20, right: 30, bottom: 30, left: 60},
+    width = 400 - margin.left - margin.right,
+    height = 400 - margin.top - margin.bottom;
+
   var chart = d3.select("#svgcontainer")
   .attr("width", width + margin.left + margin.right)
   .attr("height", height + margin.top + margin.bottom)

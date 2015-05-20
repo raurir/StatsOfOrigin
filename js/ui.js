@@ -2,6 +2,9 @@ function initUI() {
 
   var buttonNames = [
     {
+      id: "countdown",
+      label: "Countdown",
+    },{
       id: "series_winner",
       label: "Series",
     },{
@@ -10,10 +13,7 @@ function initUI() {
     },{
       id: "points_scored",
       label: "Points",
-    },{
-      id: "countdown",
-      label: "Countdown",
-    }
+    },
   ];
 
   var selectedButton = null;
