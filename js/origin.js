@@ -26,8 +26,12 @@ var data;
   var webgl = create3d();
   var svg = create2d();
   var ui = initUI();
-
+  var clicks = 0;
+  function clicked() {
+    if (clicks++ > 2) document.getElementById("buttons-help").style.display = "none";
+  }
   function showCountdown() {
+    clicked();
     webgl.showCountdown(true);
     document.getElementById("buttons-help").innerHTML = "Select an option below to see historical results";
     document.getElementById("stat").innerHTML = "Countdown to next match";
@@ -35,6 +39,7 @@ var data;
   }
 
   function showCriteria(id) {
+    clicked();
     var data = criteria[id];
     var nsw = data.map(function(d) { return d[0];})
     var qld = data.map(function(d) { return d[1];})

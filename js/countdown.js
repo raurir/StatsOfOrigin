@@ -30,7 +30,10 @@ function initCountdown() {
     }
   }
 
+  var xPositions = [1,1,4,1,1,3,1,1,3.5,1,1];
   var existing = [];
+  var uninitialised = xPositions.map(function(v,i){return i;});
+  var initialised = xPositions.map(function(v,i){return false;});
 
   function showRemaining() {
     var now = new Date();
@@ -51,6 +54,7 @@ function initCountdown() {
 
 
     if (lastSecond !== seconds ) {
+
       var arr = [].concat(
         days.split("")
       ).concat("days").concat(
@@ -60,13 +64,24 @@ function initCountdown() {
       ).concat("mins").concat(
         seconds.split("")
       )
-      var xPositions = [1,1,4,1,1,3,1,1,3.5,1,1];
+      
       // arr = seconds.split("")
       // xPositions = [1,1];
-
       // con.log("arr", arr.join(" "));
-
       if (xPositions.length !== arr.length) throw new Error("wrong length:" + xPositions.length + " v " + arr.length);
+
+
+      // initialise this symbol
+      var doInit = uninitialised.length;// && Math.random() > 0.7;
+      if (doInit) {
+        var index = Math.floor(Math.random() * uninitialised.length);
+        var toInitialise = uninitialised[index];
+        uninitialised.splice(index, 1);
+        initialised[toInitialise] = true;
+        // con.log(index, toInitialise);
+        // con.log(uninitialised, initialised);
+      }
+
 
       function remove(symbol) {
         // con.log("remove", symbol, new Date().getTime());
@@ -86,19 +101,23 @@ function initCountdown() {
       for (var i = 0, il = arr.length; i < il; i++) {
         var symbol = arr[i];
 
-        if (lastArray[i] !== arr[i]) {
+        if (initialised[i]) {
+          // con.log(i);
+          if (lastArray[i] !== arr[i]) {
 
-          if (existing[i]) {
-            remove(existing[i]);
+            if (existing[i]) {
+              remove(existing[i]);
+            }
+
+            var symbol = getSymbol(symbol);
+            drop(symbol, xp * 3);
+            existing[i] = symbol;
+
           }
 
-          var symbol = getSymbol(symbol);
-          drop(symbol, xp * 3);
-          existing[i] = symbol;
+          lastArray[i] = arr[i];
 
         }
-
-        lastArray[i] = arr[i];
 
         xp += xPositions[i];
 
