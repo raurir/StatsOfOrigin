@@ -9,11 +9,7 @@ function create3d() {
 
   var renderer, scene, camera, cubes = [[],[]];
 
-  var sw = window.innerWidth - 50,
-    sh = window.innerHeight - 100;
-
-  if (sw < 400) sw = 400;
-  if (sh < 400) sh = 400;
+  var sw = window.innerWidth, sh = window.innerHeight;
 
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera(35, sw / sh, 0.1, 1000);
@@ -35,7 +31,7 @@ function create3d() {
   scene.add( light );
 
   var pointLight =  new THREE.PointLight(0xffffff);//0x662BDE);
-  pointLight.position.y = 50;
+  pointLight.position.z = 30;
   scene.add(pointLight);
 
   var maxHeight = 40;
@@ -46,6 +42,8 @@ function create3d() {
   scene.add(countdown.group);
   countdown.group.position.y = camera.position.y;
   countdown.group.position.z = 10;
+
+  resize(sw, sh);
 
   function generateTick(label, major, xd, yd, zd, x, y, z) {
 
@@ -277,13 +275,27 @@ function create3d() {
     showGroup(countdown.group, showOrHide);
   }
 
+  function resize(width, height) {
+    var aspect = 9 / 6;
+    var w = width, h = w / aspect;
+    var margin = 0;
+    if (h > height) {
+      h = height
+      w = h * aspect;
+    }
+    margin = (height - h) / 2;
+    // con.log("resize",w,h);
+    renderer.domElement.style.marginTop = margin + "px";
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+    renderer.setSize(w, h);
+  }
 
   function render(time) {
 
     var t = time * 0.001;
     pointLight.position.x = Math.sin(t) * 45;
-    pointLight.position.z = Math.cos(t) * 45;
-
+    pointLight.position.y = Math.cos(t) * 45;
 
     countdown.update(time);
 
@@ -335,7 +347,9 @@ function create3d() {
     interactStop: interactStop,
     interactMove: interactMove,
     update: update,
-    showCount: showCount
+    showCount: showCount,
+    resize: resize,
+
   }
 
 }

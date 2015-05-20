@@ -75,6 +75,12 @@ var EVENT_INTERACT_MOVE = "EVENT_INTERACT_MOVE";
     addEventListener(EVENT_INTERACT_MOVE, function(e) {
       webgl.interactMove(e.detail);
     });
+    addEventListener(EVENT_INTERACT_MOVE, function(e) {
+      webgl.interactMove(e.detail);
+    });
+    addEventListener('resize', function(e) {
+      webgl.resize(window.innerWidth, window.innerHeight);
+    });
 
     webgl.update(zero, zero, 0);
 

@@ -1,9 +1,10 @@
 body {
-  margin: 0;
-  padding: 0;
   background: #000;
-  font-family: 'Roboto', sans-serif;
   color: #fff;
+  font-family: 'Roboto', sans-serif;
+  margin: 0;
+  overflow: hidden;
+  padding: 0;
 }
 h1,
 h2,
@@ -106,4 +107,16 @@ circle hover {
   background: #fff;
   border-radius: 2px;
   border: 2px solid #333;
+}
+@media screen and (max-width: 600px) {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    font-size: 1em;
+  }
+  #buttons {
+    bottom: 0;
+  }
 }

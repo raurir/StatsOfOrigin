@@ -34,11 +34,12 @@ Open source at: https://github.com/raurir/originstats
   </head>
   <body>
     <div id='container'>
-      <section id='header'>
+<!--       <div id='orientation'>Rotate device</div> -->
+      <div id='header'>
         <div id='debug'></div>
         <h1>OriginStats - State of Origin Statistics 1982 - 2015</h1>
         <h4 id='stat'></h4>
-      </section>
+      </div>
       <div id='webglcontainer'></div>
       <svg id="svgcontainer"></svg>
       <div id="buttons">
