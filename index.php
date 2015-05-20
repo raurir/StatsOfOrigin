@@ -1,7 +1,7 @@
 <html>
   <head>
     <title>State of Origin Statistics</title>
-    <link rel="stylesheet" type="text/css" href='css/origin.css'/>
+    <link rel="stylesheet" type="text/css" href='origin.css'/>
     <link href='http://fonts.googleapis.com/css?family=Roboto:900,400' rel='stylesheet' type='text/css'>
 <?PHP
 $host = $_SERVER['HTTP_HOST'];
@@ -27,7 +27,7 @@ if ($local) { ?>
 <!--
 Made by Rauri Rochford
 Unbiased Queenslander
-Contact: twitter.com/raurir
+Contact: @raurir
 Open source at: https://github.com/raurir/originstats
 -->
 

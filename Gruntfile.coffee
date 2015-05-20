@@ -13,9 +13,9 @@ grunt.initConfig(
     stylus:
       files: ["#{__dirname}/stylus/*.styl"]
       tasks: ['stylus:compile']
-    styles:
-      files: ["#{__dirname}/css/*.css"]
-      tasks: ['autoprefixer']
+    # styles:
+    #   files: ["#{__dirname}/css/*.css"]
+    #   tasks: ['autoprefixer']
     javascript:
       files: [
         "#{__dirname}/js/*.js"
@@ -33,13 +33,13 @@ grunt.initConfig(
           'js/*.js'
         ]
 
-  autoprefixer:
-    multiple_files: {
-      expand: true,
-      flatten: true,
-      src: 'css/*.css', # // -> src/css/file1.css, src/css/file2.css
-      dest: 'css/autoprefixed/' # // -> dest/css/file1.css, dest/css/file2.css
-    }
+  # autoprefixer:
+  #   multiple_files: {
+  #     expand: true,
+  #     flatten: true,
+  #     src: 'css/*.css', # // -> src/css/file1.css, src/css/file2.css
+  #     dest: 'css/autoprefixed/' # // -> dest/css/file1.css, dest/css/file2.css
+  #   }
 
   stylus:
     compile:
@@ -48,13 +48,13 @@ grunt.initConfig(
           expand: true
           cwd: "#{__dirname}/stylus/"
           src: ["*.styl"]
-          dest: "css/"
+          dest: "#{__dirname}/"
           ext: ".css"
         }
       ]
       options:
-        compress: false
-        expand: true
+        compress: true
+        expand: false
 )
 
 grunt.registerTask('default', ['watch']);
