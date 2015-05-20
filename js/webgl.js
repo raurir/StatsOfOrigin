@@ -1,20 +1,29 @@
 function create3d() {
 
-  var tau = Math.PI * 2;
+  var MODE_COUNTDOWN = "countdown";
+  var MODE_STAT = "stat";
+  var mode = MODE_COUNTDOWN;
+  var interacting = false;
 
+  var tau = Math.PI * 2;
   var gap = 2;
   var ticksX = [];
   var yearJump = 5;
   var unis = [];
 
-  var renderer, scene, camera, cubes = [[],[]];
+  var rotationY = 0, rotationX = 0;
+  var maxHeight = 40;
 
+  var cubes = [[],[]];
   var sw = window.innerWidth, sh = window.innerHeight;
 
-  scene = new THREE.Scene();
-  camera = new THREE.PerspectiveCamera(35, sw / sh, 0.1, 1000);
+  var scene = new THREE.Scene();
 
-  renderer = new THREE.WebGLRenderer();
+  var camera = new THREE.PerspectiveCamera(35, sw / sh, 0.1, 1000);
+  camera.position.y = maxHeight / 2;
+  camera.position.z = 100;
+
+  var renderer = new THREE.WebGLRenderer();
   renderer.setSize(sw, sh);
   document.getElementById("webglcontainer").appendChild(renderer.domElement);
 
@@ -34,10 +43,6 @@ function create3d() {
   pointLight.position.z = 30;
   scene.add(pointLight);
 
-  var maxHeight = 40;
-  camera.position.y = maxHeight / 2;
-  camera.position.z = 100;
-
   var countdown = initCountdown();
   scene.add(countdown.group);
   countdown.group.position.y = camera.position.y;
@@ -49,7 +54,6 @@ function create3d() {
 
     var colours = major ? [0xc0c0c0, 0x505050] : [0x808080, 0x505050];
 
-    // make dash
     var dashGeometry = new THREE.BoxGeometry(xd, yd, zd);
     var dashMaterial = new THREE.MeshPhongMaterial({
       ambient: colours[1],
@@ -233,9 +237,6 @@ function create3d() {
 
   }
 
-  var rotationY = 0, rotationX = 0;
-  var interacting = false;
-
   function clampRotation(r) {
     return r < 0 ? r + tau : r > tau ? r - tau : r;
   }
@@ -245,7 +246,7 @@ function create3d() {
   }
 
   function interactMove(delta) {
-    if (mode === "count") return;
+    if (mode === MODE_COUNTDOWN) return;
     rotationY += delta.x * 0.01;
     rotationX += delta.y * 0.01;
     rotationY = clampRotation(rotationY);
@@ -255,24 +256,25 @@ function create3d() {
     interacting = false;
   }
 
-  function showGroup(group, showOrHide) {
+  function showGroup(group, doShow) {
     group.traverse(function(object) {
-      object.visible = showOrHide;
+      object.visible = doShow;
     });
   };
 
-  function showAxis(showOrHide) {
-    showGroup(groupAxisX, showOrHide);
-    showGroup(groupAxisY, showOrHide);
+  function showAxis(doShow) {
+    showGroup(groupAxisX, doShow);
+    showGroup(groupAxisY, doShow);
   }
-
-  var mode = "notb";
-  function showCount(showOrHide) {
-    mode = showOrHide ? "count" : "notb";
-    showAxis(!showOrHide);
-    // showAxis(showOrHide);
-    if (showOrHide) rotationY = 0;
-    showGroup(countdown.group, showOrHide);
+  var rotationYTarget = 0;
+  var rotationQLDMin = tau * 1 / 4;
+  var rotationQLDMax = tau * 3 / 4;
+  function showCountdown(doShow) {
+    mode = doShow ? MODE_COUNTDOWN : MODE_STAT;
+    rotationYTarget = isMaroon(rotationY) ? Math.PI : 0;
+    if (rotationY > rotationQLDMax) rotationYTarget = tau;
+    showAxis(!doShow);
+    showGroup(countdown.group, doShow);
   }
 
   function resize(width, height) {
@@ -291,17 +293,26 @@ function create3d() {
     renderer.setSize(w, h);
   }
 
+  function isMaroon(rotation) {
+    var qldSide = rotation > rotationQLDMin && rotation < rotationQLDMax; 
+    return qldSide; // so here's a biased function. up the maroons. 
+  }
+
   function render(time) {
 
     var t = time * 0.001;
-    pointLight.position.x = Math.sin(t) * 45;
-    pointLight.position.y = Math.cos(t) * 45;
+    pointLight.position.x = Math.sin(t) * 15;
+    pointLight.position.y = Math.cos(t) * 15;
 
     countdown.update(time);
 
-    if (interacting) {
+    var qldSide = isMaroon(rotationY);
 
-    } else {
+    if (mode === MODE_COUNTDOWN) { // flatten graph to either side in countdown mode.
+      rotationY -= (rotationY - rotationYTarget) * 0.1;
+    }
+
+    if (!interacting) { // flatten graph when interaction stops.
       rotationX -= (rotationX - 0) * 0.1;
     }
 
@@ -309,18 +320,13 @@ function create3d() {
       unis[i].time.value = time * 0.0012;
     }
 
-    var quarter = rotationY;// //Math.round( (( Math.PI * 2 + rotationY + Math.PI / 2) % (Math.PI * 2)) );
-
-    var qldSide = (quarter > Math.PI / 2 && quarter < Math.PI * 2 * 3 / 4);
-
-    // debug.innerHTML = quarter;
+    // debug.innerHTML = rotationY;
     // if (qldSide) {
     //   debug.style.background = "blue";
     // } else {
     //   debug.style.background = "red";
     // }
 
-    // cube.rotation.x += 0.1;
     group.rotation.x = rotationX;
     group.rotation.y = rotationY;
 
@@ -347,7 +353,7 @@ function create3d() {
     interactStop: interactStop,
     interactMove: interactMove,
     update: update,
-    showCount: showCount,
+    showCountdown: showCountdown,
     resize: resize,
 
   }
