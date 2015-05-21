@@ -32,10 +32,8 @@ function initBot() {
 		initClient();
 		con.log("initialising twitter stream");
 
-		client.stream("statuses/filter", {track: "DescribeYourselfIn3Words"}, function(stream) {
+		client.stream("statuses/filter", {track: "stateoforigin"}, function(stream) {
 			stream.on("data", function(tweet) {
-
-				con.log(tweet.text);
 
 				if (tweet.user) {
 					if (tweet.user.id_str === botID) {
@@ -45,9 +43,11 @@ function initBot() {
 						if (tweet.text) {
 							// con.log("stream(user) - ok - tweet.text", tweet.text);
 
-							// con.log("=====================================");
-							// con.log("stream(user) - ok", tweet);
-							// con.log("=====================================");
+							var bad = (/(RT|loan|→|Poll)/.test(tweet.text));
+							// bad users: johnspatricc
+
+							con.log("=====================================");
+							con.log((bad ? "BAD" : "GOOD"), tweet.user.screen_name, "::", tweet.text);
 
 							if (tweet.entities.user_mentions) {
 								var botMentioned = _.findWhere(tweet.entities.user_mentions, {id_str: botID});
