@@ -5,214 +5,231 @@ var http = require("http");
 var https = require("https");
 var Promise = require('promise');
 var request = require("request");
+var express = require('express');
 
 var con = console;
 
-function initBot() {
-	con.log("initialising bot");
+var lastSave = new Date().getTime();
 
-	var botID = "3171474097",
-		hits = 0,
-		client,
-		sourceTweet = null;
+var history = [];
 
-	function initClient() {
-		if (client) return;
-		con.log("initialising client");
-		client = new Twitter({
-			consumer_key: process.env.TWITTER_CONSUMER_KEY,
-			consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
-			access_token_key: process.env.TWITTER_ACCESS_TOKEN_KEY,
-			access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET,
-		});
-		// con.log("client", client)
-	}
+function saveFile(filename, content) {
+  // con.log("self.saveFile writing:", filename);
+  lastSave = new Date().getTime();
+  fs.writeFile(__dirname + filename, content, function(err) {
+    if(err) {
+        return con.log(err);
+    }
+    con.log("self.saveFile complete:", filename, new Date().getTime() - lastSave);
+  });
+};
 
-	function initStream() {
-		initClient();
-		con.log("initialising twitter stream");
+function initServer() {
+  con.log("initServer");
 
-		client.stream("statuses/filter", {track: "stateoforigin"}, function(stream) {
-			stream.on("data", function(tweet) {
+  var output = process.env.OUTPUT_URL;
+  var self = {};
+  if (/rauri/.test(process.env.USER)) {
+    self.port = 8020;
+    self.ipaddress = "127.0.0.1";
+  } else if (/root/.test(process.env.USER)) {
+    self.port = 8020;
+    self.ipaddress = "0.0.0.0";
+  } else {
+    throw new Error("unknown environment");
+  }
 
-				if (tweet.user) {
-					if (tweet.user.id_str === botID) {
-						// con.log("Got an echo of myself!", tweet.text)
-					} else {
+  var htmlHeader = "<html><header><link rel=\"stylesheet\" type=\"text/css\" href=\"/bot.css\"></header><body>";
+  var links = "<div class='links'>" + ["memory", "history"].map(function(link,i) { return "<a href='" + output + link + "'>" + link + "</a>"; }).join(" ") + "</div>";
+  var htmlFooter = "</body></html>";
 
-						if (tweet.text) {
-							// con.log("stream(user) - ok - tweet.text", tweet.text);
 
-							var bad = (/(RT|loan|→|Poll)/.test(tweet.text));
-							// bad users: johnspatricc
-
-							con.log("=====================================");
-							con.log((bad ? "BAD" : "GOOD"), tweet.user.screen_name, "::", tweet.text);
-
-							if (tweet.entities.user_mentions) {
-								var botMentioned = _.findWhere(tweet.entities.user_mentions, {id_str: botID});
-								if (botMentioned) {
-									con.log("stream(user) - ok - botMentioned", botMentioned);
-									parseTweet(tweet);
-								} else {
-									// con.log("stream(user) - ok not mentioned", botMentioned);
-								}
-							}
-
-						} else if (tweet.friends) {
-							// con.log("stream(user) - initial tweet - friends:", tweet.friends.length);
-						} else {
-							// con.log("stream(user) - unknown tweet", tweet);
-						}
-
-					}
-
-				}
-			});
-
-			stream.on("error", function(error) {
-				// throw error;
-				con.log(error);
-			});
-		});
-
-		con.log("Bot running...");
-	}
+  function renderTweet(item, index) {
+    return [
+      "<div class='tweet " + (item.bad ? "bad" : "good") + "'>",
+        "<div class='index'>", index, "</div>",
+        "<div class='image'>",
+          "<a href='http://twitter.com/" + item.user_screen_name + "'>",
+            "<img src='" + item.user_profile_image_url + "'>",
+          "</a>",
+        "</div>",
+        "<div class='text'>",
+          "<div class='retweeted'>", (item.retweeted ? "RT!" : ""), "</div>",
+          "<a href='http://twitter.com/statuses/" + item.id_str + "'>", item.text, "</a>",
+        "</div>",
+      "</div>"
+    ].join("");
+  }
 
 
 
 
 
-	function postMedia(image) {
-		return new Promise(function(fulfill, reject) {
 
-			con.log("postMedia", image);
-			hits ++;
-			if (hits > 2) {
-				con.log("too many hits!");
-				reject(new Error("more than 5 hits!"));
-			}
+  self.routes = { };
 
-			con.log("trying client.post!");
-			try {
+  self.routes["/bot.css"] = function(req, res) {
+    fs.readFile(__dirname + '/bot.css', function (err, data) {
+      res.writeHead(200, {'Content-Type': 'text/css'});
+      res.write(data);
+      res.end();
+    });
+  };
 
-				// Make post request on media endpoint. Pass file data as media parameter
-				client.post("media/upload", {media: image}, function(error, media, response){
-					if (error) {
-						con.log("postMedia reject 01", error);
-						reject(error);
-					} else {
-						con.log("postMedia fulfill!");
-						fulfill(media);
-					}
-				});
+  self.routes[output + "memory/"] = function(req, res) {
+    res.setHeader('Content-Type', 'text/html');
+    var historyString = history.map(renderTweet).join("");
+    res.send(htmlHeader + "<h4>Memory</h4>" + links + "Items:" + history.length + "<br>" + historyString + htmlFooter);
+  };
 
-			} catch (e) {
-				con.log("postMedia reject 03", e);
-				reject(e);
-			}
+  self.routes[output + "history/"] = function(req, res) {
+    var files = fs.readdirSync(__dirname + "/history/");
+    // con.log(files);
+    var fileLinks = files.map(function(file,i) {
+      return "<a href='" + output + "history/show/" + file + "'>" + file + "</a>";
+    });
+    res.setHeader('Content-Type', 'text/html');
+    res.send(htmlHeader + "<h4>History</h4>" + links + fileLinks.join("<br>") + htmlFooter);
+  };
 
-		});
-	}
+  self.routes[output + "history/show/:file"] = function(req, res) {
+    var filename = __dirname + "/history/" + req.params.file;
+    // res.setHeader('Content-Type', 'application/json');
+    res.setHeader('Content-Type', 'text/html');
+    self.readJSON(filename).then(function(data) {
+      return new Promise(function(fulfill, reject) {
+        var loadedHistory = JSON.parse(data).map(renderTweet).join("");
+        res.end(htmlHeader + "<h4>History</h4>" + links + loadedHistory + htmlFooter);
+        // res.end(data);
+        fulfill();
+      });
+    });
+  };
 
-	function postMediaTweet(media) {
-		return new Promise(function(fulfill, reject) {
-			// If successful, a media object will be returned.
-			con.log("postMediaTweet media success", media);
 
-			// Lets tweet it
-			var status = {
-				status: "@" + sourceTweet.user.screen_name + " your ansi", // Here is an image I made earlier...",
-				media_ids: media.media_id_string,
-				in_reply_to_status_id: sourceTweet.id_str
-			}
+  self.readJSON = function(filename) {
+    return new Promise(function(fulfill, reject) {
+      fs.readFile(filename, 'utf8', function(err, data) {
+        if (err) {
+          reject(err);
+        } else {
+          fulfill(data);
+        }
+      });
+    });
+  }
 
-			try {
 
-				client.post("statuses/update", status, function(error, tweet, response){
-					if (error) {
-						con.log("postMediaTweet reject 02", error);
-						reject(error);
-					} else {
-						con.log("postMediaTweet fulfill");
-						fulfill(tweet);
-					}
-				});
 
-			} catch (e) {
-				con.log("postMediaTweet reject 01", e);
-				reject(e);
-			}
 
-		})
-	}
 
-	function checkURL(url){
-		return new Promise(function (fulfill, reject){
-			request({
-				method: "HEAD",
-				url: url,
-				followAllRedirects: true
-			},
-			function (error, response, body) {
-				if (error) {
-					con.log("checkURL reject", response);
-					reject(response);
-				} else {
-					fulfill(response.request.uri.href);
-				}
-			});
-		});
-	}
 
-	function parseTweet(tweet) {
-		var text = tweet.text;
-		var url = null;
-		_.each(text.split(" "), function(param,i) {
-			switch(param) {
-				default :
-					con.log("parseTweet - Nothing implemented:", param);
-			}
-		})
 
-		if (url) {
 
-			sourceTweet = tweet;
+  self.app = express();
 
-			var tweeter = checkURL(url)
-				.then(loadImageURL)
+  var server = http.createServer(self.app);
 
-				// .then(saveFile)
-
-				.then(makeImage)
-				.then(ansiconvert.render)
-				.then(ansiconvert.getBuffer)
-
-				//.then(saveFile).then(makeImage)
-
-				.then(postMedia).then(postMediaTweet);
-
-		} else {
-			con.log("parseTweet no URL found?", text);
-		}
-	}
-
-	// parseTweet({text: "@ansibot https://40.media.tumblr.com/0c83e15287453bbc777fb29bcad30822/tumblr_nn9bn13FAt1ro1dyeo1_540.png 1x"});
-	// parseTweet({text: "@ansibot http://i.imgur.com/GB89gsO.jpg 1x"});
-	// parseTweet({text: "@ansibot http://i.imgur.com/A3JWAcJ.jpg 1x"});
-	// parseTweet({text: "@ansibot http://i.imgur.com/NVjJHSNh.jpg 1x"});
-	// parseTweet({text: "@ansibot http://p1.pichost.me/640/48/1712789.jpg 1x"});
-	// parseTweet({text: "@ansibot http://dreamatico.com/data_images/graffiti/graffiti-1.jpg 1x"});
-	// parseTweet({text: "@ansibot http://upload.wikimedia.org/wikipedia/commons/4/46/WP_SOPA_asset_Radial_Gradient.jpg 1x"});
-	// parseTweet({text: "@ansibot http://th06.deviantart.net/fs71/PRE/f/2012/278/2/a/rainbow_gradient_by_guildmasterinfinite-d5gv3im.png 1x"});
-	// parseTweet({text: "@ansibot http://www.milesjcarter.co.uk/blog/wp-content/uploads/2010/11/gradient21.jpg 1x"});
-	// parseTweet({text: "@ansibot gradients.png 1x"});
-	// parseTweet({text: "@ansibot savoury.jpg 1x"});
-	// parseTweet({text: "@ansibot http://t.co/GiYc8PUmLF 1x"});
-
-	initStream();
-	// initClient();
+  for (var r in self.routes) {
+    self.app.get(r, self.routes[r]);
+  }
+  self.app.listen(self.port, self.ipaddress, function() {
+    con.log('%s: Node server started on %s:%d ...', Date(Date.now() ), self.ipaddress, self.port);
+  });
 
 }
 
+function initBot() {
+  con.log("initialising bot");
+
+  var botID = null,
+    hits = 0,
+    client,
+    sourceTweet = null;
+
+  function initClient() {
+    if (client) return;
+    con.log("initialising client");
+    client = new Twitter({
+      consumer_key: process.env.TWITTER_CONSUMER_KEY,
+      consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
+      access_token_key: process.env.TWITTER_ACCESS_TOKEN_KEY,
+      access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET,
+    });
+    // con.log("client", client)
+  }
+
+  function initStream() {
+    initClient();
+    con.log("initialising twitter stream");
+
+    client.stream("statuses/filter", {track: "stateoforigin"}, function(stream) {
+      stream.on("data", function(tweet) {
+
+        if (tweet.user) {
+          if (tweet.user.id_str === botID) {
+            // con.log("Got an echo of myself!", tweet.text)
+          } else {
+
+            if (tweet.text) {
+              // con.log("stream(user) - ok - tweet.text", tweet.text);
+
+              var bad = (/(RT|loan|→|Poll)/.test(tweet.text));
+              // bad users: johnspatricc
+
+              con.log("=====================================");
+              con.log((bad ? "BAD" : "GOOD"), tweet.user.screen_name, "::", tweet.text);
+
+              // con.log("=====================================");
+              // con.log(tweet);
+              // con.log("=====================================");
+
+              if (true) { //!bad) {
+                var item = {
+                  "bad": bad,
+                  "id_str": tweet.id_str,
+                  "text": tweet.text,
+                  "user_id_str": tweet.user.id_str,
+                  "user_screen_name": tweet.user.screen_name,
+                  "user_profile_image_url": tweet.user.profile_image_url,
+                  "retweeted": tweet.retweeted,
+                };
+                history.push(item);
+              }
+
+
+              var now = new Date().getTime();
+              var minute = 1000 * 60;
+              var hour = minute * 60;
+              if (now - lastSave > hour) {
+                var d = new Date();
+                var time = [d.getUTCFullYear(), (d.getUTCMonth()+1), d.getUTCDate(), d.getUTCHours(), d.getUTCMinutes()].join("-");
+                saveFile("/history/history-" + time + ".json", JSON.stringify(history));
+                history = [];
+              }
+
+            } else if (tweet.friends) {
+              // con.log("stream(user) - initial tweet - friends:", tweet.friends.length);
+            } else {
+              // con.log("stream(user) - unknown tweet", tweet);
+            }
+
+          }
+
+        }
+      });
+
+      stream.on("error", function(error) {
+        // throw error;
+        con.log(error);
+      });
+    });
+
+    con.log("Bot running...");
+  }
+
+  initStream();
+
+}
+initServer();
 initBot();
