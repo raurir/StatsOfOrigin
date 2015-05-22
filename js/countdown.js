@@ -64,7 +64,7 @@ function initCountdown() {
       ).concat("mins").concat(
         seconds.split("")
       )
-      
+
       // arr = seconds.split("")
       // xPositions = [1,1];
       // con.log("arr", arr.join(" "));

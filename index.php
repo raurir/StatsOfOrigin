@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>State of Origin Statistics</title>
+    <title>StatsOfOrigin - State of Origin Statistics</title>
     <link rel="stylesheet" type="text/css" href='origin.css'/>
     <link href='http://fonts.googleapis.com/css?family=Roboto:900,400' rel='stylesheet' type='text/css'>
 <?PHP
@@ -28,7 +28,7 @@ if ($local) { ?>
 Made by Rauri Rochford
 Unbiased Queenslander
 Contact: @raurir
-Open source at: https://github.com/raurir/originstats
+Open source at: https://github.com/raurir/StatsOfOrigin
 -->
 
   </head>
@@ -37,7 +37,7 @@ Open source at: https://github.com/raurir/originstats
 <!--       <div id='orientation'>Rotate device</div> -->
       <div id='header'>
         <div id='debug'></div>
-        <h1>OriginStats - State of Origin Statistics 1982 - 2015</h1>
+        <h1>StatsOfOrigin - State of Origin Statistics 1982 - 2015</h1>
         <h4 id='stat'></h4>
       </div>
       <div id='webglcontainer'></div>

@@ -24,7 +24,7 @@ grunt.initConfig(
 
   uglify:
     options:
-      banner: '/*! OriginStats <%= grunt.template.today("dd-mm-yyyy") %> (https://github.com/raurir/originstats) */\n'
+      banner: '/*! StatsOfOrigin <%= grunt.template.today("dd-mm-yyyy") %> (https://github.com/raurir/StatsOfOrigin) */\n'
       # mangle: false, compress: false, beautify: true # dev
       mangle: false, compress: true, beautify: false # production
     dist:
