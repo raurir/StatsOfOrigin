@@ -175,7 +175,7 @@ function initBot() {
               // con.log("stream(user) - ok - tweet.text", tweet.text);
 
               var bad = (/(RT|loan|→|Poll)/.test(tweet.text));
-              // bad users: johnspatricc
+              // bad users: johnspatricc aunewse
 
               con.log("=====================================");
               con.log((bad ? "BAD" : "GOOD"), tweet.user.screen_name, "::", tweet.text);
