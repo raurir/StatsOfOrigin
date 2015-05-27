@@ -184,7 +184,7 @@ function initBot() {
               // con.log(tweet);
               // con.log("=====================================");
 
-              if (true) { //!bad) {
+              if (!bad) {
                 var item = {
                   "bad": bad,
                   "id_str": tweet.id_str,
