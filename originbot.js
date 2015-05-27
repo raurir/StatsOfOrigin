@@ -175,7 +175,7 @@ function initBot() {
               // con.log("stream(user) - ok - tweet.text", tweet.text);
 
               var bad = (/(RT|loan|→|Poll)/.test(tweet.text));
-              // bad users: johnspatricc
+              // bad users: johnspatricc aunewse
 
               con.log("=====================================");
               con.log((bad ? "BAD" : "GOOD"), tweet.user.screen_name, "::", tweet.text);
@@ -201,7 +201,8 @@ function initBot() {
               var now = new Date().getTime();
               var minute = 1000 * 60;
               var hour = minute * 60;
-              if (now - lastSave > hour) {
+              var day = hour * 24;
+              if (now - lastSave > day || history.length > 100) {
                 var d = new Date();
                 var time = [d.getUTCFullYear(), (d.getUTCMonth()+1), d.getUTCDate(), d.getUTCHours(), d.getUTCMinutes()].join("-");
                 saveFile("/history/history-" + time + ".json", JSON.stringify(history));

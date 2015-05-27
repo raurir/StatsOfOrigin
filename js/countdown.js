@@ -8,7 +8,7 @@ function initCountdown() {
 
   */
 
-  var end = new Date(2015, 04, 27, 20, 0 );
+  var end = new Date(2015, 05, 17, 20, 0 );
 
   var _second = 1000;
   var _minute = _second * 60;
