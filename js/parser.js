@@ -24,19 +24,26 @@ function parse() {
 
     // start series
 
-    years[yearIndex].winner = years[yearIndex].NSW > years[yearIndex].QLD ? NSW : QLD;
+    if (years[yearIndex].inprogress) {
 
-    incremental_series.NSW += years[yearIndex].winner == NSW ? 1 : 0;
-    incremental_series.QLD += years[yearIndex].winner == QLD ? 1 : 0;
+      // ignore this sicne it's inprogress
 
-    // years[yearIndex].incremental_series = {
-    //   NSW: incremental_series.NSW,
-    //   QLD: incremental_series.QLD
-    // }
+      criteria.series_winner.push([years[yearIndex].NSW, years[yearIndex].QLD]);
 
-    criteria.series_winner.push([incremental_series.NSW, incremental_series.QLD]);
+    } else {
+      years[yearIndex].winner = years[yearIndex].NSW > years[yearIndex].QLD ? NSW : QLD;
 
+      incremental_series.NSW += years[yearIndex].winner == NSW ? 1 : 0;
+      incremental_series.QLD += years[yearIndex].winner == QLD ? 1 : 0;
 
+      // years[yearIndex].incremental_series = {
+      //   NSW: incremental_series.NSW,
+      //   QLD: incremental_series.QLD
+      // }
+
+      criteria.series_winner.push([incremental_series.NSW, incremental_series.QLD]);
+
+    }
 
 
     // start matches
