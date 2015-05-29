@@ -174,15 +174,15 @@ function initBot() {
             if (tweet.text) {
               // con.log("stream(user) - ok - tweet.text", tweet.text);
 
-              var bad = (/(RT|loan|→|Poll)/.test(tweet.text));
-              // bad users: johnspatricc aunewse
-
-              con.log("=====================================");
-              con.log((bad ? "BAD" : "GOOD"), tweet.user.screen_name, "::", tweet.text);
+              var badText = (/(RT|loan|→|Poll)/.test(tweet.text));
+              var badUser = ["johnspatricc", "aunewse", "l5iza", "gima2327"].indexOf(tweet.user.screen_name) > -1;
+              var bad = badText || badUser;
 
               // con.log("=====================================");
+              con.log(badUser, badText, tweet.user.screen_name, ": ", tweet.text);
+              // con.log("-------------------------------------");
               // con.log(tweet);
-              // con.log("=====================================");
+              con.log("=====================================");
 
               if (!bad) {
                 var item = {
