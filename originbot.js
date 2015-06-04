@@ -255,7 +255,8 @@ function initBot() {
       .catch(function(err) {
         if (err === "TOO_MANY") {
           con.log("known error, trying again...", err);
-          doItAgain();
+          // doItAgain();
+          doIt();
         } else {
           con.log("doIt error", err);
         }
