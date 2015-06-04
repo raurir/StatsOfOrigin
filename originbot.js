@@ -239,7 +239,7 @@ function initBot() {
       .then(function(friends) {
         return new Promise(function(fulfill, reject) {
           if (friends.length > 500) {
-            reject("Too many friends: " + friends.length);
+            reject("TOO_MANY");
           } else {
             fulfill(friends);
           }
@@ -253,7 +253,12 @@ function initBot() {
       .then(doItAgain)
 
       .catch(function(err) {
-        con.log("doIt error", err);
+        if (err === "TOO_MANY") {
+          con.log("known error, trying again...", err);
+          doItAgain();
+        } else {
+          con.log("doIt error", err);
+        }
       });
     }
 
