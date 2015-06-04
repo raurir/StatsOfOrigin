@@ -7,6 +7,8 @@ var Promise = require('promise');
 var request = require("request");
 var express = require('express');
 
+var socialbot = require('./TwitterSocialBot/socialbot');
+
 var con = console;
 
 var lastSave = new Date().getTime();
@@ -142,21 +144,15 @@ function initServer() {
 function initBot() {
   con.log("initialising bot");
 
-  var botID = null,
-    hits = 0,
-    client,
-    sourceTweet = null;
+  var botID = null, client = null;
 
   function initClient() {
-    if (client) return;
-    con.log("initialising client");
-    client = new Twitter({
+    client = socialbot.initClient({
       consumer_key: process.env.ORIGIN_TWITTER_CONSUMER_KEY,
       consumer_secret: process.env.ORIGIN_TWITTER_CONSUMER_SECRET,
       access_token_key: process.env.ORIGIN_TWITTER_ACCESS_TOKEN_KEY,
       access_token_secret: process.env.ORIGIN_TWITTER_ACCESS_TOKEN_SECRET,
     });
-    // con.log("client", client)
   }
 
   function initStream() {
@@ -229,7 +225,47 @@ function initBot() {
     con.log("Bot running...");
   }
 
+
+
+
+  function initSocial() {
+
+    function doIt() {
+      now = new Date()
+      con.log("time", now.getHours() + ":" + now.getMinutes())
+      socialbot.getFriends().then(randIndex).then(socialbot.getFriends)
+        .then(randIndex).then(socialbot.followFriend).then(doItAgain).catch(function(err) {
+          con.log("doIt error", err);
+        });
+    }
+
+    function doItAgain() {
+      var delayMins = Math.round((3 + Math.random() * 3) * 100) / 100;
+      var delay = delayMins * 60 * 1000;
+      con.log("doItAgain in minutes", delayMins, delay);
+      setTimeout(doIt, delay);
+    }
+
+    function randIndex(arr) {
+      return new Promise(function(fulfill, reject) {
+        try {
+          var item = arr[Math.round(Math.random() * arr.length)];
+          fulfill(item);
+        }catch (e) {
+          con.log("randIndex error", e);
+          reject(e);
+        }
+      });
+    }
+
+    // doItAgain();
+    doIt();
+
+  }
+
+
   initStream();
+  initSocial();
 
 }
 initServer();
