@@ -233,10 +233,28 @@ function initBot() {
     function doIt() {
       now = new Date()
       con.log("time", now.getHours() + ":" + now.getMinutes())
-      socialbot.getFriends().then(randIndex).then(socialbot.getFriends)
-        .then(randIndex).then(socialbot.followFriend).then(doItAgain).catch(function(err) {
-          con.log("doIt error", err);
+      socialbot.getFriends()
+      .then(randIndex)
+      .then(socialbot.getFriends)
+      .then(function(friends) {
+        return new Promise(function(fulfill, reject) {
+          if (friends.length > 500) {
+            reject("Too many friends: " + friends.length);
+          } else {
+            fulfill(friends);
+          }
         });
+      })
+      .then(randIndex)
+
+      // .then(function(friend) { con.log("friend:", friend); })
+
+      .then(socialbot.followFriend)
+      .then(doItAgain)
+
+      .catch(function(err) {
+        con.log("doIt error", err);
+      });
     }
 
     function doItAgain() {
