@@ -253,7 +253,7 @@ function initBot() {
       .then(doItAgain)
 
       .catch(function(err) {
-        if (err === "TOO_MANY") {
+        if (err === "TOO_MANY" || err === "NO_FRIENDS") {
           con.log("known error, trying again... in 10 seconds", err);
           doInSpecificMinutes(0.1);
         } else {
