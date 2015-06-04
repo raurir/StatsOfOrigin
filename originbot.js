@@ -255,22 +255,27 @@ function initBot() {
       .catch(function(err) {
         if (err === "TOO_MANY") {
           con.log("known error, trying again... in 10 seconds", err);
-          doItAgain(0.1);
+          doInSpecificMinutes(0.1);
         } else {
           if (err[0] && err[0].code && err[0].code == 88) {
             con.log("Known error -- too many hits, waiting 15 mins", err);
-            doItAgain(15);
+            doInSpecificMinutes(15);
           } else {
             con.log("doIt error", err);
+            saveFile("/history/error-" + time + ".json", JSON.stringify(err));
           }
         }
       });
     }
 
-    function doItAgain(delayMins) {
-      delayMins = delayMins || Math.round((3 + Math.random() * 3) * 100) / 100;
+    function doItAgain() {
+      var delayMins = Math.round((3 + Math.random() * 3) * 100) / 100;
+      doInSpecificMinutes(delayMins);
+    }
+
+    function doInSpecificMinutes(delayMins) {
       var delay = delayMins * 60 * 1000;
-      con.log("doItAgain in minutes", delayMins, delay);
+      con.log("doInSpecificMinutes in minutes", delayMins, delay);
       setTimeout(doIt, delay);
     }
 
