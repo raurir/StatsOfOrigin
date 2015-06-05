@@ -54,12 +54,6 @@ h1,h2,h3,h4,h5
   &.displayed
     display block
 
-rect.QLD, path.QLD
-  fill rgba(200,0,50,0.8)
-
-rect.NSW, path.NSW
-  fill rgba(0,0,200,0.8)
-
 .axis text
   font 10px sans-serif
   fill #fff
@@ -92,18 +86,25 @@ rect.NSW, path.NSW
 
 circle
   &.NSW
-    fill cyan
-    & hover
-      fill blue
+    fill rgba(0, 150, 255, 0.8)
+    &:hover
+      fill rgba(0, 150, 255, 1)
   &.QLD
-    fill pink
-    & hover
-      fill red
+    fill rgba(255, 0, 100, 0.8)
+    &:hover
+      fill rgba(255, 0, 100, 1)
   stroke black
   stroke-width 1
   cursor pointer
-  & hover
+  &:hover
     stroke-width 4
+
+rect.NSW, path.NSW
+  fill rgba(0, 150, 255, 0.2)
+
+rect.QLD, path.QLD
+  fill rgba(255, 0, 100, 0.2)
+
 
 .tooltip
   position absolute

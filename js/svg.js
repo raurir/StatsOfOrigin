@@ -182,7 +182,7 @@ function create2d(display) {
     var el = document.getElementById("svgcontainer");
     el.style.top = ((height - 400) / 2) + "px";
   }
-
+  resize(window.innerWidth, window.innerHeight);
 
   return {
     update: update,

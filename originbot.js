@@ -175,12 +175,13 @@ function initBot() {
               var bad = badText || badUser;
 
               // con.log("=====================================");
-              con.log(badUser, badText, tweet.user.screen_name, ": ", tweet.text);
-              // con.log("-------------------------------------");
-              // con.log(tweet);
-              con.log("=====================================");
+              // con.log(badUser, badText, tweet.user.screen_name, ": ", tweet.text);
 
               if (!bad) {
+                // con.log("-------------------------------------");
+                con.log(tweet);
+                // con.log("=====================================");
+
                 var item = {
                   "bad": bad,
                   "id_str": tweet.id_str,

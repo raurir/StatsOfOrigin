@@ -8,6 +8,8 @@ function initCountdown() {
 
   */
 
+  var div = document.createElement("div");
+
   var end = new Date(2015, 05, 17, 20, 0 );
 
   var _second = 1000;
@@ -70,6 +72,7 @@ function initCountdown() {
       // con.log("arr", arr.join(" "));
       if (xPositions.length !== arr.length) throw new Error("wrong length:" + xPositions.length + " v " + arr.length);
 
+      div.innerHTML = arr.join(" ");
 
       // initialise this symbol
       var doInit = uninitialised.length;// && Math.random() > 0.7;
@@ -263,6 +266,7 @@ function initCountdown() {
 
   return {
     group: group,
+    div: div,
     update: update
   }
 
