@@ -266,7 +266,7 @@ function initBot() {
     }
 
     function doItAgain() {
-      var delayMins = Math.round((2 + Math.random() * 3) * 100) / 100;
+      var delayMins = Math.round((1 + Math.random() * 3) * 100) / 100;
       doInSpecificMinutes(delayMins);
     }
 
