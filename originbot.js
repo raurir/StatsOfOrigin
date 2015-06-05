@@ -236,15 +236,15 @@ function initBot() {
       socialbot.getFriends()
       .then(randIndex)
       .then(socialbot.getFriends)
-      .then(function(friends) {
-        return new Promise(function(fulfill, reject) {
-          if (friends.length > 500) {
-            reject("TOO_MANY");
-          } else {
-            fulfill(friends);
-          }
-        });
-      })
+      // .then(function(friends) {
+      //   return new Promise(function(fulfill, reject) {
+      //     if (friends.length > 500) {
+      //       reject("TOO_MANY");
+      //     } else {
+      //       fulfill(friends);
+      //     }
+      //   });
+      // })
       .then(randIndex)
 
       // .then(function(friend) { con.log("friend:", friend); })
@@ -269,7 +269,7 @@ function initBot() {
     }
 
     function doItAgain() {
-      var delayMins = Math.round((3 + Math.random() * 3) * 100) / 100;
+      var delayMins = Math.round((2 + Math.random() * 3) * 100) / 100;
       doInSpecificMinutes(delayMins);
     }
 

@@ -17,7 +17,7 @@ shadowText()
 
 
 body
-  background black
+  background #222 // black
   color white
   font-family 'Roboto', sans-serif
   margin 0
@@ -47,22 +47,26 @@ h1,h2,h3,h4,h5
   bottom 20px
   width 100%
 
-svg
-  // border 1px solid black
+#svgcontainer
   display none
+  margin 0 auto
+  position relative
+  &.displayed
+    display block
 
-#chart rect.QLD, #chart path.QLD
+rect.QLD, path.QLD
   fill rgba(200,0,50,0.8)
 
-#chart rect.NSW, #chart path.NSW
+rect.NSW, path.NSW
   fill rgba(0,0,200,0.8)
 
 .axis text
   font 10px sans-serif
+  fill #fff
 
 .axis path, .axis line
   fill none
-  stroke #000
+  stroke #444
   shape-rendering crispEdges
 
 .button

@@ -1,84 +1,84 @@
-function create2d() {
+function create2d(display) {
 
   var margin = {top: 20, right: 30, bottom: 30, left: 60},
     width = 400 - margin.left - margin.right,
     height = 400 - margin.top - margin.bottom;
 
   var chart = d3.select("#svgcontainer")
-  .attr("width", width + margin.left + margin.right)
-  .attr("height", height + margin.top + margin.bottom)
-  .append("g")
-  .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .attr("class", display ? "displayed" : "hidden")
+    .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
   var x = d3.scale.linear()
-  .domain([0, years.length])
-  .range([0, width]);
+    .domain([0, years.length])
+    .range([0, width]);
 
   var y = d3.scale.linear()
-  .domain([0, d3.max(data, function(d){ return Math.max(d[0], d[1]); })])
-  .range([height,0]);
+    .domain([0, d3.max(data, function(d){ return Math.max(d[0], d[1]); })])
+    .range([height,0]);
 
   var nsw = data.map(function(d) { return d[0];})
   var qld = data.map(function(d) { return d[1];})
 
   var area = d3.svg.area()
-  .x(function(d,i) {
-    // con.log("x", d);
-    return x(i);
-  })
-  .y0(height).y1(function(d, i) {
-    // con.log("y1", i , y(d));
-    return y(d);
-  });
+    .x(function(d,i) {
+      // con.log("x", d);
+      return x(i);
+    })
+    .y0(height).y1(function(d, i) {
+      // con.log("y1", i , y(d));
+      return y(d);
+    });
 
   var line = d3.svg.line()
-  .x(function(d,i) {
-    con.log(d,i)
-    return x(i);
-  })
-  .y(function(d, i) {
-    // con.log(d,y(d))
-    return y(d);
-  });
+    .x(function(d,i) {
+      con.log(d,i)
+      return x(i);
+    })
+    .y(function(d, i) {
+      // con.log(d,y(d))
+      return y(d);
+    });
 
 
   chart
-  .selectAll("path.area")
-  .data([nsw,qld])
-  .enter()
-  .append("path")
-  .attr("class", function(d,i) { return "area " + [NSW,QLD][i]; })
-  .attr("d", area);
+    .selectAll("path.area")
+    .data([nsw,qld])
+    .enter()
+    .append("path")
+    .attr("class", function(d,i) { return "area " + [NSW,QLD][i]; })
+    .attr("d", area);
 
   chart
-  .selectAll("path")
-  .data([nsw,qld])
-  .enter()
-  .append("path")
-  .attr("class", "line")
-  .attr("d", line);
-
+    .selectAll("path")
+    .data([nsw,qld])
+    .enter()
+    .append("path")
+    .attr("class", "line")
+    .attr("d", line);
 
   var xAxis = d3.svg.axis()
-  .scale(x)
-  .orient("bottom")
-  .ticks(years.length / 4)
-  .tickFormat(function(d){
-    return years[d].year;
-  });
+    .scale(x)
+    .orient("bottom")
+    .ticks(years.length / 4)
+    .tickFormat(function(d){
+      return years[d].year;
+    });
 
   chart.append("g")
-  .attr("class", "x axis")
-  .attr("transform", "translate(0," + height + ")")
-  .call(xAxis);
+    .attr("class", "x axis")
+    .attr("transform", "translate(0," + height + ")")
+    .call(xAxis);
 
   var yAxis = d3.svg.axis()
-  .scale(y)
-  .orient("left");
+    .scale(y)
+    .orient("left");
 
   chart.append("g")
-  .attr("class", "y axis")
-  .call(yAxis);
+    .attr("class", "y axis")
+    .call(yAxis);
 
 
   var pointsNSW = point(NSW, nsw);
@@ -87,13 +87,13 @@ function create2d() {
   function point(state, stateData) {
 
     var g = chart.selectAll(".point." + state)
-    .data(stateData)
-    .enter()
-    .append("svg:circle")
-    .attr("class", state)
-    .attr("cx", function(d, i) { return x(i); })
-    .attr("cy", function(d, i) { return y(d); })
-    .attr("r", 5);
+      .data(stateData)
+      .enter()
+      .append("svg:circle")
+      .attr("class", state)
+      .attr("cx", function(d, i) { return x(i); })
+      .attr("cy", function(d, i) { return y(d); })
+      .attr("r", 5);
 
     g.on("mouseover", function(d,i){
       // con.log(this);
@@ -131,8 +131,8 @@ function create2d() {
   }
 
   var tooltip = d3.select("body")
-  .append("div")
-  .attr("class", "tooltip");;
+    .append("div")
+    .attr("class", "tooltip");
 
 
 
@@ -140,29 +140,29 @@ function create2d() {
   function update(nsw, qld, max) {
 
     y
-    .domain([0, max])
-    .range([height, 0]);
+      .domain([0, max])
+      .range([height, 0]);
 
     d3.select(".y.axis")
-    .transition()
-    // .duration(1750)
-    .call(yAxis);
+      .transition()
+      // .duration(1750)
+      .call(yAxis);
 
 
     chart
-    .selectAll("path.area")
-    .data([nsw,qld])
-    .transition()
-    // .duration(750)
-    .attr("d", function(d) { return area(d); });
+      .selectAll("path.area")
+      .data([nsw,qld])
+      .transition()
+      // .duration(750)
+      .attr("d", function(d) { return area(d); });
 
 
     chart
-    .selectAll("path.line")
-    .data([nsw,qld])
-    .transition()
-    // .duration(750)
-    .attr("d", line);
+      .selectAll("path.line")
+      .data([nsw,qld])
+      .transition()
+      // .duration(750)
+      .attr("d", line);
 
 
     function updatePoints(points, data) {
@@ -178,7 +178,14 @@ function create2d() {
 
   }
 
+  function resize(width, height) {
+    var el = document.getElementById("svgcontainer");
+    el.style.top = ((height - 400) / 2) + "px";
+  }
+
+
   return {
-    update: update
+    update: update,
+    resize: resize
   }
 }

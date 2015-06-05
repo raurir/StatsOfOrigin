@@ -24,7 +24,7 @@ var data;
   data = zero;
 
   var webgl = create3d();
-  var svg = create2d();
+  var svg = create2d({display: !webgl.ok});
   var ui = initUI();
   var clicks = 0;
   function clicked() {
@@ -75,6 +75,7 @@ var data;
     webgl.interactMove(e.detail);
   });
   addEventListener('resize', function(e) {
+    svg.resize(window.innerWidth, window.innerHeight);
     webgl.resize(window.innerWidth, window.innerHeight);
   });
 

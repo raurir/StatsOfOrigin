@@ -1,5 +1,25 @@
 function create3d() {
 
+  var ok = false;
+  if (!window.WebGLRenderingContext) {
+    // the browser doesn't even know what WebGL is
+    // window.location = "http://get.webgl.org";
+  } else {
+    var canvas = document.createElement("canvas");
+    var context = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+    if (context) {
+      // ok = true;
+    } else{
+      // browser supports WebGL but initialization failed.
+      // window.location = "http://get.webgl.org/troubleshooting";
+    }
+  }
+
+  if (ok === false) { // return a stub.
+    var func = function(){};
+    return {ok: ok, interactStart: func, interactStop: func, interactMove: func, update: func, showCountdown: func, resize: func}
+  }
+
   var MODE_COUNTDOWN = "countdown";
   var MODE_STAT = "stat";
   var mode = MODE_COUNTDOWN;
@@ -294,8 +314,8 @@ function create3d() {
   }
 
   function isMaroon(rotation) {
-    var qldSide = rotation > rotationQLDMin && rotation < rotationQLDMax; 
-    return qldSide; // so here's a biased function. up the maroons. 
+    var qldSide = rotation > rotationQLDMin && rotation < rotationQLDMax;
+    return qldSide; // so here's a biased function. up the maroons.
   }
 
   function render(time) {
@@ -355,7 +375,6 @@ function create3d() {
     update: update,
     showCountdown: showCountdown,
     resize: resize,
-
   }
 
 }
