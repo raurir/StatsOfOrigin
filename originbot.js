@@ -232,19 +232,16 @@ function initBot() {
 
     function doIt() {
       now = new Date()
-      con.log("time", now.getHours() + ":" + now.getMinutes())
+
       socialbot.getFriends()
+      .then(function(friends) {
+        return new Promise(function(fulfill, reject) {
+          con.log("time", now.getHours() + ":" + now.getMinutes(), "friends", friends.length);
+          fulfill(friends);
+        });
+      })
       .then(randIndex)
       .then(socialbot.getFriends)
-      // .then(function(friends) {
-      //   return new Promise(function(fulfill, reject) {
-      //     if (friends.length > 500) {
-      //       reject("TOO_MANY");
-      //     } else {
-      //       fulfill(friends);
-      //     }
-      //   });
-      // })
       .then(randIndex)
 
       // .then(function(friend) { con.log("friend:", friend); })
@@ -275,7 +272,7 @@ function initBot() {
 
     function doInSpecificMinutes(delayMins) {
       var delay = delayMins * 60 * 1000;
-      con.log("doInSpecificMinutes in minutes", delayMins, delay);
+      // con.log("doInSpecificMinutes in minutes", delayMins, delay);
       setTimeout(doIt, delay);
     }
 
