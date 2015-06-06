@@ -272,6 +272,7 @@ function initBot() {
               default :
                 con.log("Unknown error -- writing log", err);
                 writeLog("error", JSON.stringify(err));
+            }
           } else {
             con.log("doIt error - no code", err);
             writeLog("error", JSON.stringify(err));
