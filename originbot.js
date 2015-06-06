@@ -15,6 +15,12 @@ var lastSave = new Date().getTime();
 
 var history = [];
 
+function writeLog(filename, content) {
+  var d = new Date();
+  var time = [d.getUTCFullYear(), (d.getUTCMonth()+1), d.getUTCDate(), d.getUTCHours(), d.getUTCMinutes()].join("-");
+  saveFile("/history/" + filename + "-" + time + ".json", content);
+}
+
 function saveFile(filename, content) {
   // con.log("self.saveFile writing:", filename);
   lastSave = new Date().getTime();
@@ -22,7 +28,7 @@ function saveFile(filename, content) {
     if(err) {
         return con.log(err);
     }
-    con.log("self.saveFile complete:", filename, new Date().getTime() - lastSave);
+    // con.log("self.saveFile complete:", filename, new Date().getTime() - lastSave);
   });
 };
 
@@ -200,9 +206,7 @@ function initBot() {
               var hour = minute * 60;
               var day = hour * 24;
               if (now - lastSave > day || history.length > 100) {
-                var d = new Date();
-                var time = [d.getUTCFullYear(), (d.getUTCMonth()+1), d.getUTCDate(), d.getUTCHours(), d.getUTCMinutes()].join("-");
-                saveFile("/history/history-" + time + ".json", JSON.stringify(history));
+                writeLog("history", JSON.stringify(history));
                 history = [];
               }
 
@@ -255,12 +259,22 @@ function initBot() {
           con.log("known error, trying again... in 10 seconds", err);
           doInSpecificMinutes(0.1);
         } else {
-          if (err[0] && err[0].code && err[0].code == 88) {
-            con.log("Known error -- too many hits, waiting 15 mins", err);
-            doInSpecificMinutes(15);
+          if (err[0] && err[0].code) {
+            switch (err[0].code) {
+              case 88 : 
+                con.log("Known error -- too many hits, waiting", err);
+                doInSpecificMinutes(15);
+                break;
+              case 108 : 
+                con.log("Known error -- tried to follow someone who doesn't exist?", err);
+                doInSpecificMinutes(60);
+                break;
+              default :
+                con.log("Unknown error -- writing log", err);
+                writeLog("error", JSON.stringify(err));
           } else {
-            con.log("doIt error", err);
-            saveFile("/history/error-" + time + ".json", JSON.stringify(err));
+            con.log("doIt error - no code", err);
+            writeLog("error", JSON.stringify(err));
           }
         }
       });
