@@ -26,9 +26,12 @@ function parse() {
 
     if (years[yearIndex].inprogress) {
 
-      // ignore this sicne it's inprogress
+      // ignore this since it's in progress
 
-      criteria.series_winner.push([years[yearIndex].NSW, years[yearIndex].QLD]);
+      // criteria.series_winner.push([years[yearIndex].NSW, years[yearIndex].QLD]);
+
+      criteria.series_winner.push([incremental_series.NSW, incremental_series.QLD]);
+
 
     } else {
       years[yearIndex].winner = years[yearIndex].NSW > years[yearIndex].QLD ? NSW : QLD;

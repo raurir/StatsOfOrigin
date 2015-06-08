@@ -369,6 +369,7 @@ function create3d(options) {
   render(0);
 
   return {
+    ok: ok,
     interactStart: interactStart,
     interactStop: interactStop,
     interactMove: interactMove,

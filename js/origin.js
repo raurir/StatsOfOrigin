@@ -33,6 +33,7 @@ var data;
     if (clicks++ > 2) document.getElementById("buttons-help").style.display = "none";
   }
 
+  con.log(webgl, webgl.ok);
 
   function update(time) {
     countdown.update(time);
