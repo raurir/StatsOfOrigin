@@ -132,42 +132,7 @@ function initCountdown() {
 
   }
 
-
-
-
-
   var group = new THREE.Object3D();
-
-
-  // var sw = 800, sh = 300;
-
-  // var scene = new THREE.Scene();
-  // var camera = new THREE.PerspectiveCamera(25, sw / sh, 0.1, 1000);
-
-  // var renderer = new THREE.WebGLRenderer();
-  // renderer.setSize(sw, sh);
-  // document.getElementById("container-countdown").appendChild(renderer.domElement);
-
-  // var light = new THREE.AmbientLight(0x202020); // soft white light
-  // scene.add( light );
-
-  // var pointLight =  new THREE.PointLight(0xa00030);
-  // pointLight.position.y = 50;
-  // scene.add(pointLight);
-
-  // var pointLight2 =  new THREE.PointLight(0x000090);
-  // pointLight2.position.y = 50;
-  // scene.add(pointLight2);
-
-  // var pointLight3=  new THREE.PointLight(0xf0f0f0);
-  // pointLight3.position.y = 50;
-  // pointLight3.position.z = 50;
-  // scene.add(pointLight3);
-
-  // camera.position.z = 60;
-  // camera.position.y = 14;
-  // camera.lookAt(new THREE.Vector3(0, 0, 0));
-
 
   function generateCharacter(glyph) {
     var material = new THREE.MeshFaceMaterial([
@@ -230,39 +195,9 @@ function initCountdown() {
 
   };
 
-  // group.add(meshes[0][4]);
-
-/*
-  function render(time) {
-    // con.log(t)
-    if (time > 200) showRemaining();
-    // group.rotation.y = 0;
-
-    var t = time * 0.002;
-
-    pointLight.position.x = Math.sin(t) * 15;
-    pointLight.position.z = Math.cos(t) * 15;
-    pointLight2.position.x = -Math.sin(t *.9) * 15;
-    pointLight2.position.z = -Math.cos(t *.9) * 15;
-    pointLight3.position.x = -Math.sin(t *.8) * 15;
-    pointLight3.position.z = -Math.cos(t *.8) * 15;
-
-    // con.log(pointLight.position.x,pointLight.position.z)
-    // pointLight.lookAt(new THREE.Vector3(0, 0, 0));
-
-    renderer.render(scene, camera);
-
-    // con.log(time);
-    //if (time < 3000)
-    requestAnimationFrame(render);
-  };
-*/
-
   function update(time) {
     if (time > 200) showRemaining();
   }
-
-  // render(0);
 
   return {
     group: group,
@@ -270,6 +205,4 @@ function initCountdown() {
     update: update
   }
 
-
 }
-

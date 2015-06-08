@@ -1,4 +1,4 @@
-function create3d() {
+function create3d(options) {
 
   var ok = false;
   if (!window.WebGLRenderingContext) {
@@ -8,7 +8,7 @@ function create3d() {
     var canvas = document.createElement("canvas");
     var context = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
     if (context) {
-      // ok = true;
+      ok = true;
     } else{
       // browser supports WebGL but initialization failed.
       // window.location = "http://get.webgl.org/troubleshooting";
@@ -17,7 +17,7 @@ function create3d() {
 
   if (ok === false) { // return a stub.
     var func = function(){};
-    return {ok: ok, interactStart: func, interactStop: func, interactMove: func, update: func, showCountdown: func, resize: func}
+    return {ok: ok, interactStart: func, interactStop: func, interactMove: func, update: func, showCountdown: func, showState: func, resize: func};
   }
 
   var MODE_COUNTDOWN = "countdown";
@@ -63,7 +63,7 @@ function create3d() {
   pointLight.position.z = 30;
   scene.add(pointLight);
 
-  var countdown = initCountdown();
+  var countdown = options.countdown;
   scene.add(countdown.group);
   countdown.group.position.y = camera.position.y;
   countdown.group.position.z = 10;
@@ -374,6 +374,7 @@ function create3d() {
     interactMove: interactMove,
     update: update,
     showCountdown: showCountdown,
+    showState: function() {},
     resize: resize,
   }
 

@@ -1,4 +1,4 @@
-function create2d(display) {
+function create2d(options) {
 
   var margin = {top: 20, right: 30, bottom: 30, left: 60},
     width = 400 - margin.left - margin.right,
@@ -7,8 +7,9 @@ function create2d(display) {
   var chart = d3.select("#svgcontainer")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
-    .attr("class", display ? "displayed" : "hidden")
+    .attr("class", options.display ? "displayed" : "hidden")
     .append("g")
+    .attr("id", "chart-group")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
   var x = d3.scale.linear()
@@ -32,15 +33,15 @@ function create2d(display) {
       return y(d);
     });
 
-  var line = d3.svg.line()
-    .x(function(d,i) {
-      con.log(d,i)
-      return x(i);
-    })
-    .y(function(d, i) {
-      // con.log(d,y(d))
-      return y(d);
-    });
+  // var line = d3.svg.line()
+  //   .x(function(d,i) {
+  //     // con.log(d,i)
+  //     return x(i);
+  //   })
+  //   .y(function(d, i) {
+  //     // con.log(d,y(d))
+  //     return y(d);
+  //   });
 
 
   chart
@@ -51,13 +52,13 @@ function create2d(display) {
     .attr("class", function(d,i) { return "area " + [NSW,QLD][i]; })
     .attr("d", area);
 
-  chart
-    .selectAll("path")
-    .data([nsw,qld])
-    .enter()
-    .append("path")
-    .attr("class", "line")
-    .attr("d", line);
+  // chart
+  //   .selectAll("path")
+  //   .data([nsw,qld])
+  //   .enter()
+  //   .append("path")
+  //   .attr("class", "line")
+  //   .attr("d", line);
 
   var xAxis = d3.svg.axis()
     .scale(x)
@@ -86,7 +87,10 @@ function create2d(display) {
 
   function point(state, stateData) {
 
-    var g = chart.selectAll(".point." + state)
+    var g = chart
+      .append("g")
+      .attr("class", "points " + state)
+      .selectAll()
       .data(stateData)
       .enter()
       .append("svg:circle")
@@ -108,12 +112,13 @@ function create2d(display) {
           " (",
           match.winner.score,
           "-",
-          match.loser.score
+          match.loser.score,
+          ")"
         ].join("");
       })
 
       var state = this.attributes.class.value;
-      tooltip.text([state, years[i].year, "value", d, m].join(" "))
+      tooltip.text([state, years[i].year, ":", d, m].join(" "))
       tooltip.style("visibility", "visible");
     })
     .on("mousemove", function(d,i){
@@ -145,37 +150,47 @@ function create2d(display) {
 
     d3.select(".y.axis")
       .transition()
-      // .duration(1750)
+      .duration(1750)
       .call(yAxis);
-
 
     chart
       .selectAll("path.area")
-      .data([nsw,qld])
+      .data([nsw, qld])
       .transition()
-      // .duration(750)
+      .duration(750)
       .attr("d", function(d) { return area(d); });
 
-
-    chart
-      .selectAll("path.line")
-      .data([nsw,qld])
-      .transition()
-      // .duration(750)
-      .attr("d", line);
-
+    // chart
+    //   .selectAll("path.line")
+    //   .data([nsw, qld])
+    //   .transition()
+    //   .duration(750)
+    //   .attr("d", line);
 
     function updatePoints(points, data) {
       points
       .data(data)
       .transition()
       .attr("cy", function(d, i) { return y(d); })
-      // .duration(function(d, i) { return i * 40;} )
+      .duration(function(d, i) { return i * 40;} )
     }
     updatePoints(pointsNSW, nsw);
     updatePoints(pointsQLD, qld);
 
+  }
 
+  var nswTopLayer = true;
+  function showState(state) {
+    return;
+    nswTopLayer = state === NSW;
+    document.getElementById("chart-group").insertBefore(
+      document.getElementsByClassName("area " + (nswTopLayer ? QLD : NSW))[0],
+      document.getElementsByClassName("area " + (nswTopLayer ? NSW : QLD))[0] 
+    );
+    document.getElementById("chart-group").insertBefore(
+      document.getElementsByClassName("points " + (nswTopLayer ? QLD : NSW))[0],
+      document.getElementsByClassName("points " + (nswTopLayer ? NSW : QLD))[0] 
+    );
   }
 
   function resize(width, height) {
@@ -186,6 +201,7 @@ function create2d(display) {
 
   return {
     update: update,
-    resize: resize
+    resize: resize,
+    showState: showState,
   }
 }

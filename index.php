@@ -40,6 +40,8 @@ Open source at: https://github.com/raurir/StatsOfOrigin
         <h1>StatsOfOrigin - State of Origin Statistics 1982 - 2015</h1>
         <h4 id='stat'></h4>
       </div>
+      <div class='button-show-state button' id='show-NSW'>NSW</div>
+      <div class='button-show-state button' id='show-QLD'>QLD</div>
       <div id='webglcontainer'></div>
       <svg id="svgcontainer"></svg>
       <div id="buttons">

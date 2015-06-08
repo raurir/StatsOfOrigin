@@ -1,6 +1,7 @@
 var con = console;
 var NSW = "NSW", QLD = "QLD";
 var EVENT_COUNTDOWN_SELECTED = "EVENT_COUNTDOWN_SELECTED";
+var EVENT_STATE_SELECTED = "EVENT_STATE_SELECTED";
 var EVENT_STAT_SELECTED = "EVENT_STAT_SELECTED";
 var EVENT_SHOW = "EVENT_SHOW";
 var EVENT_INTERACT_START = "EVENT_INTERACT_START";
@@ -23,20 +24,35 @@ var data;
   var zero = years.map(function(){return [0,0];}); // create an array of [0,0] as long as we have years.
   data = zero;
 
-  var webgl = create3d();
+  var countdown = initCountdown();
+  var webgl = create3d({countdown: countdown});
   var svg = create2d({display: !webgl.ok});
   var ui = initUI();
   var clicks = 0;
   function clicked() {
     if (clicks++ > 2) document.getElementById("buttons-help").style.display = "none";
   }
+
+
+  function update(time) {
+    countdown.update(time);
+    requestAnimationFrame(update);
+  };
+  if (!webgl.ok) update(0);
+
   function showCountdown() {
     clicked();
-    webgl.showCountdown(true);
-    document.getElementById("buttons-help").innerHTML = "Select an option below to see historical results";
     document.getElementById("stat").innerHTML = "Countdown to next match";
+    if (webgl.ok) {
+      webgl.showCountdown(true);
+    } else {
+      document.getElementById("stat").appendChild(countdown.div);
+    }
+    document.getElementById("buttons-help").innerHTML = "Select an option below to see historical results";
     dispatchEvent(new CustomEvent(EVENT_SHOW, {detail: "countdown"}));
   }
+
+
 
   function showCriteria(id) {
     clicked();
@@ -44,6 +60,8 @@ var data;
     var nsw = data.map(function(d) { return d[0];})
     var qld = data.map(function(d) { return d[1];})
     var max = d3.max(data, function(d){ return Math.max(d[0], d[1]); })
+
+
     svg.update(nsw, qld, max);
     webgl.showCountdown(false);
     webgl.update(nsw, qld, max);
@@ -56,8 +74,17 @@ var data;
     dispatchEvent(new CustomEvent(EVENT_SHOW, {detail: id}));
   }
 
+  function showState(state) {
+    con.log("showState", state);
+    svg.showState(state);
+    webgl.showState(state);
+  }
+
   addEventListener(EVENT_STAT_SELECTED, function(e) {
     showCriteria(e.detail);
+  });
+  addEventListener(EVENT_STATE_SELECTED, function(e) {
+    showState(e.detail);
   });
   addEventListener(EVENT_COUNTDOWN_SELECTED, function(e) {
     showCountdown();

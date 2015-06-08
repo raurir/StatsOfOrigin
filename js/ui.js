@@ -73,14 +73,21 @@ function initUI() {
       if (b.id === "countdown") {
         dispatchEvent(new CustomEvent(EVENT_COUNTDOWN_SELECTED));
       } else {
-        dispatchEvent(new CustomEvent(EVENT_STAT_SELECTED, {detail:b.id}));
+        dispatchEvent(new CustomEvent(EVENT_STAT_SELECTED, {detail: b.id}));
       }
-    })
+    });
   }
   for (var b in buttonNames) {
     createButton(buttonNames[b]);
   }
 
+  function stateButton(state) {
+    document.getElementById("show-" + state).addEventListener("click", function() {
+      dispatchEvent(new CustomEvent(EVENT_STATE_SELECTED, {detail: state}));
+    });
+  }
+  stateButton(NSW);
+  stateButton(QLD);
 
 }
 
