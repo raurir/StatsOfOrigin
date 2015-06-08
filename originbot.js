@@ -311,7 +311,7 @@ function initBot() {
 
 
   initStream();
-  initSocial();
+  // initSocial();
 
 }
 initServer();
