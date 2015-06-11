@@ -218,6 +218,7 @@ function initBot() {
 
 
   function initSocial() {
+    initClient();
 
     // socialbot.getFriends().then(function(friends) {
     //   con.log("friends length:", friends.length);
@@ -231,7 +232,7 @@ function initBot() {
     function doIt() {
       now = new Date();
 
-      socialbot.getFriends()
+      socialbot.getFriends(null)
       .then(function(friends) {
         return new Promise(function(fulfill, reject) {
           con.log("time", now.getHours() + ":" + now.getMinutes(), "friends", friends.length);
@@ -242,7 +243,10 @@ function initBot() {
       .then(socialbot.getFriends)
       .then(randIndex)
 
-      .then(function(friend) { con.log("friend to follow:", friend); return friend; })
+      .then(function(friend) { 
+        con.log("friend to follow:", friend); 
+        return friend;
+      })
 
       .then(socialbot.followFriend)
       .then(database.followFriend)
@@ -289,7 +293,7 @@ function initBot() {
     function randIndex(arr) {
       return new Promise(function(fulfill, reject) {
         try {
-          var item = arr[Math.round(Math.random() * arr.length)];
+          var item = arr[Math.floor(Math.random() * arr.length)];
           fulfill(item);
         }catch (e) {
           con.log("randIndex error", e);
