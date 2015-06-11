@@ -299,7 +299,7 @@ function initBot() {
     }
 
     // doItAgain();
-    // doIt();
+    doIt();
 
   }
 
