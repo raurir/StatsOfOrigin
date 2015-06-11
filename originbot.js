@@ -8,6 +8,7 @@ var request = require("request");
 var express = require('express');
 
 var socialbot = require('./TwitterSocialBot/socialbot');
+var database = require('./database');
 
 var con = console;
 
@@ -249,9 +250,10 @@ function initBot() {
       .then(socialbot.getFriends)
       .then(randIndex)
 
-      // .then(function(friend) { con.log("friend:", friend); })
+      .then(function(friend) { con.log("friend to follow:", friend); return friend; })
 
       .then(socialbot.followFriend)
+      .then(database.followFriend)
       .then(doItAgain)
 
       .catch(function(err) {
@@ -261,11 +263,11 @@ function initBot() {
         } else {
           if (err[0] && err[0].code) {
             switch (err[0].code) {
-              case 88 : 
+              case 88 :
                 con.log("Known error -- too many hits, waiting", err);
                 doInSpecificMinutes(15);
                 break;
-              case 108 : 
+              case 108 :
                 con.log("Known error -- tried to follow someone who doesn't exist?", err);
                 doInSpecificMinutes(60);
                 break;
@@ -311,7 +313,7 @@ function initBot() {
 
 
   initStream();
-  // initSocial();
+  initSocial();
 
 }
 initServer();
