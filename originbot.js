@@ -243,8 +243,8 @@ function initBot() {
       .then(socialbot.getFriends)
       .then(randIndex)
 
-      .then(function(friend) { 
-        con.log("friend to follow:", friend); 
+      .then(function(friend) {
+        con.log("friend to follow:", friend);
         return friend;
       })
 
@@ -264,8 +264,12 @@ function initBot() {
                 doInSpecificMinutes(15);
                 break;
               case 108 :
-                con.log("Known error -- tried to follow someone who doesn't exist?", err);
-                doInSpecificMinutes(60);
+                con.log("Known error -- tried to follow someone who doesn't exist", err);
+                doInSpecificMinutes(20);
+                break;
+              case 250 :
+                con.log("Known error -- tried to follow someone with age restriction", err);
+                doInSpecificMinutes(5);
                 break;
               default :
                 con.log("Unknown error -- writing log", err);
