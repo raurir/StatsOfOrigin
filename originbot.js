@@ -16,23 +16,6 @@ var lastSave = new Date().getTime();
 
 var history = [];
 
-function writeLog(filename, content) {
-  var d = new Date();
-  var time = [d.getUTCFullYear(), (d.getUTCMonth()+1), d.getUTCDate(), d.getUTCHours(), d.getUTCMinutes()].join("-");
-  saveFile("/history/" + filename + "-" + time + ".json", content);
-}
-
-function saveFile(filename, content) {
-  // con.log("self.saveFile writing:", filename);
-  lastSave = new Date().getTime();
-  fs.writeFile(__dirname + filename, content, function(err) {
-    if(err) {
-        return con.log(err);
-    }
-    // con.log("self.saveFile complete:", filename, new Date().getTime() - lastSave);
-  });
-};
-
 function initServer() {
   con.log("initServer");
 
@@ -236,8 +219,17 @@ function initBot() {
 
   function initSocial() {
 
+    // socialbot.getFriends().then(function(friends) {
+    //   con.log("friends length:", friends.length);
+    //   con.log("friends:", friends);
+    // });
+
+    // socialbot.getFollowers().then(function(followers) {
+    //   con.log("followers", followers.ids.length, followers.next_cursor, followers.previous_cursor);
+    // });
+
     function doIt() {
-      now = new Date()
+      now = new Date();
 
       socialbot.getFriends()
       .then(function(friends) {
@@ -307,14 +299,34 @@ function initBot() {
     }
 
     // doItAgain();
-    doIt();
+    // doIt();
 
   }
 
 
-  initStream();
+  // initStream();
   initSocial();
 
 }
-initServer();
+
+function writeLog(filename, content) {
+  var d = new Date();
+  var time = [d.getUTCFullYear(), (d.getUTCMonth()+1), d.getUTCDate(), d.getUTCHours(), d.getUTCMinutes()].join("-");
+  saveFile("/history/" + filename + "-" + time + ".json", content);
+}
+
+function saveFile(filename, content) {
+  // con.log("self.saveFile writing:", filename);
+  lastSave = new Date().getTime();
+  fs.writeFile(__dirname + filename, content, function(err) {
+    if(err) {
+        return con.log(err);
+    }
+    // con.log("self.saveFile complete:", filename, new Date().getTime() - lastSave);
+  });
+};
+
+
+
+// initServer();
 initBot();
