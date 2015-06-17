@@ -10,7 +10,7 @@ function initCountdown() {
 
   var div = document.createElement("div");
 
-  var end = new Date(2015, 05, 17, 20, 0 );
+  var end = new Date(2015, 06, 8, 20, 0 );
 
   var _second = 1000;
   var _minute = _second * 60;
@@ -41,7 +41,7 @@ function initCountdown() {
     var now = new Date();
     var distance = end - now;
     if (distance < 0) {
-      clearInterval(timer);
+      // clearInterval(timer);
       return;
     }
 
