@@ -1,140 +1,17 @@
-var Twitter = require("twitter");
 var _ = require("underscore");
-var fs = require("fs");
-var http = require("http");
-var https = require("https");
-var Promise = require('promise');
-var request = require("request");
-var express = require('express');
-
-var socialbot = require('./TwitterSocialBot/socialbot');
 var database = require('./database');
+var fs = require("fs");
+var Promise = require('promise');
+var socialbot = require('./TwitterSocialBot/socialbot');
+var Twitter = require("twitter");
 
 var con = console;
 
-var lastSave = new Date().getTime();
+module.exports = function (history) {
 
-var history = [];
+  var botID = null, client = null, db = null;
 
-function initServer() {
-  con.log("initServer");
-
-  var output = process.env.OUTPUT_URL;
-  var self = {};
-  if (/rauri/.test(process.env.USER)) {
-    self.port = 8020;
-    self.ipaddress = "127.0.0.1";
-  } else if (/root/.test(process.env.USER)) {
-    self.port = 8020;
-    self.ipaddress = "0.0.0.0";
-  } else {
-    throw new Error("unknown environment");
-  }
-
-  var htmlHeader = "<html><header><link rel=\"stylesheet\" type=\"text/css\" href=\"/bot.css\"></header><body>";
-  var links = "<div class='links'>" + ["memory", "history"].map(function(link,i) { return "<a href='" + output + link + "'>" + link + "</a>"; }).join(" ") + "</div>";
-  var htmlFooter = "</body></html>";
-
-
-  function renderTweet(item, index) {
-    return [
-      "<div class='tweet " + (item.bad ? "bad" : "good") + "'>",
-        "<div class='index'>", index, "</div>",
-        "<div class='image'>",
-          "<a href='http://twitter.com/" + item.user_screen_name + "'>",
-            "<img src='" + item.user_profile_image_url + "'>",
-          "</a>",
-        "</div>",
-        "<div class='text'>",
-          "<div class='retweeted'>", (item.retweeted ? "RT!" : ""), "</div>",
-          "<a href='http://twitter.com/statuses/" + item.id_str + "'>", item.text, "</a>",
-        "</div>",
-      "</div>"
-    ].join("");
-  }
-
-
-
-
-
-
-  self.routes = { };
-
-  self.routes["/bot.css"] = function(req, res) {
-    fs.readFile(__dirname + '/bot.css', function (err, data) {
-      res.writeHead(200, {'Content-Type': 'text/css'});
-      res.write(data);
-      res.end();
-    });
-  };
-
-  self.routes[output + "memory/"] = function(req, res) {
-    res.setHeader('Content-Type', 'text/html');
-    var historyString = history.map(renderTweet).join("");
-    res.send(htmlHeader + "<h4>Memory</h4>" + links + "Items:" + history.length + "<br>" + historyString + htmlFooter);
-  };
-
-  self.routes[output + "history/"] = function(req, res) {
-    var files = fs.readdirSync(__dirname + "/history/");
-    // con.log(files);
-    var fileLinks = files.map(function(file,i) {
-      return "<a href='" + output + "history/show/" + file + "'>" + file + "</a>";
-    });
-    res.setHeader('Content-Type', 'text/html');
-    res.send(htmlHeader + "<h4>History</h4>" + links + fileLinks.join("<br>") + htmlFooter);
-  };
-
-  self.routes[output + "history/show/:file"] = function(req, res) {
-    var filename = __dirname + "/history/" + req.params.file;
-    // res.setHeader('Content-Type', 'application/json');
-    res.setHeader('Content-Type', 'text/html');
-    self.readJSON(filename).then(function(data) {
-      return new Promise(function(fulfill, reject) {
-        var loadedHistory = JSON.parse(data).map(renderTweet).join("");
-        res.end(htmlHeader + "<h4>History</h4>" + links + loadedHistory + htmlFooter);
-        // res.end(data);
-        fulfill();
-      });
-    });
-  };
-
-
-  self.readJSON = function(filename) {
-    return new Promise(function(fulfill, reject) {
-      fs.readFile(filename, 'utf8', function(err, data) {
-        if (err) {
-          reject(err);
-        } else {
-          fulfill(data);
-        }
-      });
-    });
-  }
-
-
-
-
-
-
-
-
-  self.app = express();
-
-  var server = http.createServer(self.app);
-
-  for (var r in self.routes) {
-    self.app.get(r, self.routes[r]);
-  }
-  self.app.listen(self.port, self.ipaddress, function() {
-    con.log('%s: Node server started on %s:%d ...', Date(Date.now() ), self.ipaddress, self.port);
-  });
-
-}
-
-function initBot() {
-  con.log("initialising bot");
-
-  var botID = null, client = null;
+  var lastSave = new Date().getTime();
 
   function initClient() {
     client = socialbot.initClient({
@@ -145,9 +22,22 @@ function initBot() {
     });
   }
 
+  function initDB() {
+    if (!db) {
+      // con.log("initDB calling connect");
+      database.init().then(function() {
+        con.log("initDB connected");
+        db = true;
+      });
+    }
+  }
+
   function initStream() {
+    initDB();
     initClient();
-    con.log("initialising twitter stream");
+    con.log("initStream");
+
+    
 
     client.stream("statuses/filter", {track: "stateoforigin"}, function(stream) {
       stream.on("data", function(tweet) {
@@ -191,6 +81,7 @@ function initBot() {
               var day = hour * 24;
               if (now - lastSave > day || history.length > 100) {
                 writeLog("history", JSON.stringify(history));
+                lastSave = new Date().getTime();
                 history = [];
               }
 
@@ -219,8 +110,10 @@ function initBot() {
 
   function initSocial() {
     initClient();
+    initDB();
+    con.log("initSocial");
 
-    // socialbot.getFriends().then(function(friends) {
+    // socialbot.getFollowing().then(function(friends) {
     //   con.log("friends length:", friends.length);
     //   con.log("friends:", friends);
     // });
@@ -230,9 +123,61 @@ function initBot() {
     // });
 
     function doIt() {
+      // findFriend();
+      con.log("doIt");
+      if (db) {
+        checkFollowers();
+
+      } else {
+        setTimeout(doIt, 100);
+      }
+    }
+
+    function checkFollowers() {
+      // con.log("checkFollowers", db, database);
+      socialbot.getFollowers().then(function(followers) {
+        // con.log("followers", followers.ids.length);// , followers.next_cursor, followers.previous_cursor);
+        
+
+        database.getFollowedHistory()
+        .then(function(following) {
+          return arrayPickSome(following, 10);
+        })
+        .then(function(selectedFollowing) {
+
+          // checking which following are also followers
+          var toPrune = [];
+          for (var i = 0; i < selectedFollowing.length; i++) {
+            var followingId = Number(selectedFollowing[i].friend);
+            if (followers.ids.indexOf(followingId) === -1) {
+              // con.log("This guy  me", followingId, typeof followingId);
+              toPrune.push(followingId);
+            } else {
+              con.log("This guy ain't IS following me", followingId);
+            }
+          };
+          // con.log("OriginBot getFollowedHistory", selectedFollowing.length, toPrune);
+          return toPrune[0];
+
+        })
+        .then(socialbot.unfollowFriend)
+        .then(database.updateFriend)
+        .then(database.findFriend) // just a verify loop... 
+        .then(function() {
+          doInSpecificMinutes(0.5);
+          con.log("========================");
+        });
+
+      });
+
+    }
+
+
+    function findFriend() {
+      con.log("findFriend");
       now = new Date();
 
-      socialbot.getFriends(null)
+      socialbot.getFollowing(null)
       .then(function(friends) {
         return new Promise(function(fulfill, reject) {
           con.log("time", now.getHours() + ":" + now.getMinutes(), "friends", friends.length);
@@ -240,7 +185,7 @@ function initBot() {
         });
       })
       .then(randIndex)
-      .then(socialbot.getFriends)
+      .then(socialbot.getFollowing)
       .then(randIndex)
 
       .then(function(friend) {
@@ -290,21 +235,55 @@ function initBot() {
 
     function doInSpecificMinutes(delayMins) {
       var delay = delayMins * 60 * 1000;
-      // con.log("doInSpecificMinutes in minutes", delayMins, delay);
+      con.log("doInSpecificMinutes in minutes", delayMins, delay);
       setTimeout(doIt, delay);
     }
 
+
+
+
+    // util functions
     function randIndex(arr) {
       return new Promise(function(fulfill, reject) {
         try {
           var item = arr[Math.floor(Math.random() * arr.length)];
           fulfill(item);
-        }catch (e) {
+        } catch (e) {
           con.log("randIndex error", e);
           reject(e);
         }
       });
     }
+
+    function arrayPickSome(source, required) {
+      // con.log("calling arrayPickSome");
+      return new Promise(function(fulfill, reject) {
+        source = source.slice();
+        if (source.length && required) {
+          var good = [], iterations = 0, maxIterations = 2000;
+          while (good.length < required && source.length && iterations < maxIterations) {
+            var index = Math.floor(Math.random() * source.length);
+            var item = source.splice(index, 1)[0];
+            good.push(item);
+            // con.log("arrayPickSome", index, item, good.length);
+            iterations ++;
+          }
+          if (iterations >= maxIterations) {
+            con.warn("arrayPickSome - Too many iterations");
+            reject([]);
+          } else {
+            con.log("arrayPickSome - good:", good.length);
+            fulfill(good);
+          }
+        } else {
+          if (!source.length) con.log("arrayPickSome - source array was empty");
+          if (!required) con.log("arrayPickSome - required amount was falsey", required);
+          fulfill([]);
+        }
+      });
+    }
+
+
 
     // doItAgain();
     doIt();
@@ -312,29 +291,20 @@ function initBot() {
   }
 
 
+  function writeLog(filename, content) {
+    var d = new Date();
+    var time = [d.getUTCFullYear(), (d.getUTCMonth()+1), d.getUTCDate(), d.getUTCHours(), d.getUTCMinutes()].join("-");
+    saveFile("/history/" + filename + "-" + time + ".json", content);
+  }
+
+  function saveFile(filename, content) {
+    fs.writeFile(__dirname + filename, content, function(err) {
+      if(err) {return con.log(err);}
+    });
+  };
+
+
   // initStream();
   initSocial();
 
 }
-
-function writeLog(filename, content) {
-  var d = new Date();
-  var time = [d.getUTCFullYear(), (d.getUTCMonth()+1), d.getUTCDate(), d.getUTCHours(), d.getUTCMinutes()].join("-");
-  saveFile("/history/" + filename + "-" + time + ".json", content);
-}
-
-function saveFile(filename, content) {
-  // con.log("self.saveFile writing:", filename);
-  lastSave = new Date().getTime();
-  fs.writeFile(__dirname + filename, content, function(err) {
-    if(err) {
-        return con.log(err);
-    }
-    // con.log("self.saveFile complete:", filename, new Date().getTime() - lastSave);
-  });
-};
-
-
-
-// initServer();
-initBot();

@@ -1,23 +1,33 @@
 var MongoClient = require('mongodb').MongoClient;
-var format = require('util').format;
+// var format = require('util').format;
 var Promise = require('promise');
 
 var con = console;
 
 module.exports = (function() {
 
-  con.log("database hello!!");
+  // launch database:
+  // mongod --dbpath data/db
 
   var collection = null;
 
-  MongoClient.connect('mongodb://127.0.0.1:27017/test', function(err, db) {
-    if (err) throw err;
-    collection = db.collection('test_insert');
-    con.log("database initialised!");
-  });
+  function init() {
+    // con.log("Database connect"); 
+    return new Promise(function(fulfill, reject) {
+      MongoClient.connect('mongodb://127.0.0.1:27017/test', function(err, db) {
+        if (err) {
+          con.log("database.connect rejected", err);
+          reject(err);
+        } else {
+          collection = db.collection('test_insert');
+          fulfill();
+        }
+      });
+    });
+  }
 
   function followFriend(friend) {
-    con.log("db followFriend", friend.screen_name);
+    // con.log("db followFriend", friend.screen_name);
     return new Promise(function(fulfill, reject) {
       if (collection) {
         collection.insert({friend: friend.id_str, dateFollowed: new Date()}, function(err, docs) {
@@ -37,6 +47,7 @@ module.exports = (function() {
 
   function findFriend(friend) {
     con.log("db findFriend");
+    friend = String(friend);
     return new Promise(function(fulfill, reject) {
       if (collection) {
         collection.find({
@@ -46,11 +57,78 @@ module.exports = (function() {
             con.log("db findFriend reject err", err);
             reject(err);
           } else {
+            con.log("db findFriend results", results);
             fulfill(friend);
           }
         });
       } else {
         con.log("db findFriend reject no connection");
+        reject("No connection");
+      }
+    });
+  }
+
+
+  function updateFriend(friend) {
+    friend = String(friend);
+    con.log("db updateFriend");
+    return new Promise(function(fulfill, reject) {
+      if (collection) {
+        try {
+          collection.update(
+            { friend: friend},
+            {
+              $set: {
+                dateUnfollowed: new Date()
+              }
+            }
+          );
+          // con.log("db updateFriend response");
+          fulfill(friend);
+        } catch(err) {
+          con.log("db updateFriend err", err);
+          reject(err);
+        }
+      } else {
+        con.log("db updateFriend reject no connection");
+        reject("No connection");
+      }
+    });
+  }
+
+
+
+  function getFollowedHistory() {
+    return new Promise(function(fulfill, reject) {
+      if (collection) {
+
+        try { // coz we suck at sql...
+
+          var d = new Date();
+          var then = d.getTime();
+          d.setDate(d.getDate() - 7); 
+
+          collection.find({
+            dateFollowed: {"$lt": d},
+            dateUnfollowed: {"$exists": false} // make sure we don't unfollow previous unfollows
+          }).toArray(function(err, results) {
+            if (err) {
+              con.log("db getFollowedHistory reject err", err);
+              reject(err);
+            } else {
+              con.log("db getFollowedHistory fulfill - following:", results.length);
+              var proctime = new Date().getTime() - then;
+              con.log("db getFollowedHistory proctime", proctime);
+              fulfill(results);
+            }
+          });
+
+        } catch(err) {
+          con.log("error", err);
+        }
+
+      } else {
+        con.log("db getFollowedHistory reject no connection");
         reject("No connection");
       }
     });
@@ -85,8 +163,11 @@ module.exports = (function() {
 
 
   return {
+    init: init,
     findFriend: findFriend,
     followFriend: followFriend,
+    getFollowedHistory: getFollowedHistory,
+    updateFriend: updateFriend,
   }
 
 })();
