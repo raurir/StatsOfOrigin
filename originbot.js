@@ -124,19 +124,18 @@ module.exports = function (history) {
 
     function doIt() {
       // findFriend();
-      con.log("doIt");
+      con.log("doIt");  
       if (db) {
         checkFollowers();
-
       } else {
         setTimeout(doIt, 100);
       }
     }
 
     function checkFollowers() {
-      // con.log("checkFollowers", db, database);
+      con.log("checkFollowers", db, database);
       socialbot.getFollowers().then(function(followers) {
-        // con.log("followers", followers.ids.length);// , followers.next_cursor, followers.previous_cursor);
+        con.log("followers", followers.ids.length);// , followers.next_cursor, followers.previous_cursor);
         
 
         database.getFollowedHistory()
@@ -153,7 +152,7 @@ module.exports = function (history) {
               // con.log("This guy  me", followingId, typeof followingId);
               toPrune.push(followingId);
             } else {
-              con.log("This guy ain't IS following me", followingId);
+              con.log("This guy IS following me", followingId);
             }
           };
           // con.log("OriginBot getFollowedHistory", selectedFollowing.length, toPrune);
@@ -164,7 +163,7 @@ module.exports = function (history) {
         .then(database.updateFriend)
         .then(database.findFriend) // just a verify loop... 
         .then(function() {
-          doInSpecificMinutes(0.5);
+          doInSpecificMinutes(0.2);
           con.log("========================");
         });
 
@@ -235,7 +234,7 @@ module.exports = function (history) {
 
     function doInSpecificMinutes(delayMins) {
       var delay = delayMins * 60 * 1000;
-      con.log("doInSpecificMinutes in minutes", delayMins, delay);
+      // con.log("doInSpecificMinutes in minutes", delayMins, delay);
       setTimeout(doIt, delay);
     }
 
@@ -272,7 +271,7 @@ module.exports = function (history) {
             con.warn("arrayPickSome - Too many iterations");
             reject([]);
           } else {
-            con.log("arrayPickSome - good:", good.length);
+            // con.log("arrayPickSome - good:", good.length);
             fulfill(good);
           }
         } else {

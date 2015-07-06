@@ -46,7 +46,7 @@ module.exports = (function() {
   }
 
   function findFriend(friend) {
-    con.log("db findFriend");
+    // con.log("db findFriend");
     friend = String(friend);
     return new Promise(function(fulfill, reject) {
       if (collection) {
@@ -57,7 +57,7 @@ module.exports = (function() {
             con.log("db findFriend reject err", err);
             reject(err);
           } else {
-            con.log("db findFriend results", results);
+            con.log("db findFriend results - dateUnfollowed:", friend, results[0].dateUnfollowed);
             fulfill(friend);
           }
         });
@@ -71,7 +71,7 @@ module.exports = (function() {
 
   function updateFriend(friend) {
     friend = String(friend);
-    con.log("db updateFriend");
+    // con.log("db updateFriend");
     return new Promise(function(fulfill, reject) {
       if (collection) {
         try {
@@ -116,9 +116,9 @@ module.exports = (function() {
               con.log("db getFollowedHistory reject err", err);
               reject(err);
             } else {
-              con.log("db getFollowedHistory fulfill - following:", results.length);
+              // con.log("db getFollowedHistory fulfill - following:", results.length);
               var proctime = new Date().getTime() - then;
-              con.log("db getFollowedHistory proctime", proctime);
+              // con.log("db getFollowedHistory proctime", proctime);
               fulfill(results);
             }
           });
