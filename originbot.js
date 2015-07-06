@@ -12,6 +12,7 @@ module.exports = function (history) {
   var botID = null, client = null, db = null;
 
   var lastSave = new Date().getTime();
+  var lastFollow = 0;//new Date().getTime();
 
   function initClient() {
     client = socialbot.initClient({
@@ -38,8 +39,10 @@ module.exports = function (history) {
     con.log("initStream");
 
     
+    var term = "stateoforigin,#nrl,state of origin,maroons blues";
+    // term = "kyrgios,gasquet";
 
-    client.stream("statuses/filter", {track: "stateoforigin"}, function(stream) {
+    client.stream("statuses/filter", {track: term}, function(stream) {
       stream.on("data", function(tweet) {
 
         if (tweet.user) {
@@ -50,6 +53,13 @@ module.exports = function (history) {
             if (tweet.text) {
               // con.log("stream(user) - ok - tweet.text", tweet.text);
 
+              var now = new Date().getTime();
+             
+              var minute = 1000 * 60;
+              var hour = minute * 60;
+              var day = hour * 24;
+
+
               var badText = (/(RT|loan|→|Poll)/.test(tweet.text));
               var badUser = ["johnspatricc", "aunewse", "l5iza", "gima2327"].indexOf(tweet.user.screen_name) > -1;
               var bad = badText || badUser;
@@ -59,7 +69,7 @@ module.exports = function (history) {
 
               if (!bad) {
                 // con.log("-------------------------------------");
-                con.log(tweet);
+                // con.log(tweet);
                 // con.log("=====================================");
 
                 var item = {
@@ -72,18 +82,54 @@ module.exports = function (history) {
                   "retweeted": tweet.retweeted,
                 };
                 history.push(item);
+
+
+                // if (tweet.retweet_count || tweet.favorite_count) {
+                //   con.log("popular tweet...");
+                // } else {
+                //   con.log("not popular", tweet.retweet_count, tweet.favorite_count);
+                // }
+
+                // con.log("found tweet", tweet.user.name, tweet.text);
+
+                if (true || tweet.user.followers_count < 100) {
+                  // con.log("found user with no mates", tweet.user.name, tweet.text);
+
+                  var friend = tweet.user.id_str;
+                  database.hasBeenFollowed(friend).then(function(hasBeen) {
+                    if (hasBeen) {
+                      con.log("hasBeenFollowed already!", friend, friend, tweet.user.name, tweet.text);
+                    } else {
+                      if (now - lastFollow > minute * 2) {
+
+                        con.log("hasBeenFollowed following friend!!", friend, tweet.user.name, tweet.text);
+                        socialbot.followFriend(friend)
+                        .then(database.followFriend)
+                        .catch(handleError);
+
+                        lastFollow = now;
+                      } else {
+                        con.log("hasBeenFollowed too soon!", friend, tweet.user.name, tweet.text);
+                      }
+                    }
+                  }).catch(handleError);
+
+
+
+
+                }
+
               }
 
 
-              var now = new Date().getTime();
-              var minute = 1000 * 60;
-              var hour = minute * 60;
-              var day = hour * 24;
+ 
               if (now - lastSave > day || history.length > 100) {
                 writeLog("history", JSON.stringify(history));
-                lastSave = new Date().getTime();
+                lastSave = now;
                 history = [];
               }
+
+
 
             } else if (tweet.friends) {
               // con.log("stream(user) - initial tweet - friends:", tweet.friends.length);
@@ -98,7 +144,7 @@ module.exports = function (history) {
 
       stream.on("error", function(error) {
         // throw error;
-        con.log(error);
+        con.log("Stream error:", error);
       });
     });
 
@@ -122,22 +168,13 @@ module.exports = function (history) {
     //   con.log("followers", followers.ids.length, followers.next_cursor, followers.previous_cursor);
     // });
 
-    function doIt() {
-      // findFriend();
-      con.log("doIt");  
-      if (db) {
-        checkFollowers();
-      } else {
-        setTimeout(doIt, 100);
-      }
-    }
+ 
 
     function checkFollowers() {
-      con.log("checkFollowers", db, database);
+      con.log("checkFollowers");
       socialbot.getFollowers().then(function(followers) {
         con.log("followers", followers.ids.length);// , followers.next_cursor, followers.previous_cursor);
         
-
         database.getFollowedHistory()
         .then(function(following) {
           return arrayPickSome(following, 10);
@@ -165,7 +202,7 @@ module.exports = function (history) {
         .then(function() {
           doInSpecificMinutes(0.2);
           con.log("========================");
-        });
+        }).catch(handleError);
 
       });
 
@@ -195,50 +232,8 @@ module.exports = function (history) {
       .then(socialbot.followFriend)
       .then(database.followFriend)
       .then(doItAgain)
-
-      .catch(function(err) {
-        if (err === "TOO_MANY" || err === "NO_FRIENDS") {
-          con.log("known error, trying again... in 10 seconds", err);
-          doInSpecificMinutes(0.1);
-        } else {
-          if (err[0] && err[0].code) {
-            switch (err[0].code) {
-              case 88 :
-                con.log("Known error -- too many hits, waiting", err);
-                doInSpecificMinutes(15);
-                break;
-              case 108 :
-                con.log("Known error -- tried to follow someone who doesn't exist", err);
-                doInSpecificMinutes(20);
-                break;
-              case 250 :
-                con.log("Known error -- tried to follow someone with age restriction", err);
-                doInSpecificMinutes(5);
-                break;
-              default :
-                con.log("Unknown error -- writing log", err);
-                writeLog("error", JSON.stringify(err));
-            }
-          } else {
-            con.log("doIt error - no code", err);
-            writeLog("error", JSON.stringify(err));
-          }
-        }
-      });
+      .catch(handleError);
     }
-
-    function doItAgain() {
-      var delayMins = Math.round((2 + Math.random() * 2) * 100) / 100;
-      doInSpecificMinutes(delayMins);
-    }
-
-    function doInSpecificMinutes(delayMins) {
-      var delay = delayMins * 60 * 1000;
-      // con.log("doInSpecificMinutes in minutes", delayMins, delay);
-      setTimeout(doIt, delay);
-    }
-
-
 
 
     // util functions
@@ -283,11 +278,82 @@ module.exports = function (history) {
     }
 
 
-
+    // doItCallback = checkFollowers;
     // doItAgain();
     doIt();
 
   }
+
+
+
+
+
+  var doItCallback = null;
+  function doIt() {
+    // findFriend();
+    con.log("doIt");  
+    if (db) {
+      doItCallback();
+      // checkFollowers();
+
+    } else {
+      setTimeout(doIt, 100);
+    }
+  }
+
+  function doItAgain() {
+    var delayMins = Math.round((2 + Math.random() * 2) * 100) / 100;
+    doInSpecificMinutes(delayMins);
+  }
+
+  function doInSpecificMinutes(delayMins) {
+    var delay = delayMins * 60 * 1000;
+    // con.log("doInSpecificMinutes in minutes", delayMins, delay);
+    setTimeout(doIt, delay);
+  }
+
+
+
+
+
+  function handleError(err) {
+    if (err === "TOO_MANY" || err === "NO_FRIENDS") {
+      con.log("Custom error, trying again... in 10 seconds", err);
+      doInSpecificMinutes(0.1);
+    } else {
+      if (err[0] && err[0].code) {
+        switch (err[0].code) {
+          case 34 :
+            con.log("Known error -- page does not exist", err);
+            doInSpecificMinutes(1);
+            break;
+          case 88 :
+            con.log("Known error -- too many hits, waiting", err);
+            doInSpecificMinutes(15);
+            break;
+          case 108 :
+            con.log("Known error -- tried to follow someone who doesn't exist", err);
+            doInSpecificMinutes(20);
+            break;
+          case 250 :
+            con.log("Known error -- tried to follow someone with age restriction", err);
+            doInSpecificMinutes(5);
+            break;
+          default :
+            con.log("Unknown error -- writing log", err);
+            writeLog("error", JSON.stringify(err));
+        }
+      } else {
+        con.log("handleError error - no code", err);
+        writeLog("error", JSON.stringify(err));
+      }
+    }
+  }
+
+
+
+
+
 
 
   function writeLog(filename, content) {
@@ -303,7 +369,7 @@ module.exports = function (history) {
   };
 
 
-  // initStream();
-  initSocial();
+  initStream();
+  // initSocial();
 
 }
