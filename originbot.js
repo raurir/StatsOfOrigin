@@ -38,7 +38,7 @@ module.exports = function (history) {
     initClient();
     con.log("initStream");
 
-    
+
     var term = "stateoforigin,#nrl,state of origin,maroons blues";
     // term = "kyrgios,gasquet";
 
@@ -54,7 +54,7 @@ module.exports = function (history) {
               // con.log("stream(user) - ok - tweet.text", tweet.text);
 
               var now = new Date().getTime();
-             
+
               var minute = 1000 * 60;
               var hour = minute * 60;
               var day = hour * 24;
@@ -98,31 +98,29 @@ module.exports = function (history) {
                   var friend = tweet.user.id_str;
                   database.hasBeenFollowed(friend).then(function(hasBeen) {
                     if (hasBeen) {
-                      con.log("hasBeenFollowed already!", friend, friend, tweet.user.name, tweet.text);
+                      con.log("* followed already!", friend, tweet.user.name, tweet.text);
                     } else {
                       if (now - lastFollow > minute * 2) {
 
-                        con.log("hasBeenFollowed following friend!!", friend, tweet.user.name, tweet.text);
+                        con.log("# following friend!!", friend, tweet.user.name, tweet.text);
                         socialbot.followFriend(friend)
                         .then(database.followFriend)
                         .catch(handleError);
 
                         lastFollow = now;
+
                       } else {
-                        con.log("hasBeenFollowed too soon!", friend, tweet.user.name, tweet.text);
+                        con.log("% too soon!", friend, tweet.user.name, tweet.text);
                       }
                     }
                   }).catch(handleError);
-
-
-
 
                 }
 
               }
 
 
- 
+
               if (now - lastSave > day || history.length > 100) {
                 writeLog("history", JSON.stringify(history));
                 lastSave = now;
@@ -168,13 +166,13 @@ module.exports = function (history) {
     //   con.log("followers", followers.ids.length, followers.next_cursor, followers.previous_cursor);
     // });
 
- 
+
 
     function checkFollowers() {
       con.log("checkFollowers");
       socialbot.getFollowers().then(function(followers) {
         con.log("followers", followers.ids.length);// , followers.next_cursor, followers.previous_cursor);
-        
+
         database.getFollowedHistory()
         .then(function(following) {
           return arrayPickSome(following, 10);
@@ -198,7 +196,7 @@ module.exports = function (history) {
         })
         .then(socialbot.unfollowFriend)
         .then(database.updateFriend)
-        .then(database.findFriend) // just a verify loop... 
+        .then(database.findFriend) // just a verify loop...
         .then(function() {
           doInSpecificMinutes(0.2);
           con.log("========================");
@@ -291,7 +289,7 @@ module.exports = function (history) {
   var doItCallback = null;
   function doIt() {
     // findFriend();
-    con.log("doIt");  
+    con.log("doIt");
     if (db) {
       doItCallback();
       // checkFollowers();

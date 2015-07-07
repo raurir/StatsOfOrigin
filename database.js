@@ -10,7 +10,11 @@ launch database:
 mongod --dbpath data/db
 
 export database:
-mongoexport --host 127.0.01 --db test --collection test_insert --out test.json
+mongoexport --host 127.0.0.1 --db test --collection test_insert --out test.json
+
+import database:
+mongoimport --host 127.0.0.1 --db test --collection test_insert --file test.json
+
 */
 
 module.exports = (function() {
@@ -18,7 +22,7 @@ module.exports = (function() {
   var collection = null;
 
   function init() {
-    // con.log("Database connect"); 
+    // con.log("Database connect");
     return new Promise(function(fulfill, reject) {
       MongoClient.connect('mongodb://127.0.0.1:27017/test', function(err, db) {
         if (err) {
@@ -112,7 +116,7 @@ module.exports = (function() {
 
           var d = new Date();
           var then = d.getTime();
-          d.setDate(d.getDate() - 7); 
+          d.setDate(d.getDate() - 7);
 
           collection.find({
             dateFollowed: {"$lt": d},
