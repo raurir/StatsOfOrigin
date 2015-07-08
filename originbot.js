@@ -105,7 +105,15 @@ module.exports = function (history) {
                         con.log("# following friend!!", friend, tweet.user.name, tweet.text);
                         socialbot.followFriend(friend)
                         .then(database.followFriend)
+                        .then(function() {
+                          con.log("calling checkFollowers");
+                          checkFollowers();
+                          setTimeout(checkFollowers, 10000);
+                          return true;
+                        })
                         .catch(handleError);
+
+
 
                         lastFollow = now;
 
@@ -166,121 +174,130 @@ module.exports = function (history) {
     //   con.log("followers", followers.ids.length, followers.next_cursor, followers.previous_cursor);
     // });
 
-
-
-    function checkFollowers() {
-      con.log("checkFollowers");
-      socialbot.getFollowers().then(function(followers) {
-        con.log("followers", followers.ids.length);// , followers.next_cursor, followers.previous_cursor);
-
-        database.getFollowedHistory()
-        .then(function(following) {
-          return arrayPickSome(following, 10);
-        })
-        .then(function(selectedFollowing) {
-
-          // checking which following are also followers
-          var toPrune = [];
-          for (var i = 0; i < selectedFollowing.length; i++) {
-            var followingId = Number(selectedFollowing[i].friend);
-            if (followers.ids.indexOf(followingId) === -1) {
-              // con.log("This guy  me", followingId, typeof followingId);
-              toPrune.push(followingId);
-            } else {
-              con.log("This guy IS following me", followingId);
-            }
-          };
-          // con.log("OriginBot getFollowedHistory", selectedFollowing.length, toPrune);
-          return toPrune[0];
-
-        })
-        .then(socialbot.unfollowFriend)
-        .then(database.updateFriend)
-        .then(database.findFriend) // just a verify loop...
-        .then(function() {
-          doInSpecificMinutes(0.2);
-          con.log("========================");
-        }).catch(handleError);
-
-      });
-
-    }
-
-
-    function findFriend() {
-      con.log("findFriend");
-      now = new Date();
-
-      socialbot.getFollowing(null)
-      .then(function(friends) {
-        return new Promise(function(fulfill, reject) {
-          con.log("time", now.getHours() + ":" + now.getMinutes(), "friends", friends.length);
-          fulfill(friends);
-        });
-      })
-      .then(randIndex)
-      .then(socialbot.getFollowing)
-      .then(randIndex)
-
-      .then(function(friend) {
-        con.log("friend to follow:", friend);
-        return friend;
-      })
-
-      .then(socialbot.followFriend)
-      .then(database.followFriend)
-      .then(doItAgain)
-      .catch(handleError);
-    }
-
-
-    // util functions
-    function randIndex(arr) {
-      return new Promise(function(fulfill, reject) {
-        try {
-          var item = arr[Math.floor(Math.random() * arr.length)];
-          fulfill(item);
-        } catch (e) {
-          con.log("randIndex error", e);
-          reject(e);
-        }
-      });
-    }
-
-    function arrayPickSome(source, required) {
-      // con.log("calling arrayPickSome");
-      return new Promise(function(fulfill, reject) {
-        source = source.slice();
-        if (source.length && required) {
-          var good = [], iterations = 0, maxIterations = 2000;
-          while (good.length < required && source.length && iterations < maxIterations) {
-            var index = Math.floor(Math.random() * source.length);
-            var item = source.splice(index, 1)[0];
-            good.push(item);
-            // con.log("arrayPickSome", index, item, good.length);
-            iterations ++;
-          }
-          if (iterations >= maxIterations) {
-            con.warn("arrayPickSome - Too many iterations");
-            reject([]);
-          } else {
-            // con.log("arrayPickSome - good:", good.length);
-            fulfill(good);
-          }
-        } else {
-          if (!source.length) con.log("arrayPickSome - source array was empty");
-          if (!required) con.log("arrayPickSome - required amount was falsey", required);
-          fulfill([]);
-        }
-      });
-    }
-
-
-    // doItCallback = checkFollowers;
     // doItAgain();
     doIt();
 
   }
+
+
+
+
+
+
+
+  function checkFollowers() {
+    con.log("checkFollowers");
+    socialbot.getFollowers().then(function(followers) {
+      con.log("followers", followers.ids.length);// , followers.next_cursor, followers.previous_cursor);
+
+      database.getFollowedHistory()
+      .then(function(following) {
+        return arrayPickSome(following, 10);
+      })
+      .then(function(selectedFollowing) {
+
+        // checking which following are also followers
+        var toPrune = [];
+        for (var i = 0; i < selectedFollowing.length; i++) {
+          var followingId = Number(selectedFollowing[i].friend);
+          if (followers.ids.indexOf(followingId) === -1) {
+            // con.log("This guy  me", followingId, typeof followingId);
+            toPrune.push(followingId);
+          } else {
+            con.log("This guy IS following me", followingId);
+          }
+        };
+        // con.log("OriginBot getFollowedHistory", selectedFollowing.length, toPrune);
+        return toPrune[0];
+
+      })
+      .then(socialbot.unfollowFriend)
+      .then(database.updateFriend)
+      .then(database.findFriend) // just a verify loop...
+      .then(function() {
+        // doInSpecificMinutes(0.2);
+
+        con.log("========================");
+      }).catch(handleError);
+
+    });
+
+  }
+
+
+  function findFriend() {
+    con.log("findFriend");
+    now = new Date();
+
+    socialbot.getFollowing(null)
+    .then(function(friends) {
+      return new Promise(function(fulfill, reject) {
+        con.log("time", now.getHours() + ":" + now.getMinutes(), "friends", friends.length);
+        fulfill(friends);
+      });
+    })
+    .then(randIndex)
+    .then(socialbot.getFollowing)
+    .then(randIndex)
+
+    .then(function(friend) {
+      con.log("friend to follow:", friend);
+      return friend;
+    })
+
+    .then(socialbot.followFriend)
+    .then(database.followFriend)
+    .then(doItAgain)
+    .catch(handleError);
+  }
+
+
+  // util functions
+  function randIndex(arr) {
+    return new Promise(function(fulfill, reject) {
+      try {
+        var item = arr[Math.floor(Math.random() * arr.length)];
+        fulfill(item);
+      } catch (e) {
+        con.log("randIndex error", e);
+        reject(e);
+      }
+    });
+  }
+
+  function arrayPickSome(source, required) {
+    // con.log("calling arrayPickSome");
+    return new Promise(function(fulfill, reject) {
+      source = source.slice();
+      if (source.length && required) {
+        var good = [], iterations = 0, maxIterations = 2000;
+        while (good.length < required && source.length && iterations < maxIterations) {
+          var index = Math.floor(Math.random() * source.length);
+          var item = source.splice(index, 1)[0];
+          good.push(item);
+          // con.log("arrayPickSome", index, item, good.length);
+          iterations ++;
+        }
+        if (iterations >= maxIterations) {
+          con.warn("arrayPickSome - Too many iterations");
+          reject([]);
+        } else {
+          // con.log("arrayPickSome - good:", good.length);
+          fulfill(good);
+        }
+      } else {
+        if (!source.length) con.log("arrayPickSome - source array was empty");
+        if (!required) con.log("arrayPickSome - required amount was falsey", required);
+        fulfill([]);
+      }
+    });
+  }
+
+
+
+
+
+
 
 
 
@@ -291,9 +308,7 @@ module.exports = function (history) {
     // findFriend();
     con.log("doIt");
     if (db) {
-      doItCallback();
-      // checkFollowers();
-
+      checkFollowers();
     } else {
       setTimeout(doIt, 100);
     }

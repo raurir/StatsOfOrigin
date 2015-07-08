@@ -67,6 +67,7 @@ module.exports = (function() {
             con.log("db findFriend reject err", err);
             reject(err);
           } else {
+            // con.log("db findFriend results:", results);
             con.log("db findFriend results - dateUnfollowed:", friend, results[0].dateUnfollowed);
             fulfill(friend);
           }
