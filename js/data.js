@@ -1988,7 +1988,7 @@ var years = [
 
  {
     "year": "2015",
-    "inprogress": true,
+    // "inprogress": true,
     "matches": [
       {
         "date": "27 May 2015",
@@ -2019,13 +2019,28 @@ var years = [
         "referee": "Gerard Sutton",
         "ground": "Melbourne Cricket Ground",
         "crowd": "91,513"
+      },
+      {
+        "date": "8 July 2015",
+        "details": "Queensland 52\NNSW 6",
+        "winner": {
+          "team": "QLD",
+          "score": 52
+        },
+        "loser": {
+          "team": "NSW",
+          "score": 6
+        },
+        "referee": "",
+        "ground": "",
+        "crowd": ""
       }
     ],
     "NSW": 1,
-    "QLD": 1,
+    "QLD": 2,
     "points_per_series": {
-      "NSW": 36,
-      "QLD": 29
+      "NSW": 42,
+      "QLD": 81
     },
     "incremental_matches": {
       "NSW": 0,
