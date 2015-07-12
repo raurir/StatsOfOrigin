@@ -7,7 +7,7 @@ var Twitter = require("twitter");
 
 var con = console;
 
-module.exports = function (history) {
+module.exports = function(options) {
 
   var botID = null, client = null, db = null;
 
@@ -15,18 +15,13 @@ module.exports = function (history) {
   var lastFollow = 0;//new Date().getTime();
 
   function initClient() {
-    client = socialbot.initClient({
-      consumer_key: process.env.ORIGIN_TWITTER_CONSUMER_KEY,
-      consumer_secret: process.env.ORIGIN_TWITTER_CONSUMER_SECRET,
-      access_token_key: process.env.ORIGIN_TWITTER_ACCESS_TOKEN_KEY,
-      access_token_secret: process.env.ORIGIN_TWITTER_ACCESS_TOKEN_SECRET,
-    });
+    client = socialbot.initClient(options.twitter);
   }
 
   function initDB() {
     if (!db) {
       // con.log("initDB calling connect");
-      database.init().then(function() {
+      database.init(options.database).then(function() {
         con.log("initDB connected");
         db = true;
       });
@@ -38,123 +33,134 @@ module.exports = function (history) {
     initClient();
     con.log("initStream");
 
+    if (options.term) {
 
-    var term = "stateoforigin,#nrl,state of origin,maroons blues";
-    // term = "kyrgios,gasquet";
+      client.stream("statuses/filter", {track: options.term}, function(stream) {
+        stream.on("data", function(tweet) {
 
-    client.stream("statuses/filter", {track: term}, function(stream) {
-      stream.on("data", function(tweet) {
+          if (tweet.user) {
+            if (tweet.user.id_str === botID) {
+              // con.log("Got an echo of myself!", tweet.text)
+            } else {
 
-        if (tweet.user) {
-          if (tweet.user.id_str === botID) {
-            // con.log("Got an echo of myself!", tweet.text)
-          } else {
+              if (tweet.text) {
+                // con.log("stream(user) - ok - tweet.text", tweet.text);
 
-            if (tweet.text) {
-              // con.log("stream(user) - ok - tweet.text", tweet.text);
+                var now = new Date().getTime();
 
-              var now = new Date().getTime();
-
-              var minute = 1000 * 60;
-              var hour = minute * 60;
-              var day = hour * 24;
+                var minute = 1000 * 60;
+                var hour = minute * 60;
+                var day = hour * 24;
 
 
-              var badText = (/(RT|loan|→|Poll)/.test(tweet.text));
-              var badUser = ["johnspatricc", "aunewse", "l5iza", "gima2327"].indexOf(tweet.user.screen_name) > -1;
-              var bad = badText || badUser;
+                var badText = false;
+                var badUser = false;
+                if (options.bad ) {
+                  if (options.bad.text) {
+                    badText = options.bad.text.test(tweet.text);
+                  }
+                  if (options.bad.users) {
+                    badUser = options.bad.users.indexOf(tweet.user.screen_name) > -1;
+                  }
+                }
+                var bad = badText || badUser;
 
-              // con.log("=====================================");
-              // con.log(badUser, badText, tweet.user.screen_name, ": ", tweet.text);
-
-              if (!bad) {
-                // con.log("-------------------------------------");
-                // con.log(tweet);
                 // con.log("=====================================");
+                // con.log(badUser, badText, tweet.user.screen_name, ": ", tweet.text);
 
-                var item = {
-                  "bad": bad,
-                  "id_str": tweet.id_str,
-                  "text": tweet.text,
-                  "user_id_str": tweet.user.id_str,
-                  "user_screen_name": tweet.user.screen_name,
-                  "user_profile_image_url": tweet.user.profile_image_url,
-                  "retweeted": tweet.retweeted,
-                };
-                history.push(item);
+                if (!bad) {
+                  // con.log("-------------------------------------");
+                  // con.log(tweet);
+                  // con.log("=====================================");
 
-
-                // if (tweet.retweet_count || tweet.favorite_count) {
-                //   con.log("popular tweet...");
-                // } else {
-                //   con.log("not popular", tweet.retweet_count, tweet.favorite_count);
-                // }
-
-                // con.log("found tweet", tweet.user.name, tweet.text);
-
-                if (true || tweet.user.followers_count < 100) {
-                  // con.log("found user with no mates", tweet.user.name, tweet.text);
-
-                  var friend = tweet.user.id_str;
-                  database.hasBeenFollowed(friend).then(function(hasBeen) {
-                    if (hasBeen) {
-                      con.log("* followed already!", friend, tweet.user.name, tweet.text);
-                    } else {
-                      if (now - lastFollow > minute * 2) {
-
-                        con.log("# following friend!!", friend, tweet.user.name, tweet.text);
-                        socialbot.followFriend(friend)
-                        .then(database.followFriend)
-                        .then(function() {
-                          con.log("calling checkFollowers");
-                          checkFollowers();
-                          setTimeout(checkFollowers, 10000);
-                          return true;
-                        })
-                        .catch(handleError);
+                  var item = {
+                    "bad": bad,
+                    "id_str": tweet.id_str,
+                    "text": tweet.text,
+                    "user_id_str": tweet.user.id_str,
+                    "user_screen_name": tweet.user.screen_name,
+                    "user_profile_image_url": tweet.user.profile_image_url,
+                    "retweeted": tweet.retweeted,
+                  };
+                  options.history.push(item);
 
 
+                  // if (tweet.retweet_count || tweet.favorite_count) {
+                  //   con.log("popular tweet...");
+                  // } else {
+                  //   con.log("not popular", tweet.retweet_count, tweet.favorite_count);
+                  // }
 
-                        lastFollow = now;
+                  // con.log("found tweet", tweet.user.name, tweet.text);
 
+                  if (true || tweet.user.followers_count < 100) {
+                    // con.log("found user with no mates", tweet.user.name, tweet.text);
+
+                    var friend = tweet.user.id_str;
+                    database.hasBeenFollowed(friend).then(function(hasBeen) {
+                      if (hasBeen) {
+                        con.log("* followed already!", friend, tweet.user.name, tweet.text);
                       } else {
-                        con.log("% too soon!", friend, tweet.user.name, tweet.text);
+                        if (now - lastFollow > minute * 2) {
+
+                          con.log("# following friend!!", friend, tweet.user.name, tweet.text);
+                          socialbot.followFriend(friend)
+                          .then(database.followFriend)
+                          .then(function() {
+                            con.log("calling checkFollowers");
+                            checkFollowers();
+                            setTimeout(checkFollowers, 10000);
+                            return true;
+                          })
+                          .catch(handleError);
+
+
+
+                          lastFollow = now;
+
+                        } else {
+                          con.log("% too soon!", friend, tweet.user.name, tweet.text);
+                        }
                       }
-                    }
-                  }).catch(handleError);
+                    }).catch(handleError);
+
+                  }
 
                 }
 
+
+
+                if (now - lastSave > day || options.history.length > 100) {
+                  writeLog("history", JSON.stringify(options.history));
+                  lastSave = now;
+                  options.history = [];
+                }
+
+
+
+              } else if (tweet.friends) {
+                // con.log("stream(user) - initial tweet - friends:", tweet.friends.length);
+              } else {
+                // con.log("stream(user) - unknown tweet", tweet);
               }
 
-
-
-              if (now - lastSave > day || history.length > 100) {
-                writeLog("history", JSON.stringify(history));
-                lastSave = now;
-                history = [];
-              }
-
-
-
-            } else if (tweet.friends) {
-              // con.log("stream(user) - initial tweet - friends:", tweet.friends.length);
-            } else {
-              // con.log("stream(user) - unknown tweet", tweet);
             }
 
           }
+        });
 
-        }
+        stream.on("error", function(error) {
+          // throw error;
+          con.log("Stream error:", error);
+        });
       });
 
-      stream.on("error", function(error) {
-        // throw error;
-        con.log("Stream error:", error);
-      });
-    });
 
-    con.log("Bot running...");
+
+    } else {
+      con.log("initStream called with no options.term...");
+    }
+
   }
 
 
@@ -382,7 +388,11 @@ module.exports = function (history) {
   };
 
 
-  initStream();
-  // initSocial();
+  if (options.start) {
+    if (options.start.stream) initStream();
+    if (options.start.social) initSocial();
+  } else {
+    con.log("no options.start passed in!");
+  }
 
 }
