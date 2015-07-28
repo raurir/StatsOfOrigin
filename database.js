@@ -21,15 +21,15 @@ module.exports = (function() {
 
   var collection = null;
 
-  function init() {
+  function init(options) {
     // con.log("Database connect");
     return new Promise(function(fulfill, reject) {
-      MongoClient.connect('mongodb://127.0.0.1:27017/test', function(err, db) {
+      MongoClient.connect(options.name, function(err, db) {
         if (err) {
           con.log("database.connect rejected", err);
           reject(err);
         } else {
-          collection = db.collection('test_insert');
+          collection = db.collection(options.collection);
           fulfill();
         }
       });
