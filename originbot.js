@@ -103,13 +103,16 @@ module.exports = function(options) {
                       } else {
                         if (now - lastFollow > minute * 2) {
 
-                          con.log("# following friend!!", friend, tweet.user.name, tweet.text);
+
+                          con.log("# following friend!!", new Date().getHours() + ":" + new Date().getMinutes(), friend, tweet.user.name, tweet.text);
                           socialbot.followFriend(friend)
                           .then(database.followFriend)
                           .then(function() {
+                            /*
                             con.log("calling checkFollowers");
                             checkFollowers();
                             setTimeout(checkFollowers, 10000);
+                            */
                             return true;
                           })
                           .catch(handleError);
