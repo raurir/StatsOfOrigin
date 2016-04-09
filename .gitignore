@@ -1,8 +1,9 @@
-node_modules
 .DS_Store
-launchOrigin.sh
+data/db
+digital.sh
 history/*
+launchOrigin.sh
+node_modules
+origin.min.js
 TwitterSocialBot
 TwitterSocialBot/*
-digital.sh
-data/db

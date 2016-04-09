@@ -2,15 +2,16 @@ function initCountdown() {
 
   /*
 
-  Origin Game One: NSW vs Queensland – Wednesday, 27 May 2015, 8.00pm AEST – ANZ Stadium, Sydney
-  Origin Game Two: NSW vs Queensland – Wednesday, 17 June 2015, 8.00pm AEST – Melbourne Cricket Ground
-  Origin Game Three: Queensland vs NSW – Wednesday 8 July 2015, 8.00pm AEST – Suncorp Stadium, Brisbane
+  The 2016 State of Origin dates are:
+  Game 1: ANZ Stadium, Sydney on Wednesday 1st June 2016.
+  Game 2: Suncorp Stadium, Brisbane on Wednesday 22nd June 2016.
+  Game 3: ANZ Stadium, Sydney on Wednesday 13th July 2016.
 
   */
 
   var div = document.createElement("div");
 
-  var end = new Date(2015, 06, 8, 20, 0 );
+  var end = new Date(2016, 5, 1, 20, 0);
 
   var _second = 1000;
   var _minute = _second * 60;
