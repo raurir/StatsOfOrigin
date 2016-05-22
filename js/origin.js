@@ -8,7 +8,7 @@ var EVENT_INTERACT_START = "EVENT_INTERACT_START";
 var EVENT_INTERACT_STOP = "EVENT_INTERACT_STOP";
 var EVENT_INTERACT_MOVE = "EVENT_INTERACT_MOVE";
 
-var data;
+var data, font;
 
 (function() {
 
@@ -33,13 +33,12 @@ var data;
     if (clicks++ > 2) document.getElementById("buttons-help").style.display = "none";
   }
 
-  con.log(webgl, webgl.ok);
+  // con.log(webgl, webgl.ok);
 
   function update(time) {
     countdown.update(time);
     requestAnimationFrame(update);
   };
-  if (!webgl.ok) update(0);
 
   function showCountdown() {
     clicked();
@@ -107,7 +106,18 @@ var data;
     webgl.resize(window.innerWidth, window.innerHeight);
   });
 
-  webgl.update(zero, zero, 0);
-  showCountdown();
+  if (webgl.ok) {
+    var loader = new THREE.FontLoader();
+    loader.load("fonts/helvetiker_regular.typeface.json", function(fuck) {
+      font = fuck; // making fuck available globally as font. WHY? Because FUCK deprecating changes on a Sunday evening.
+      countdown.init();
+      webgl.init();
+      webgl.update(zero, zero, 0);
+      showCountdown();
+    });
+  } else {
+    update(0);
+    showCountdown();
+  }
 
 })();

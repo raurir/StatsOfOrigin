@@ -88,7 +88,7 @@ function initCountdown() {
 
 
       function remove(symbol) {
-        // con.log("remove", symbol, new Date().getTime());
+        if (!symbol) return;
         TweenMax.to(symbol.mesh.position, 0.3, {y: -offScreenY, delay: 0.1, ease: Quad.easeIn, onComplete: function() {
           // con.log("this", mesh);
           symbol.used = false;
@@ -96,6 +96,7 @@ function initCountdown() {
       }
 
       function drop(symbol, x) {
+        if (!symbol) return;
         // con.log("drop", symbol, new Date().getTime());
         var mesh = symbol.mesh;
         TweenMax.fromTo(mesh.position, 0.3, {x: x, y: offScreenY}, {y: 0, ease: Bounce.easeOut })
@@ -141,13 +142,12 @@ function initCountdown() {
       new THREE.MeshPhongMaterial({color: 0x505050, shading: THREE.MeshLambertMaterial}) // side
     ] );
     if (glyph === 10) glyph = ":";
+
     var geometry = new THREE.TextGeometry(glyph, {
       size: 3,
       height: 4,
       curveSegments: 3,
-      font: 'helvetiker',
-      // weight: "bold",
-      // style: style,
+      font: font,
       material: 0,
       extrudeMaterial: 1
     });
@@ -179,28 +179,29 @@ function initCountdown() {
   ]
   var meshes = {};
 
-  for (var n = 0; n < symbols.length; n++) {
-    var str = symbols[n];
-    meshes[str] = [];
-    for (var i = 0; i < 8; i++) {
-      var mesh = generateCharacter(str);
-      meshes[str][i] = {
-        chr: str,
-        mesh: mesh,
-        used: false
-      };
-      mesh.position.set(0, offScreenY, 0);
-      group.add(mesh);
-    }
-
-
-  };
-
   function update(time) {
     if (time > 200) showRemaining();
   }
 
+  function init() {
+    for (var n = 0; n < symbols.length; n++) {
+      var str = symbols[n];
+      meshes[str] = [];
+      for (var i = 0; i < 8; i++) {
+        var mesh = generateCharacter(str);
+        meshes[str][i] = {
+          chr: str,
+          mesh: mesh,
+          used: false
+        };
+        mesh.position.set(0, offScreenY, 0);
+        group.add(mesh);
+      }
+    };
+  }
+
   return {
+    init: init,
     group: group,
     div: div,
     update: update

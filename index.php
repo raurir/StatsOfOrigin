@@ -7,9 +7,8 @@
 $host = $_SERVER['HTTP_HOST'];
 $local = (preg_match("/local/", $host)); # include dev or production files
 if ($local) { ?>
-    <script src="lib/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r77/three.min.js"></script>
     <script src="lib/d3.min.js"></script>
-    <script src="lib/helvetiker_regular.typeface.js"></script>
     <script src="lib/TweenMax.min.js"></script>
     <script src="js/data.js"></script>
     <script src="js/parser.js"></script>
@@ -18,9 +17,8 @@ if ($local) { ?>
     <script src="js/countdown.js"></script>
     <script src="js/webgl.js"></script>
 <?PHP } else { ?>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r71/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r77/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
-    <script src="http://threejs.org/examples/fonts/helvetiker_regular.typeface.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenMax.min.js"></script>
 <?PHP } ?>
 

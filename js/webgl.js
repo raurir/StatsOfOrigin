@@ -76,7 +76,7 @@ function create3d(options) {
 
     var dashGeometry = new THREE.BoxGeometry(xd, yd, zd);
     var dashMaterial = new THREE.MeshPhongMaterial({
-      ambient: colours[1],
+      // ambient: colours[1],
       color: colours[0],
       specular: colours[0],
       shininess: 1,
@@ -92,9 +92,7 @@ function create3d(options) {
       size: 2,
       height: 1,
       curveSegments: 4,
-      font: 'helvetiker',
-      // weight: weight,
-      // style: style,
+      font: font,
       material: 0,
       extrudeMaterial: 1
     });
@@ -366,10 +364,13 @@ function create3d(options) {
     requestAnimationFrame(render);
   };
 
-  render(0);
+  function init() {
+    render(0);
+  }
 
   return {
     ok: ok,
+    init: init,
     interactStart: interactStart,
     interactStop: interactStop,
     interactMove: interactMove,
