@@ -7,7 +7,7 @@
 $host = $_SERVER['HTTP_HOST'];
 $local = (preg_match("/local/", $host)); # include dev or production files
 if ($local) { ?>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r77/three.min.js"></script>
+    <script src="lib/three.min.js"></script>
     <script src="lib/d3.min.js"></script>
     <script src="lib/TweenMax.min.js"></script>
     <script src="js/data.js"></script>
