@@ -1,6 +1,5 @@
 .DS_Store
 data/db
-digital.sh
 history/*
 launchOrigin.sh
 node_modules
