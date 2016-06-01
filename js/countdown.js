@@ -3,15 +3,15 @@ function initCountdown() {
   /*
 
   The 2016 State of Origin dates are:
-  Game 1: ANZ Stadium, Sydney on Wednesday 1st June 2016.
-  Game 2: Suncorp Stadium, Brisbane on Wednesday 22nd June 2016.
-  Game 3: ANZ Stadium, Sydney on Wednesday 13th July 2016.
+  Game 1: 8pm ANZ Stadium, Sydney on Wednesday 1st June 2016.
+  Game 2: 8pm Suncorp Stadium, Brisbane on Wednesday 22nd June 2016.
+  Game 3: 8pm ANZ Stadium, Sydney on Wednesday 13th July 2016.
 
   */
 
   var div = document.createElement("div");
 
-  var end = new Date(2016, 5, 1, 20, 0);
+  var end = new Date(2016, 5, 22, 20, 0);
 
   var _second = 1000;
   var _minute = _second * 60;

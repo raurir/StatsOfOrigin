@@ -13,7 +13,7 @@ function create2d(options) {
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
   var x = d3.scale.linear()
-    .domain([0, years.length])
+    .domain([0, years.length - 1])
     .range([0, width]);
 
   var y = d3.scale.linear()
