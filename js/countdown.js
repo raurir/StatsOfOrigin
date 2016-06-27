@@ -11,7 +11,7 @@ function initCountdown() {
 
   var div = document.createElement("div");
 
-  var end = new Date(2016, 5, 22, 20, 0);
+  var end = new Date(2016, 6, 13, 20, 0);
 
   var _second = 1000;
   var _minute = _second * 60;
@@ -20,7 +20,7 @@ function initCountdown() {
 
   var lastSecond = null, lastArray = [];
 
-  var offScreenY = 40
+  var offScreenY = 40;
 
   function getSymbol(symbol) {
     // for (var i = 0, il = meshes[symbol].length; i < il;i++) {
