@@ -2051,7 +2051,7 @@ var years = [
     "matches": [
       {
         "date": "1 June 2016",
-        "details": "Queensland 32 (Dane Gagai try; J. Thurston 1 goal)\nNew South Wales 4 (Boyd Cordner try)",
+        "details": "Queensland 6 (Dane Gagai try; J. Thurston 1 goal)\nNew South Wales 4 (Boyd Cordner try)",
         "winner": {
           "team": "QLD",
           "score": 6
@@ -2063,13 +2063,28 @@ var years = [
         "referee": "",
         "ground": "ANZ Stadium",
         "crowd": ""
+      },
+      {
+        "date": "22 June 2016",
+        "details": "Queensland 26 (Dane Gagai 3, Corey Oates tries; J. Thurston 5 goals)\nNew South Wales 16 (Frizell, Maloney tries. Maloney 1, Reynolds 3 conversions)",
+        "winner": {
+          "team": "QLD",
+          "score": 26
+        },
+        "loser": {
+          "team": "NSW",
+          "score": 16
+        },
+        "referee": "",
+        "ground": "Suncorp Stadium",
+        "crowd": ""
       }
     ],
     "NSW": 0,
-    "QLD": 1,
+    "QLD": 2,
     "points_per_series": {
-      "NSW": 4,
-      "QLD": 6
+      "NSW": 20,
+      "QLD": 32
     },
     "incremental_matches": {
       "NSW": 0,
