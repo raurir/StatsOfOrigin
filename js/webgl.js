@@ -35,6 +35,7 @@ function create3d(options) {
   var maxHeight = 40;
 
   var cubes = [[],[]];
+  var areas = [];
   var sw = window.innerWidth, sh = window.innerHeight;
 
   var scene = new THREE.Scene();
@@ -151,7 +152,7 @@ function create3d(options) {
     // TweenMax.to(groupAxisY, 0.5, {alpha: 0});
 
     function renderYear(teamIndex, height, yearIndex, red, green, blue) {
-
+      return;
       var cube;
 
       var h = height / max * maxHeight;
@@ -205,6 +206,78 @@ function create3d(options) {
     }
 
 
+    function renderState(teamIndex, teamData, red, green, blue) {
+
+      if (years.length !== teamData.length) {
+        return con.warn("years does not equal teamData.length", years.length, teamData.length);
+      }
+
+      var coords = [];
+      var shape = new THREE.Shape();
+      for (var i = 0, il = teamData.length; i < il; i++) {
+        var height = teamData[i];
+        var h = height / max * maxHeight;
+        // if (h == 0) h = 0.01;
+        var x = (-years.length / 2 + i) * gap,
+          y = h;
+        if (i == 0) {
+          shape.moveTo(x, y);
+        } else {
+          shape.lineTo(x, y);
+        }
+        coords.push({x: x, y: y});
+      }
+      shape.lineTo(x, 0);
+      coords.push({x: x, y: 0});
+
+      if (areas[teamIndex]) {
+
+        var Things = (areas[teamIndex].geometry.vertices);
+        var mesh = areas[teamIndex];
+
+        var half = Things.length / 2;
+        for (var i = 0; i < Things.length; i++) {
+          var vertexIndex = i < half ? half - i - 1 : i - half;// (Things.length - i - 1) % (Things.length / 2);
+          con.log("i, vertexIndex", i, vertexIndex);
+          var vertex = mesh.geometry.vertices[vertexIndex];
+          con.log("i, vertexIndex", i, vertexIndex, vertex.x, vertex.y, coords[vertexIndex].x, coords[vertexIndex].y, coords[vertexIndex].x === vertex.x);
+          vertex.x = coords[vertexIndex].x;
+          vertex.y = coords[vertexIndex].y
+        };
+        mesh.geometry.verticesNeedUpdate = true;
+
+
+      } else {
+        var extrudeSettings = { amount: 3, bevelEnabled: false };
+        var geometry = new THREE.ExtrudeGeometry( shape, extrudeSettings );
+        // var material = new THREE.MeshBasicMaterial( {color: 0x440044 } );
+
+        var uniforms = {
+          time: { type: "f", value: 1.0 },
+          index: { type: "f", value: 0.0},
+          resolution: { type: "v2", value: new THREE.Vector2() },
+          red: { type: "f", value: red },
+          green: { type: "f", value: green},
+          blue: { type: "f", value: blue },
+        };
+        var material = new THREE.ShaderMaterial( {
+          uniforms: uniforms,
+          vertexShader: document.getElementById( 'vertexShader' ).textContent,
+          fragmentShader: document.getElementById( 'fragmentShader' ).textContent
+        });
+
+        var steps = new THREE.Mesh( geometry, material );
+        var z = (teamIndex ? 1 : -1) * 2;
+        steps.position.z = z;
+        group.add(steps);
+
+        areas[teamIndex] = steps;
+
+      }
+
+
+    }
+
 
     for (var i = 0, il = nsw.length; i < il; i++) {
       renderYear(0, nsw[i], i, 0.0, 0.6, 1);
@@ -213,6 +286,9 @@ function create3d(options) {
     for (i = 0, il = qld.length; i < il; i++) {
       renderYear(1, qld[i], i, 1, 0, 0.4);
     }
+
+    renderState(0, nsw, 0.0, 0.6, 1);
+    renderState(1, qld, 1, 0, 0.4);
 
     for (var i = groupAxisY.children.length - 1; i > -1; i--) {
       groupAxisY.remove(groupAxisY.children[i]);
