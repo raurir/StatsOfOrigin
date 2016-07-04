@@ -212,43 +212,55 @@ function create3d(options) {
         return con.warn("years does not equal teamData.length", years.length, teamData.length);
       }
 
-      var coords = [];
+      // var coords = [];
       var shape = new THREE.Shape();
       for (var i = 0, il = teamData.length; i < il; i++) {
         var height = teamData[i];
-        var h = height / max * maxHeight;
+        var h = max ? height / max * maxHeight : 0;
         // if (h == 0) h = 0.01;
         var x = (-years.length / 2 + i) * gap,
           y = h;
         if (i == 0) {
-          shape.moveTo(x, y);
-        } else {
-          shape.lineTo(x, y);
+          shape.moveTo(x, -1);
         }
-        coords.push({x: x, y: y});
+        shape.lineTo(x, y);
+        con.log(x, y, height, h, max, maxHeight);
+        // coords.push({x: x, y: y});
       }
-      shape.lineTo(x, 0);
-      coords.push({x: x, y: 0});
+      shape.lineTo(x, -1);
+      // coords.push({x: x, y: 0});
+
+      var extrudeSettings = { amount: 3, bevelEnabled: false };
 
       if (areas[teamIndex]) {
 
-        var Things = (areas[teamIndex].geometry.vertices);
+        var geometry = new THREE.ExtrudeGeometry( shape, extrudeSettings );
+        var material = new THREE.MeshBasicMaterial( {color: 0x440044 } );
+        var steps = new THREE.Mesh( geometry, material );
+
+        var Things = areas[teamIndex].geometry.vertices;
         var mesh = areas[teamIndex];
 
-        var half = Things.length / 2;
         for (var i = 0; i < Things.length; i++) {
-          var vertexIndex = i < half ? half - i - 1 : i - half;// (Things.length - i - 1) % (Things.length / 2);
-          con.log("i, vertexIndex", i, vertexIndex);
-          var vertex = mesh.geometry.vertices[vertexIndex];
-          con.log("i, vertexIndex", i, vertexIndex, vertex.x, vertex.y, coords[vertexIndex].x, coords[vertexIndex].y, coords[vertexIndex].x === vertex.x);
-          vertex.x = coords[vertexIndex].x;
-          vertex.y = coords[vertexIndex].y
+          var existingVertex = mesh.geometry.vertices[i];
+          var newVertex = steps.geometry.vertices[i];
+          // con.log(existingVertex, newVertex);
+          existingVertex.x = newVertex.x;
+          existingVertex.y = newVertex.y;
+          existingVertex.z = newVertex.z;
         };
         mesh.geometry.verticesNeedUpdate = true;
 
 
+        // var delay = 0 + i * 0.02, ease = Bounce.easeOut;
+
+        // TweenMax.to(cube.scale, 1.5, {y: h, ease: ease, delay: delay});
+        // TweenMax.to(cube.position, 1.5, {x: x, y: y, z: z, ease: ease, delay: delay});
+
+
+
       } else {
-        var extrudeSettings = { amount: 3, bevelEnabled: false };
+
         var geometry = new THREE.ExtrudeGeometry( shape, extrudeSettings );
         // var material = new THREE.MeshBasicMaterial( {color: 0x440044 } );
 
