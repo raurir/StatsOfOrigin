@@ -199,41 +199,43 @@ function create3d(options) {
   }
 
 
+  function getX(year) {
+    return (-years.length / 2 + year) * gap;
+  }
+
   function renderState(teamIndex, teamData, max, red, green, blue) {
 
     if (years.length !== teamData.length) {
       return con.warn("years does not equal teamData.length", years.length, teamData.length);
     }
 
-    function getX(year) {
-      return (-years.length / 2 + year) * gap;
-    }
     function getY(year) {
-      return max ? teamData[year] / max * maxHeight : 0;
+      var val = teamData[year];
+      if (!val) val = 0;
+      return max ? val / max * maxHeight : 0;
     }
 
     var extrudeSettings = { amount: 2, bevelEnabled: false };
 
-    // var coords = [];
-    var shapes = [];
-    for (var i = 0, il = teamData.length - 1; i < il; i++) {
-      var x0 = getX(i) + 0.2,
-        x1 = getX(i + 1) - 0.2,
-        y0 = getY(i),
-        y1 = getY(i + 1),
+    var geometries = [];
+    for (var i = 0, il = teamData.length; i < il; i++) {
+      var x0 = getX(i - 1) + 0.2,
+        x1 = getX(i) - 0.2,
+        y0 = getY(i - 1),
+        y1 = getY(i),
         shape = new THREE.Shape();
+        // con.log(x0, x1, y0, y1);
       shape.moveTo(x0, -0.1);
       shape.lineTo(x0, y0);
       shape.lineTo(x1, y1);
       shape.lineTo(x1, -0.1);
-      shapes.push(shape);
-      // con.log(x0, x1, y0, y1);
+      geometries.push(new THREE.ExtrudeGeometry(shape, extrudeSettings));
     }
 
     if (areas[teamIndex]) {
 
-      for (var i = 0, il = teamData.length - 1; i < il; i++) {
-        var geometry = new THREE.ExtrudeGeometry(shapes[i], extrudeSettings);
+      for (var i = 0, il = teamData.length; i < il; i++) {
+        var geometry = geometries[i];
         var mesh = areas[teamIndex][i];
         animateMesh(mesh, geometry, i);
       }
@@ -241,8 +243,8 @@ function create3d(options) {
     } else {
 
       areas[teamIndex] = [];
-      for (var i = 0, il = teamData.length - 1; i < il; i++) {
-        var geometry = new THREE.ExtrudeGeometry(shapes[i], extrudeSettings);
+      for (var i = 0, il = teamData.length; i < il; i++) {
+        var geometry = geometries[i];
         var year = createMesh(geometry, i / il, red, green, blue);
         year.position.z = (teamIndex ? 1 : -1) * 2;
         group.add(year);
@@ -292,7 +294,7 @@ function create3d(options) {
         var text = years[yearIndex].year;
         var tickMesh = generateTickX(text, false);
         groupAxisX.add(tickMesh);
-        tickMesh.position.x = (-years.length / 2 + yearIndex) * gap;
+        tickMesh.position.x = getX(yearIndex);//(-years.length / 2 + yearIndex) * gap;
         ticksX[i] = tickMesh;
       }
     }
