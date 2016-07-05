@@ -13,15 +13,9 @@ grunt.initConfig(
     stylus:
       files: ["#{__dirname}/stylus/*.styl"]
       tasks: ['stylus:compile']
-    # styles:
-    #   files: ["#{__dirname}/css/*.css"]
-    #   tasks: ['autoprefixer']
     javascript:
-      files: [
-        "#{__dirname}/js/*.js"
-      ]
+      files: ["#{__dirname}/js/*.js"]
       tasks: ['uglify']
-
   uglify:
     options:
       banner: '/*! StatsOfOrigin <%= grunt.template.today("dd-mm-yyyy") %> (https://github.com/raurir/StatsOfOrigin) */\n'
@@ -32,15 +26,6 @@ grunt.initConfig(
         'origin.min.js': [
           'js/*.js'
         ]
-
-  # autoprefixer:
-  #   multiple_files: {
-  #     expand: true,
-  #     flatten: true,
-  #     src: 'css/*.css', # // -> src/css/file1.css, src/css/file2.css
-  #     dest: 'css/autoprefixed/' # // -> dest/css/file1.css, dest/css/file2.css
-  #   }
-
   stylus:
     compile:
       files: [
@@ -58,3 +43,4 @@ grunt.initConfig(
 )
 
 grunt.registerTask('default', ['watch']);
+grunt.registerTask('build', ['uglify', 'stylus']);
