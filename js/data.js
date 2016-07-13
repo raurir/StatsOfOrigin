@@ -2047,7 +2047,7 @@ var years = [
 
   {
     "year": "2016",
-    "inprogress": true,
+    // "inprogress": true,
     "matches": [
       {
         "date": "1 June 2016",
@@ -2078,13 +2078,28 @@ var years = [
         "referee": "",
         "ground": "Suncorp Stadium",
         "crowd": ""
+      },
+      {
+        "date": "13 Julu 2016",
+        "details": "New South Wales 16 (Frizell, Fifita, Jennings tries. Gallen 1, Maloney 2 goal)\nQueensland 26 (Inglis, Cooper, Boyd tries; J. Thurston 1 goal)",
+        "winner": {
+          "team": "NSW",
+          "score": 18
+        },
+        "loser": {
+          "team": "QLD",
+          "score": 14
+        },
+        "referee": "",
+        "ground": "ANZ Stadium",
+        "crowd": ""
       }
     ],
-    "NSW": 0,
+    "NSW": 1,
     "QLD": 2,
     "points_per_series": {
-      "NSW": 20,
-      "QLD": 32
+      "NSW": 38,
+      "QLD": 46
     },
     "incremental_matches": {
       "NSW": 0,
