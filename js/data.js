@@ -1,6 +1,7 @@
 var years = [
   {
-    "year": "1982",
+    "NSW": 1,
+    "QLD": 2,
     "matches": [
       {
         "date": "1 June 1982",
@@ -48,19 +49,12 @@ var years = [
         "crowd": "20,242"
       }
     ],
-    "NSW": 1,
-    "QLD": 2,
-    "points_per_series": {
-      "NSW": 32,
-      "QLD": 37
-    },
-    "incremental_matches": {
-      "NSW": 0,
-      "QLD": 0
-    }
+    "winner": "QLD",
+    "year": "1982"
   },
   {
-    "year": "1983",
+    "NSW": 1,
+    "QLD": 2,
     "matches": [
       {
         "date": "7 June 1983",
@@ -108,19 +102,12 @@ var years = [
         "crowd": "26,084"
       }
     ],
-    "NSW": 1,
-    "QLD": 2,
-    "points_per_series": {
-      "NSW": 44,
-      "QLD": 73
-    },
-    "incremental_matches": {
-      "NSW": 0,
-      "QLD": 0
-    }
+    "winner": "QLD",
+    "year": "1983"
   },
   {
-    "year": "1984",
+    "NSW": 1,
+    "QLD": 2,
     "matches": [
       {
         "date": "29 May 1984",
@@ -168,19 +155,12 @@ var years = [
         "crowd": "16,559"
       }
     ],
-    "NSW": 1,
-    "QLD": 2,
-    "points_per_series": {
-      "NSW": 36,
-      "QLD": 55
-    },
-    "incremental_matches": {
-      "NSW": 0,
-      "QLD": 0
-    }
+    "winner": "QLD",
+    "year": "1984"
   },
   {
-    "year": "1985",
+    "NSW": 2,
+    "QLD": 1,
     "matches": [
       {
         "date": "28 May 1985",
@@ -228,19 +208,12 @@ var years = [
         "crowd": "18,825"
       }
     ],
-    "NSW": 2,
-    "QLD": 1,
-    "points_per_series": {
-      "NSW": 45,
-      "QLD": 36
-    },
-    "incremental_matches": {
-      "NSW": 0,
-      "QLD": 0
-    }
+    "winner": "NSW",
+    "year": "1985"
   },
   {
-    "year": "1986",
+    "NSW": 3,
+    "QLD": 0,
     "matches": [
       {
         "date": "27 May 1986",
@@ -288,19 +261,12 @@ var years = [
         "crowd": "21,097"
       }
     ],
-    "NSW": 3,
-    "QLD": 0,
-    "points_per_series": {
-      "NSW": 64,
-      "QLD": 52
-    },
-    "incremental_matches": {
-      "NSW": 0,
-      "QLD": 0
-    }
+    "winner": "NSW",
+    "year": "1986"
   },
   {
-    "year": "1987",
+    "NSW": 1,
+    "QLD": 2,
     "matches": [
       {
         "date": "2 June 1987",
@@ -348,19 +314,12 @@ var years = [
         "crowd": "32,602"
       }
     ],
-    "NSW": 1,
-    "QLD": 2,
-    "points_per_series": {
-      "NSW": 34,
-      "QLD": 38
-    },
-    "incremental_matches": {
-      "NSW": 0,
-      "QLD": 0
-    }
+    "winner": "QLD",
+    "year": "1987"
   },
   {
-    "year": "1988",
+    "NSW": 0,
+    "QLD": 3,
     "matches": [
       {
         "date": "17 May 1988",
@@ -408,19 +367,12 @@ var years = [
         "crowd": "16,910"
       }
     ],
-    "NSW": 0,
-    "QLD": 3,
-    "points_per_series": {
-      "NSW": 46,
-      "QLD": 80
-    },
-    "incremental_matches": {
-      "NSW": 0,
-      "QLD": 0
-    }
+    "winner": "QLD",
+    "year": "1988"
   },
   {
-    "year": "1989",
+    "NSW": 0,
+    "QLD": 3,
     "matches": [
       {
         "date": "23 May 1989",
@@ -468,19 +420,12 @@ var years = [
         "crowd": "33,260"
       }
     ],
-    "NSW": 0,
-    "QLD": 3,
-    "points_per_series": {
-      "NSW": 34,
-      "QLD": 88
-    },
-    "incremental_matches": {
-      "NSW": 0,
-      "QLD": 0
-    }
+    "winner": "QLD",
+    "year": "1989"
   },
   {
-    "year": "1990",
+    "NSW": 2,
+    "QLD": 1,
     "matches": [
       {
         "date": "9 May 1990",
@@ -528,19 +473,12 @@ var years = [
         "crowd": "31,416"
       }
     ],
-    "NSW": 2,
-    "QLD": 1,
-    "points_per_series": {
-      "NSW": 30,
-      "QLD": 20
-    },
-    "incremental_matches": {
-      "NSW": 0,
-      "QLD": 0
-    }
+    "winner": "NSW",
+    "year": "1990"
   },
   {
-    "year": "1991",
+    "NSW": 1,
+    "QLD": 2,
     "matches": [
       {
         "date": "8 May 1991",
@@ -588,19 +526,12 @@ var years = [
         "crowd": "33,226"
       }
     ],
-    "NSW": 1,
-    "QLD": 2,
-    "points_per_series": {
-      "NSW": 30,
-      "QLD": 32
-    },
-    "incremental_matches": {
-      "NSW": 0,
-      "QLD": 0
-    }
+    "winner": "QLD",
+    "year": "1991"
   },
   {
-    "year": "1992",
+    "NSW": 2,
+    "QLD": 1,
     "matches": [
       {
         "date": "6 May 1992",
@@ -648,19 +579,12 @@ var years = [
         "crowd": "41,878"
       }
     ],
-    "NSW": 2,
-    "QLD": 1,
-    "points_per_series": {
-      "NSW": 34,
-      "QLD": 15
-    },
-    "incremental_matches": {
-      "NSW": 0,
-      "QLD": 0
-    }
+    "winner": "NSW",
+    "year": "1992"
   },
   {
-    "year": "1993",
+    "NSW": 2,
+    "QLD": 1,
     "matches": [
       {
         "date": "3 May 1993",
@@ -708,19 +632,12 @@ var years = [
         "crowd": "31,500"
       }
     ],
-    "NSW": 2,
-    "QLD": 1,
-    "points_per_series": {
-      "NSW": 42,
-      "QLD": 46
-    },
-    "incremental_matches": {
-      "NSW": 0,
-      "QLD": 0
-    }
+    "winner": "NSW",
+    "year": "1993"
   },
   {
-    "year": "1994",
+    "NSW": 2,
+    "QLD": 1,
     "matches": [
       {
         "date": "23 May 1994",
@@ -768,19 +685,12 @@ var years = [
         "crowd": "40,665"
       }
     ],
-    "NSW": 2,
-    "QLD": 1,
-    "points_per_series": {
-      "NSW": 53,
-      "QLD": 28
-    },
-    "incremental_matches": {
-      "NSW": 0,
-      "QLD": 0
-    }
+    "winner": "NSW",
+    "year": "1994"
   },
   {
-    "year": "1995",
+    "NSW": 0,
+    "QLD": 3,
     "matches": [
       {
         "date": "15 May 1995",
@@ -828,19 +738,12 @@ var years = [
         "crowd": "40,189"
       }
     ],
-    "NSW": 0,
-    "QLD": 3,
-    "points_per_series": {
-      "NSW": 28,
-      "QLD": 46
-    },
-    "incremental_matches": {
-      "NSW": 0,
-      "QLD": 0
-    }
+    "winner": "QLD",
+    "year": "1995"
   },
   {
-    "year": "1996",
+    "NSW": 3,
+    "QLD": 0,
     "matches": [
       {
         "date": "20 May 1996",
@@ -888,19 +791,12 @@ var years = [
         "crowd": "38,217"
       }
     ],
-    "NSW": 3,
-    "QLD": 0,
-    "points_per_series": {
-      "NSW": 47,
-      "QLD": 26
-    },
-    "incremental_matches": {
-      "NSW": 0,
-      "QLD": 0
-    }
+    "winner": "NSW",
+    "year": "1996"
   },
   {
-    "year": "1997",
+    "NSW": 2,
+    "QLD": 1,
     "matches": [
       {
         "date": "28 May 1997",
@@ -948,19 +844,12 @@ var years = [
         "crowd": "33,241"
       }
     ],
-    "NSW": 2,
-    "QLD": 1,
-    "points_per_series": {
-      "NSW": 35,
-      "QLD": 38
-    },
-    "incremental_matches": {
-      "NSW": 0,
-      "QLD": 0
-    }
+    "winner": "NSW",
+    "year": "1997"
   },
   {
-    "year": "1998",
+    "NSW": 1,
+    "QLD": 2,
     "matches": [
       {
         "date": "22 May 1998",
@@ -1008,19 +897,12 @@ var years = [
         "crowd": "38,952"
       }
     ],
-    "NSW": 1,
-    "QLD": 2,
-    "points_per_series": {
-      "NSW": 53,
-      "QLD": 53
-    },
-    "incremental_matches": {
-      "NSW": 0,
-      "QLD": 0
-    }
+    "winner": "QLD",
+    "year": "1998"
   },
   {
-    "year": "1999",
+    "NSW": 1,
+    "QLD": 2,
     "matches": [
       {
         "date": "26 May 1999",
@@ -1068,19 +950,12 @@ var years = [
         "crowd": "39,371"
       }
     ],
-    "NSW": 1,
-    "QLD": 2,
-    "points_per_series": {
-      "NSW": 30,
-      "QLD": 27
-    },
-    "incremental_matches": {
-      "NSW": 0,
-      "QLD": 0
-    }
+    "winner": "QLD",
+    "year": "1999"
   },
   {
-    "year": "2000",
+    "NSW": 3,
+    "QLD": 0,
     "matches": [
       {
         "date": "10 May 2000",
@@ -1128,19 +1003,12 @@ var years = [
         "crowd": "58,767"
       }
     ],
-    "NSW": 3,
-    "QLD": 0,
-    "points_per_series": {
-      "NSW": 104,
-      "QLD": 42
-    },
-    "incremental_matches": {
-      "NSW": 0,
-      "QLD": 0
-    }
+    "winner": "NSW",
+    "year": "2000"
   },
   {
-    "year": "2001",
+    "NSW": 1,
+    "QLD": 2,
     "matches": [
       {
         "date": "6 May 2001",
@@ -1188,19 +1056,12 @@ var years = [
         "crowd": "49,441"
       }
     ],
-    "NSW": 1,
-    "QLD": 2,
-    "points_per_series": {
-      "NSW": 56,
-      "QLD": 82
-    },
-    "incremental_matches": {
-      "NSW": 0,
-      "QLD": 0
-    }
+    "winner": "QLD",
+    "year": "2001"
   },
   {
-    "year": "2002",
+    "NSW": 1,
+    "QLD": 2,
     "matches": [
       {
         "date": "12 May 2002",
@@ -1248,19 +1109,12 @@ var years = [
         "crowd": "74,842"
       }
     ],
-    "NSW": 1,
-    "QLD": 2,
-    "points_per_series": {
-      "NSW": 68,
-      "QLD": 48
-    },
-    "incremental_matches": {
-      "NSW": 0,
-      "QLD": 0
-    }
+    "winner": "QLD",
+    "year": "2002"
   },
   {
-    "year": "2003",
+    "NSW": 2,
+    "QLD": 1,
     "matches": [
       {
         "date": "11 June 2003",
@@ -1308,19 +1162,12 @@ var years = [
         "crowd": "52,130"
       }
     ],
-    "NSW": 2,
-    "QLD": 1,
-    "points_per_series": {
-      "NSW": 58,
-      "QLD": 52
-    },
-    "incremental_matches": {
-      "NSW": 0,
-      "QLD": 0
-    }
+    "winner": "NSW",
+    "year": "2003"
   },
   {
-    "year": "2004",
+    "NSW": 2,
+    "QLD": 1,
     "matches": [
       {
         "date": "26 May 2004",
@@ -1368,19 +1215,12 @@ var years = [
         "crowd": "82,487"
       }
     ],
-    "NSW": 2,
-    "QLD": 1,
-    "points_per_series": {
-      "NSW": 63,
-      "QLD": 44
-    },
-    "incremental_matches": {
-      "NSW": 0,
-      "QLD": 0
-    }
+    "winner": "NSW",
+    "year": "2004"
   },
   {
-    "year": "2005",
+    "NSW": 2,
+    "QLD": 1,
     "matches": [
       {
         "date": "25 May 2005",
@@ -1428,19 +1268,12 @@ var years = [
         "crowd": "52,436"
       }
     ],
-    "NSW": 2,
-    "QLD": 1,
-    "points_per_series": {
-      "NSW": 84,
-      "QLD": 56
-    },
-    "incremental_matches": {
-      "NSW": 0,
-      "QLD": 0
-    }
+    "winner": "NSW",
+    "year": "2005"
   },
   {
-    "year": "2006",
+    "NSW": 1,
+    "QLD": 2,
     "matches": [
       {
         "date": "24 May 2006",
@@ -1488,19 +1321,12 @@ var years = [
         "crowd": "54,833"
       }
     ],
-    "NSW": 1,
-    "QLD": 2,
-    "points_per_series": {
-      "NSW": 37,
-      "QLD": 62
-    },
-    "incremental_matches": {
-      "NSW": 0,
-      "QLD": 0
-    }
+    "winner": "QLD",
+    "year": "2006"
   },
   {
-    "year": "2007",
+    "NSW": 1,
+    "QLD": 2,
     "matches": [
       {
         "date": "23 May 2007",
@@ -1548,19 +1374,12 @@ var years = [
         "crowd": "52,469"
       }
     ],
-    "NSW": 1,
-    "QLD": 2,
-    "points_per_series": {
-      "NSW": 42,
-      "QLD": 39
-    },
-    "incremental_matches": {
-      "NSW": 0,
-      "QLD": 0
-    }
+    "winner": "QLD",
+    "year": "2007"
   },
   {
-    "year": "2008",
+    "NSW": 1,
+    "QLD": 2,
     "matches": [
       {
         "date": "21 May 2008",
@@ -1608,19 +1427,12 @@ var years = [
         "crowd": "78,751"
       }
     ],
-    "NSW": 1,
-    "QLD": 2,
-    "points_per_series": {
-      "NSW": 28,
-      "QLD": 56
-    },
-    "incremental_matches": {
-      "NSW": 0,
-      "QLD": 0
-    }
+    "winner": "QLD",
+    "year": "2008"
   },
   {
-    "year": "2009",
+    "NSW": 1,
+    "QLD": 2,
     "matches": [
       {
         "date": "3 June 2009",
@@ -1668,19 +1480,12 @@ var years = [
         "crowd": "52,439"
       }
     ],
-    "NSW": 1,
-    "QLD": 2,
-    "points_per_series": {
-      "NSW": 60,
-      "QLD": 68
-    },
-    "incremental_matches": {
-      "NSW": 0,
-      "QLD": 0
-    }
+    "winner": "QLD",
+    "year": "2009"
   },
   {
-    "year": "2010",
+    "NSW": 0,
+    "QLD": 3,
     "matches": [
       {
         "date": "26 May 2010",
@@ -1728,19 +1533,12 @@ var years = [
         "crowd": "61,259"
       }
     ],
-    "NSW": 0,
-    "QLD": 3,
-    "points_per_series": {
-      "NSW": 48,
-      "QLD": 85
-    },
-    "incremental_matches": {
-      "NSW": 0,
-      "QLD": 0
-    }
+    "winner": "QLD",
+    "year": "2010"
   },
   {
-    "year": "2011",
+    "NSW": 1,
+    "QLD": 2,
     "matches": [
       {
         "date": "25 May 2011",
@@ -1788,19 +1586,12 @@ var years = [
         "crowd": "52,498"
       }
     ],
-    "NSW": 1,
-    "QLD": 2,
-    "points_per_series": {
-      "NSW": 54,
-      "QLD": 58
-    },
-    "incremental_matches": {
-      "NSW": 0,
-      "QLD": 0
-    }
+    "winner": "QLD",
+    "year": "2011"
   },
   {
-    "year": "2012",
+    "NSW": 1,
+    "QLD": 2,
     "matches": [
       {
         "date": "23 May 2012",
@@ -1848,19 +1639,12 @@ var years = [
         "crowd": "52,437"
       }
     ],
-    "NSW": 1,
-    "QLD": 2,
-    "points_per_series": {
-      "NSW": 46,
-      "QLD": 51
-    },
-    "incremental_matches": {
-      "NSW": 0,
-      "QLD": 0
-    }
+    "winner": "QLD",
+    "year": "2012"
   },
   {
-    "year": "2013",
+    "NSW": 1,
+    "QLD": 2,
     "matches": [
       {
         "date": "5 June 2013",
@@ -1908,19 +1692,12 @@ var years = [
         "crowd": "83,813"
       }
     ],
-    "NSW": 1,
-    "QLD": 2,
-    "points_per_series": {
-      "NSW": 30,
-      "QLD": 44
-    },
-    "incremental_matches": {
-      "NSW": 0,
-      "QLD": 0
-    }
+    "winner": "QLD",
+    "year": "2013"
   },
   {
-    "year": "2014",
+    "NSW": 2,
+    "QLD": 1,
     "matches": [
       {
         "date": "28 May 2014",
@@ -1972,24 +1749,16 @@ var years = [
         "crowd": "50155"
       }
     ],
-    "NSW": 2,
-    "QLD": 1,
-    "points_per_series": {
-      "NSW": 26,
-      "QLD": 44
-    },
-    "incremental_matches": {
-      "NSW": 0,
-      "QLD": 0
-    }
+    "winner": "NSW",
+    "year": "2014"
   },
-
   {
-    "year": "2015",
+    "NSW": 1,
+    "QLD": 2,
     "matches": [
       {
         "date": "27 May 2015",
-        "details": "Queensland 11\NNSW 10",
+        "details": "Queensland 11NNSW 10",
         "winner": {
           "team": "QLD",
           "score": 11
@@ -2004,7 +1773,7 @@ var years = [
       },
       {
         "date": "17 June 2015",
-        "details": "NSW 26\NQLD 18",
+        "details": "NSW 26NQLD 18",
         "winner": {
           "team": "NSW",
           "score": 26
@@ -2019,7 +1788,7 @@ var years = [
       },
       {
         "date": "8 July 2015",
-        "details": "Queensland 52\NNSW 6",
+        "details": "Queensland 52NNSW 6",
         "winner": {
           "team": "QLD",
           "score": 52
@@ -2033,21 +1802,12 @@ var years = [
         "crowd": ""
       }
     ],
+    "winner": "QLD",
+    "year": "2015"
+  },
+  {
     "NSW": 1,
     "QLD": 2,
-    "points_per_series": {
-      "NSW": 42,
-      "QLD": 81
-    },
-    "incremental_matches": {
-      "NSW": 0,
-      "QLD": 0
-    }
-  },
-
-  {
-    "year": "2016",
-    // "inprogress": true,
     "matches": [
       {
         "date": "1 June 2016",
@@ -2095,16 +1855,7 @@ var years = [
         "crowd": ""
       }
     ],
-    "NSW": 1,
-    "QLD": 2,
-    "points_per_series": {
-      "NSW": 38,
-      "QLD": 46
-    },
-    "incremental_matches": {
-      "NSW": 0,
-      "QLD": 0
-    }
+    "winner": "QLD",
+    "year": "2016"
   }
-
 ];//.slice(0, 12);
