@@ -2,16 +2,32 @@ function initCountdown() {
 
   /*
 
-  The 2016 State of Origin dates are:
-  Game 1: 8pm ANZ Stadium, Sydney on Wednesday 1st June 2016.
-  Game 2: 8pm Suncorp Stadium, Brisbane on Wednesday 22nd June 2016.
-  Game 3: 8pm ANZ Stadium, Sydney on Wednesday 13th July 2016.
+  The 2017 State of Origin dates are:
+  Game 1: 8pm May 13, Brisbane
+  Game 2: 8pm June 21, Sydney
+  Game 3: 8pm July 12, Brisbane
 
   */
 
+  var dates = [
+    new Date(2017, 4, 13, 20, 0),
+    new Date(2017, 5, 21, 20, 0),
+    new Date(2017, 6, 12, 20, 0)
+  ]
+
   var div = document.createElement("div");
 
-  var end = new Date(2016, 6, 13, 20, 0);
+  var now = new Date();
+  var end;
+  var datesReversed = dates.reverse();
+  for (var i = 0; i < datesReversed.length; i++) {
+    var date = datesReversed[i];
+    if (now < date) {
+      end = date;
+    }
+    con.log("date", date);
+  }
+  con.log("end", end)
 
   var _second = 1000;
   var _minute = _second * 60;
@@ -42,9 +58,8 @@ function initCountdown() {
     var now = new Date();
     var distance = end - now;
     if (distance < 0) {
-      // clearInterval(timer);
       return;
-    }
+    } 
 
     function pad(n) { return String((String(n).length === 1) ? "0" + n : n); }
 

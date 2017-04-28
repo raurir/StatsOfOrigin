@@ -1,12 +1,5 @@
-<html>
-  <head>
-    <title>StatsOfOrigin - State of Origin Statistics</title>
-    <link rel="stylesheet" type="text/css" href='origin.css'/>
-    <meta name="viewport" content="initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,width=device-width,height=device-height,user-scalable=yes">
-    <link href='http://fonts.googleapis.com/css?family=Roboto:900,400' rel='stylesheet' type='text/css'>
 <?PHP
-$host = $_SERVER['HTTP_HOST'];
-$local = (preg_match("/local/", $host)); # include dev or production files
+include "header.php";
 if ($local) { ?>
     <script src="lib/three.min.js"></script>
     <script src="lib/d3.min.js"></script>
@@ -36,7 +29,7 @@ Open source at: https://github.com/raurir/StatsOfOrigin
 <!--       <div id='orientation'>Rotate device</div> -->
       <div id='header'>
         <div id='debug'></div>
-        <h1>StatsOfOrigin - State of Origin Statistics 1982 - 2016</h1>
+        <h1>StatsOfOrigin - State of Origin Statistics 1982 - 2017</h1>
         <h4 id='stat'></h4>
       </div>
       <div class='button-show-state button' id='show-NSW'>NSW</div>
@@ -45,6 +38,7 @@ Open source at: https://github.com/raurir/StatsOfOrigin
       <svg id="svgcontainer"></svg>
       <div id="buttons">
         <h4 id='buttons-help'>Drag the graph to explore or Select an option below</h4>
+        <!-- <a class="button" href="/about.php">About</a> -->
       </div>
     </div>
 
@@ -94,20 +88,15 @@ Open source at: https://github.com/raurir/StatsOfOrigin
 
     </script>
 
-<?PHP if ($local) { ?>
+<?PHP
+if ($local) {
+?>
     <script src="js/origin.js"></script>
-<?PHP } else { ?>
+<?PHP
+} else {
+?>
     <script src="origin.min.js"></script>
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-      ga('create', 'UA-63027306-1', 'auto');
-      ga('send', 'pageview');
-
-    </script>
-<?PHP } ?>
-  </body>
-</html>
+<?PHP
+}
+include "footer.php";
+?>
