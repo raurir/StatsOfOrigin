@@ -3,14 +3,14 @@ function initCountdown() {
   /*
 
   The 2017 State of Origin dates are:
-  Game 1: 8pm May 13, Brisbane
+  Game 1: 8pm May 31, Brisbane
   Game 2: 8pm June 21, Sydney
   Game 3: 8pm July 12, Brisbane
 
   */
 
   var dates = [
-    new Date(2017, 4, 13, 20, 0),
+    new Date(2017, 4, 31, 20, 0),
     new Date(2017, 5, 21, 20, 0),
     new Date(2017, 6, 12, 20, 0)
   ]
