@@ -17,4 +17,4 @@ Built with [Three JS](http://threejs.org/) using WebGL. There is also a SVG rend
 
 Uses [TwitterSocialBot](https://github.com/raurir/TwitterSocialBot)
 
-PS. Maroon rhymes with moon, not own.
+PS. Maroon rhymes with moon, not moan.
