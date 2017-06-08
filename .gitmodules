@@ -1,0 +1,6 @@
+[submodule "-f"]
+	path = -f
+	url = https://github.com/raurir/TwitterSocialBot
+[submodule "TwitterSocialBot"]
+	path = TwitterSocialBot
+	url = https://github.com/raurir/TwitterSocialBot
