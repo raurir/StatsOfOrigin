@@ -1840,7 +1840,7 @@ var years = [
         "crowd": ""
       },
       {
-        "date": "13 Julu 2016",
+        "date": "13 July 2016",
         "details": "New South Wales 16 (Frizell, Fifita, Jennings tries. Gallen 1, Maloney 2 goal)\nQueensland 26 (Inglis, Cooper, Boyd tries; J. Thurston 1 goal)",
         "winner": {
           "team": "NSW",
@@ -1857,5 +1857,58 @@ var years = [
     ],
     "winner": "QLD",
     "year": "2016"
+  },
+  {
+    "NSW": 1,
+    "QLD": 2,
+    "matches": [
+      {
+        "date": "31 May 2017",
+        "details": "New South Wales 28 (James Maloney, Mitchell Pearce, James Tedesco, Andrew Fifita, Jarryd Hayne, tries; James Maloney 4 conversions)\nQueensland 4 (Corey Oates 1 try; J. Cameron Smith 1 conversion)",
+        "winner": {
+          "team": "NSW",
+          "score": 28
+        },
+        "loser": {
+          "team": "QLD",
+          "score": 4
+        },
+        "referee": "Matt Cecchin, Gerard Sutton",
+        "ground": "Suncorp Stadium, Brisbane",
+        "crowd": "50,390"
+      },
+      {
+        "date": "21 June 2017",
+        "details": "Queensland 18 (Dane Gagai 2, Valentine Holmes tries; Johnathan Thurston 3 conversions)\nNew South Wales 16 (Jarryd Hayne, Brett Morris, Mitchell Pearce tries; James Maloney 2 conversions)",
+        "winner": {
+          "team": "QLD",
+          "score": 18
+        },
+        "loser": {
+          "team": "NSW",
+          "score": 16
+        },
+        "referee": "Matt Cecchin, Gerard Sutton",
+        "ground": "ANZ Stadium, Sydney",
+        "crowd": "82,259"
+      },
+      {
+        "date": "12 July 2017",
+        "details": "Queensland 18 (Valentine Holmes 3, Jarrod Wallace tries; Cameron Smith 3 conversions)\nNew South Wales 16 (Josh Dugan try; James Maloney conversion)",
+        "winner": {
+          "team": "QLD",
+          "score": 22
+        },
+        "loser": {
+          "team": "NSW",
+          "score": 6
+        },
+        "referee": "Matt Cecchin, Gerard Sutton",
+        "ground": "Suncorp Stadium, Brisbane",
+        "crowd": "52,540"
+      }
+    ],
+    "winner": "QLD",
+    "year": "2017"
   }
 ];//.slice(0, 12);

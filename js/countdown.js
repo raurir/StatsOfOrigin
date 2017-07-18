@@ -2,17 +2,13 @@ function initCountdown() {
 
   /*
 
-  The 2017 State of Origin dates are:
-  Game 1: 8pm May 31, Brisbane
-  Game 2: 8pm June 21, Sydney
-  Game 3: 8pm July 12, Brisbane
+  The 2018 State of Origin dates are:
+  unknown
 
   */
 
   var dates = [
-    new Date(2017, 4, 31, 20, 0),
-    new Date(2017, 5, 21, 20, 0),
-    new Date(2017, 6, 12, 20, 0)
+    new Date(2018, 4, 31, 20, 15)
   ]
 
   var div = document.createElement("div");
@@ -49,7 +45,8 @@ function initCountdown() {
     }
   }
 
-  var xPositions = [1,1,4,1,1,3,1,1,3.5,1,1];
+  var xPositions = [1,1,1,4,1,1,3,1,1,3.5,1,1];
+
   var existing = [];
   var uninitialised = xPositions.map(function(v,i){return i;});
   var initialised = xPositions.map(function(v,i){return false;});
@@ -61,12 +58,18 @@ function initCountdown() {
       return;
     } 
 
-    function pad(n) { return String((String(n).length === 1) ? "0" + n : n); }
+    function pad(number, length) {
+      number = String(number);
+      while(number.length < length) {
+        number = "0" + number;
+      }
+      return number;
+    }
 
-    var days = pad(Math.floor(distance / _day));
-    var hours = pad(Math.floor((distance % _day) / _hour));
-    var minutes = pad(Math.floor((distance % _hour) / _minute));
-    var seconds = pad(Math.floor((distance % _minute) / _second));
+    var days = pad(Math.floor(distance / _day), 3);
+    var hours = pad(Math.floor((distance % _day) / _hour), 2);
+    var minutes = pad(Math.floor((distance % _hour) / _minute), 2);
+    var seconds = pad(Math.floor((distance % _minute) / _second), 2);
 
 
 
@@ -86,7 +89,10 @@ function initCountdown() {
       // arr = seconds.split("")
       // xPositions = [1,1];
       // con.log("arr", arr.join(" "));
-      if (xPositions.length !== arr.length) throw new Error("wrong length:" + xPositions.length + " v " + arr.length);
+      if (xPositions.length !== arr.length) {
+        con.log(xPositions, arr);
+        throw new Error("wrong length:" + xPositions.length + " v " + arr.length);
+      }
 
       div.innerHTML = arr.join(" ");
 
