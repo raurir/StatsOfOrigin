@@ -38,7 +38,6 @@ Open source at: https://github.com/raurir/StatsOfOrigin
       <svg id="svgcontainer"></svg>
       <div id="buttons">
         <h4 id='buttons-help'>Drag the graph to explore or Select an option below</h4>
-        <!-- <a class="button" href="/about.php">About</a> -->
       </div>
     </div>
 
