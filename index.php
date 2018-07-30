@@ -29,7 +29,7 @@ Open source at: https://github.com/raurir/StatsOfOrigin
 <!--       <div id='orientation'>Rotate device</div> -->
       <div id='header'>
         <div id='debug'></div>
-        <h1>StatsOfOrigin - State of Origin Statistics 1982 - 2017</h1>
+        <h1>StatsOfOrigin - State of Origin Statistics 1982 - 2018</h1>
         <h4 id='stat'></h4>
       </div>
       <div class='button-show-state button' id='show-NSW'>NSW</div>
@@ -38,7 +38,6 @@ Open source at: https://github.com/raurir/StatsOfOrigin
       <svg id="svgcontainer"></svg>
       <div id="buttons">
         <h4 id='buttons-help'>Drag the graph to explore or Select an option below</h4>
-        <!-- <a class="button" href="/about.php">About</a> -->
       </div>
     </div>
 
@@ -95,7 +94,7 @@ if ($local) {
 <?PHP
 } else {
 ?>
-    <script src="origin.min.js"></script>
+    <script src="js/origin.min.js"></script>
 <?PHP
 }
 include "footer.php";

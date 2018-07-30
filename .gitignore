@@ -1,6 +1,6 @@
 .DS_Store
 data/db
+deploy
 history/*
 launchOrigin.sh
 node_modules
-origin.min.js

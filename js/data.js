@@ -1910,5 +1910,61 @@ var years = [
     ],
     "winner": "QLD",
     "year": "2017"
+  },
+  {
+    "NSW": 2,
+    "QLD": 1,
+    "matches": [
+      {
+        "date": "6 June 2018",
+        "details": "New South Wales 22 (Lattrell Mitchell, James Tedesco, Tom Trbojevic, Josh Addo-Carr tries; James Maloney 2 conversions and 1 penalty goal)\nQueensland 12 (Valentine Holmes and Dane Gagai tries; Valentine Holems 2 conversions)",
+        "winner": {
+          "team": "NSW",
+          "score": 22
+        },
+        "loser": {
+          "team": "QLD",
+          "score": 12
+        },
+        "referee": "Gerard Sutton, Ashley Klein",
+        "ground": "Melbourne Cricket Ground, Melbourne",
+        "crowd": "87,122",
+        "man_of_match": "James Tedesco"
+      },
+      {
+        "date": "24 June 2018",
+        "details": "New South Wales 18 (Josh Addo-Carr, Boyd Cordner, Latrell Mitchell tries; James Maloney 3 conversions)\nQueensland 14 (Valentine Holmes, Dane Gagai, Will Chambers tries; Valentine Holmes 1 conversion)",
+        "winner": {
+          "team": "NSW",
+          "score": 18
+        },
+        "loser": {
+          "team": "QLD",
+          "score": 14
+        },
+        "referee": "Gerard Sutton, Ashley Klein",
+        "ground": "ANZ Stadium, Sydney",
+        "crowd": "82,223",
+        "man_of_match": "Boyd Cordner"
+      },
+      {
+        "date": "11 July 2018",
+        "details": "Queensland 18 (Valentine Holmes 2, Daly Cherry-Evans tries; Valentine Holmes 3 conversions)\nNew South Wales 12 (Tom Trbojevic, James Tedesco tries; Nathan Cleary 2 conversions)",
+        "winner": {
+          "team": "QLD",
+          "score": 18
+        },
+        "loser": {
+          "team": "NSW",
+          "score": 12
+        },
+        "referee": "Gerard Sutton, Ashley Klein",
+        "ground": "Suncorp Stadium, Brisbane",
+        "crowd": "51,214",
+        "man_of_match": "Billy Slater"
+      }
+    ],
+    "winner": "NSW",
+    "year": "2018"
   }
-];//.slice(0, 12);
+];

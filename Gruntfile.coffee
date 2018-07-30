@@ -23,7 +23,7 @@ grunt.initConfig(
       mangle: false, compress: true, beautify: false # production
     dist:
       files:
-        'origin.min.js': [
+        'deploy/js/origin.min.js': [
           'js/*.js'
         ]
   stylus:
@@ -33,14 +33,31 @@ grunt.initConfig(
           expand: true
           cwd: "#{__dirname}/stylus/"
           src: ["*.styl"]
-          dest: "#{__dirname}/"
+          dest: "#{__dirname}/deploy/css/"
           ext: ".css"
         }
       ]
       options:
         compress: true
         expand: false
+
+  sync:
+    main:
+      files: [
+        {
+          cwd: "./"
+          src: [
+            'js/*.js'
+            'lib/*.js'
+            'fonts/*.json'
+          ]
+          dest: 'deploy/'
+        }
+      ]
+      # pretend: true # Don't do any IO
+      verbose: true
+
 )
 
-grunt.registerTask('default', ['watch']);
-grunt.registerTask('build', ['uglify', 'stylus']);
+grunt.registerTask('default', ['watch'])
+grunt.registerTask('build', ['uglify', 'stylus', 'sync'])
