@@ -94,7 +94,7 @@ if ($local) {
 <?PHP
 } else {
 ?>
-    <script src="origin.min.js"></script>
+    <script src="js/origin.min.js"></script>
 <?PHP
 }
 include "footer.php";

@@ -2,13 +2,13 @@ function initCountdown() {
 
   /*
 
-  The 2018 State of Origin dates are:
+  The 2019 State of Origin dates are:
   unknown
 
   */
 
   var dates = [
-    new Date(2018, 4, 31, 20, 15)
+    new Date(2019, 4, 31, 20, 15)
   ]
 
   var div = document.createElement("div");
