@@ -29,7 +29,7 @@ Open source at: https://github.com/raurir/StatsOfOrigin
 <!--       <div id='orientation'>Rotate device</div> -->
       <div id='header'>
         <div id='debug'></div>
-        <h1>StatsOfOrigin - State of Origin Statistics 1982 - 2017</h1>
+        <h1>StatsOfOrigin - State of Origin Statistics 1982 - 2018</h1>
         <h4 id='stat'></h4>
       </div>
       <div class='button-show-state button' id='show-NSW'>NSW</div>
