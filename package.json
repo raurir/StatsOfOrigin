@@ -11,11 +11,11 @@
     "grunt-contrib-stylus": "^0.21.0",
     "grunt-contrib-uglify": "^0.9.1",
     "grunt-contrib-watch": "^0.6.1",
-    "grunt-sync": "^0.2.3",
+    "grunt-sync": "^0.8.0",
     "mongodb": "^2.0.33",
     "promise": "~7.0.1",
-    "request": "~2.55.0",
-    "twitter": "~1.2.5",
+    "request": "^2.88.0",
+    "twitter": "^1.7.1",
     "underscore": "~1.8.3"
   },
   "scripts": {
