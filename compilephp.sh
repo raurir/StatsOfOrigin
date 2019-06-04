@@ -1,2 +1,3 @@
-php index.php dev > deploy/index.dev.html
+php about.php > deploy/about.html
+php index.php dev > deploy/localdev.html
 php index.php > deploy/index.html

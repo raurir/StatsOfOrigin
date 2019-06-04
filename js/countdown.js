@@ -1,15 +1,33 @@
 function initCountdown() {
-
   /*
-
   The 2019 State of Origin dates are:
-  unknown
+
+  Wednesday, 5 June 2019
+  8:10pm (AEST)
+  Queensland Queensland colours.svg v New South Wales colours.svg New South Wales
+  Suncorp Stadium, Brisbane
+  Referee: Gerard Sutton, Ashley Klein
+
+  Sunday, 23 June 2019
+  5:50pm (AWST)
+  Queensland Queensland colours.svg v New South Wales colours.svg New South Wales
+  Optus Stadium, Perth
+
+  Game III
+  Wednesday, 10 July 2019
+  8:10pm (AEST)
+  New South Wales New South Wales colours.svg v Queensland colours.svg Queensland
+  ANZ Stadium, Sydney
 
   */
 
+  var group = new THREE.Object3D();
+
   var dates = [
-    new Date(2019, 4, 31, 20, 15)
-  ]
+    new Date(2019, 5, 5, 20, 10),
+    new Date(2019, 5, 23, 17, 50),
+    new Date(2019, 6, 10, 20, 10)
+  ];
 
   var div = document.createElement("div");
 
@@ -21,16 +39,24 @@ function initCountdown() {
     if (now < date) {
       end = date;
     }
-    con.log("date", date);
   }
-  con.log("end", end)
+  if (!end) {
+    function noop() {}
+    return {
+      init: noop,
+      group: group,
+      div: div,
+      update: noop
+    };
+  }
 
   var _second = 1000;
   var _minute = _second * 60;
   var _hour = _minute * 60;
   var _day = _hour * 24;
 
-  var lastSecond = null, lastArray = [];
+  var lastSecond = null,
+    lastArray = [];
 
   var offScreenY = 40;
 
@@ -45,22 +71,26 @@ function initCountdown() {
     }
   }
 
-  var xPositions = [1,1,1,4,1,1,3,1,1,3.5,1,1];
+  var xPositions = [1, 1, 1, 4, 1, 1, 3, 1, 1, 3.5, 1, 1];
 
   var existing = [];
-  var uninitialised = xPositions.map(function(v,i){return i;});
-  var initialised = xPositions.map(function(v,i){return false;});
+  var uninitialised = xPositions.map(function(v, i) {
+    return i;
+  });
+  var initialised = xPositions.map(function(v, i) {
+    return false;
+  });
 
   function showRemaining() {
     var now = new Date();
     var distance = end - now;
     if (distance < 0) {
       return;
-    } 
+    }
 
     function pad(number, length) {
       number = String(number);
-      while(number.length < length) {
+      while (number.length < length) {
         number = "0" + number;
       }
       return number;
@@ -71,33 +101,27 @@ function initCountdown() {
     var minutes = pad(Math.floor((distance % _hour) / _minute), 2);
     var seconds = pad(Math.floor((distance % _minute) / _second), 2);
 
+    if (lastSecond !== seconds) {
+      var arr = []
+        .concat(days.split(""))
+        .concat("days")
+        .concat(hours.split(""))
+        .concat("hrs")
+        .concat(minutes.split(""))
+        .concat("mins")
+        .concat(seconds.split(""));
 
-
-
-    if (lastSecond !== seconds ) {
-
-      var arr = [].concat(
-        days.split("")
-      ).concat("days").concat(
-        hours.split("")
-      ).concat("hrs").concat(
-        minutes.split("")
-      ).concat("mins").concat(
-        seconds.split("")
-      )
-
-      // arr = seconds.split("")
-      // xPositions = [1,1];
-      // con.log("arr", arr.join(" "));
       if (xPositions.length !== arr.length) {
         con.log(xPositions, arr);
-        throw new Error("wrong length:" + xPositions.length + " v " + arr.length);
+        throw new Error(
+          "wrong length:" + xPositions.length + " v " + arr.length
+        );
       }
 
       div.innerHTML = arr.join(" ");
 
       // initialise this symbol
-      var doInit = uninitialised.length;// && Math.random() > 0.7;
+      var doInit = uninitialised.length; // && Math.random() > 0.7;
       if (doInit) {
         var index = Math.floor(Math.random() * uninitialised.length);
         var toInitialise = uninitialised[index];
@@ -107,20 +131,29 @@ function initCountdown() {
         // con.log(uninitialised, initialised);
       }
 
-
       function remove(symbol) {
         if (!symbol) return;
-        TweenMax.to(symbol.mesh.position, 0.3, {y: -offScreenY, delay: 0.1, ease: Quad.easeIn, onComplete: function() {
-          // con.log("this", mesh);
-          symbol.used = false;
-        }});
+        TweenMax.to(symbol.mesh.position, 0.3, {
+          y: -offScreenY,
+          delay: 0.1,
+          ease: Quad.easeIn,
+          onComplete: function() {
+            // con.log("this", mesh);
+            symbol.used = false;
+          }
+        });
       }
 
       function drop(symbol, x) {
         if (!symbol) return;
         // con.log("drop", symbol, new Date().getTime());
         var mesh = symbol.mesh;
-        TweenMax.fromTo(mesh.position, 0.3, {x: x, y: offScreenY}, {y: 0, ease: Bounce.easeOut })
+        TweenMax.fromTo(
+          mesh.position,
+          0.3,
+          { x: x, y: offScreenY },
+          { y: 0, ease: Bounce.easeOut }
+        );
       }
 
       var xp = -9;
@@ -130,7 +163,6 @@ function initCountdown() {
         if (initialised[i]) {
           // con.log(i);
           if (lastArray[i] !== arr[i]) {
-
             if (existing[i]) {
               remove(existing[i]);
             }
@@ -138,30 +170,28 @@ function initCountdown() {
             var symbol = getSymbol(symbol);
             drop(symbol, xp * 3);
             existing[i] = symbol;
-
           }
 
           lastArray[i] = arr[i];
-
         }
 
         xp += xPositions[i];
-
       }
-
-
     }
     lastSecond = seconds;
-
   }
-
-  var group = new THREE.Object3D();
 
   function generateCharacter(glyph) {
     var material = new THREE.MeshFaceMaterial([
-      new THREE.MeshPhongMaterial({color: 0xffffff, shading: THREE.FlatShading}), // front
-      new THREE.MeshPhongMaterial({color: 0x505050, shading: THREE.MeshLambertMaterial}) // side
-    ] );
+      new THREE.MeshPhongMaterial({
+        color: 0xffffff,
+        shading: THREE.FlatShading
+      }), // front
+      new THREE.MeshPhongMaterial({
+        color: 0x505050,
+        shading: THREE.MeshLambertMaterial
+      }) // side
+    ]);
     if (glyph === 10) glyph = ":";
 
     var geometry = new THREE.TextGeometry(glyph, {
@@ -180,7 +210,6 @@ function initCountdown() {
     return text;
   }
 
-
   var symbols = [
     "0",
     "1",
@@ -196,11 +225,12 @@ function initCountdown() {
     "days",
     "hrs",
     "mins",
-    "secs",
-  ]
+    "secs"
+  ];
   var meshes = {};
 
   function update(time) {
+    // console.log("update", time);
     if (time > 200) showRemaining();
   }
 
@@ -218,7 +248,7 @@ function initCountdown() {
         mesh.position.set(0, offScreenY, 0);
         group.add(mesh);
       }
-    };
+    }
   }
 
   return {
@@ -226,6 +256,5 @@ function initCountdown() {
     group: group,
     div: div,
     update: update
-  }
-
+  };
 }

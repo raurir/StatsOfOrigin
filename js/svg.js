@@ -1,10 +1,10 @@
 function create2d(options) {
-
-  var margin = {top: 20, right: 30, bottom: 30, left: 60},
+  var margin = { top: 20, right: 30, bottom: 30, left: 60 },
     width = 400 - margin.left - margin.right,
     height = 400 - margin.top - margin.bottom;
 
-  var chart = d3.select("#svgcontainer")
+  var chart = d3
+    .select("#svgcontainer")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
     .attr("class", options.display ? "displayed" : "hidden")
@@ -12,23 +12,36 @@ function create2d(options) {
     .attr("id", "chart-group")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-  var x = d3.scale.linear()
+  var x = d3.scale
+    .linear()
     .domain([0, years.length - 1])
     .range([0, width]);
 
-  var y = d3.scale.linear()
-    .domain([0, d3.max(data, function(d){ return Math.max(d[0], d[1]); })])
-    .range([height,0]);
+  var y = d3.scale
+    .linear()
+    .domain([
+      0,
+      d3.max(data, function(d) {
+        return Math.max(d[0], d[1]);
+      })
+    ])
+    .range([height, 0]);
 
-  var nsw = data.map(function(d) { return d[0];})
-  var qld = data.map(function(d) { return d[1];})
+  var nsw = data.map(function(d) {
+    return d[0];
+  });
+  var qld = data.map(function(d) {
+    return d[1];
+  });
 
-  var area = d3.svg.area()
-    .x(function(d,i) {
+  var area = d3.svg
+    .area()
+    .x(function(d, i) {
       // con.log("x", d);
       return x(i);
     })
-    .y0(height).y1(function(d, i) {
+    .y0(height)
+    .y1(function(d, i) {
       // con.log("y1", i , y(d));
       return y(d);
     });
@@ -43,13 +56,14 @@ function create2d(options) {
   //     return y(d);
   //   });
 
-
   chart
     .selectAll("path.area")
-    .data([nsw,qld])
+    .data([nsw, qld])
     .enter()
     .append("path")
-    .attr("class", function(d,i) { return "area " + [NSW,QLD][i]; })
+    .attr("class", function(d, i) {
+      return "area " + [NSW, QLD][i];
+    })
     .attr("d", area);
 
   // chart
@@ -60,33 +74,35 @@ function create2d(options) {
   //   .attr("class", "line")
   //   .attr("d", line);
 
-  var xAxis = d3.svg.axis()
+  var xAxis = d3.svg
+    .axis()
     .scale(x)
     .orient("bottom")
     .ticks(years.length / 4)
-    .tickFormat(function(d){
+    .tickFormat(function(d) {
       return years[d].year;
     });
 
-  chart.append("g")
+  chart
+    .append("g")
     .attr("class", "x axis")
     .attr("transform", "translate(0," + height + ")")
     .call(xAxis);
 
-  var yAxis = d3.svg.axis()
+  var yAxis = d3.svg
+    .axis()
     .scale(y)
     .orient("left");
 
-  chart.append("g")
+  chart
+    .append("g")
     .attr("class", "y axis")
     .call(yAxis);
-
 
   var pointsNSW = point(NSW, nsw);
   var pointsQLD = point(QLD, qld);
 
   function point(state, stateData) {
-
     var g = chart
       .append("g")
       .attr("class", "points " + state)
@@ -95,15 +111,19 @@ function create2d(options) {
       .enter()
       .append("svg:circle")
       .attr("class", state)
-      .attr("cx", function(d, i) { return x(i); })
-      .attr("cy", function(d, i) { return y(d); })
+      .attr("cx", function(d, i) {
+        return x(i);
+      })
+      .attr("cy", function(d, i) {
+        return y(d);
+      })
       .attr("r", 5);
 
-    g.on("mouseover", function(d,i){
+    g.on("mouseover", function(d, i) {
       // con.log(this);
 
       // con.log(years[i])
-      var m = years[i].matches.map(function(match,i) {
+      var m = years[i].matches.map(function(match, i) {
         // con.log(match)
         return [
           match.winner.team,
@@ -115,38 +135,34 @@ function create2d(options) {
           match.loser.score,
           ")"
         ].join("");
-      })
+      });
 
       var state = this.attributes.class.value;
-      tooltip.text([state, years[i].year, ":", d, m].join(" "))
+      tooltip.text([state, years[i].year, ":", d, m].join(" "));
       tooltip.style("visibility", "visible");
     })
-    .on("mousemove", function(d,i){
-
-      var x = margin.left + Number(this.attributes.cx.value) + "px",
-        y = 10 + margin.top + Number(this.attributes.cy.value) + "px";
+      .on("mousemove", function(d, i) {
+        var x = margin.left + Number(this.attributes.cx.value) + "px",
+          y = 10 + margin.top + Number(this.attributes.cy.value) + "px";
 
         // con.log(x,y);
-      return tooltip.style("left", x).style("top", y);
-      // return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");
-    })
-    .on("mouseout", function(){return tooltip.style("visibility", "hidden");});
+        return tooltip.style("left", x).style("top", y);
+        // return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");
+      })
+      .on("mouseout", function() {
+        return tooltip.style("visibility", "hidden");
+      });
 
     return g;
   }
 
-  var tooltip = d3.select("body")
+  var tooltip = d3
+    .select("body")
     .append("div")
     .attr("class", "tooltip");
 
-
-
-
   function update(nsw, qld, max) {
-
-    y
-      .domain([0, max])
-      .range([height, 0]);
+    y.domain([0, max]).range([height, 0]);
 
     d3.select(".y.axis")
       .transition()
@@ -158,7 +174,9 @@ function create2d(options) {
       .data([nsw, qld])
       .transition()
       .duration(750)
-      .attr("d", function(d) { return area(d); });
+      .attr("d", function(d) {
+        return area(d);
+      });
 
     // chart
     //   .selectAll("path.line")
@@ -169,39 +187,50 @@ function create2d(options) {
 
     function updatePoints(points, data) {
       points
-      .data(data)
-      .transition()
-      .attr("cy", function(d, i) { return y(d); })
-      .duration(function(d, i) { return i * 40;} )
+        .data(data)
+        .transition()
+        .attr("cy", function(d, i) {
+          return y(d);
+        })
+        .duration(function(d, i) {
+          return i * 40;
+        });
     }
     updatePoints(pointsNSW, nsw);
     updatePoints(pointsQLD, qld);
-
   }
 
   var nswTopLayer = true;
   function showState(state) {
     return;
     nswTopLayer = state === NSW;
-    document.getElementById("chart-group").insertBefore(
-      document.getElementsByClassName("area " + (nswTopLayer ? QLD : NSW))[0],
-      document.getElementsByClassName("area " + (nswTopLayer ? NSW : QLD))[0] 
-    );
-    document.getElementById("chart-group").insertBefore(
-      document.getElementsByClassName("points " + (nswTopLayer ? QLD : NSW))[0],
-      document.getElementsByClassName("points " + (nswTopLayer ? NSW : QLD))[0] 
-    );
+    document
+      .getElementById("chart-group")
+      .insertBefore(
+        document.getElementsByClassName("area " + (nswTopLayer ? QLD : NSW))[0],
+        document.getElementsByClassName("area " + (nswTopLayer ? NSW : QLD))[0]
+      );
+    document
+      .getElementById("chart-group")
+      .insertBefore(
+        document.getElementsByClassName(
+          "points " + (nswTopLayer ? QLD : NSW)
+        )[0],
+        document.getElementsByClassName(
+          "points " + (nswTopLayer ? NSW : QLD)
+        )[0]
+      );
   }
 
   function resize(width, height) {
     var el = document.getElementById("svgcontainer");
-    el.style.top = ((height - 400) / 2) + "px";
+    el.style.top = (height - 400) / 2 + "px";
   }
   resize(window.innerWidth, window.innerHeight);
 
   return {
     update: update,
     resize: resize,
-    showState: showState,
-  }
+    showState: showState
+  };
 }
