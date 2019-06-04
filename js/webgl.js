@@ -52,9 +52,9 @@ function create3d(options) {
 
   var scene = new THREE.Scene();
 
-  var camera = new THREE.PerspectiveCamera(35, sw / sh, 0.1, 1000);
+  var camera = new THREE.PerspectiveCamera(15, sw / sh, 0.1, 2000);
   camera.position.y = maxHeight / 2;
-  camera.position.z = 100;
+  camera.position.z = 250;
 
   var renderer = new THREE.WebGLRenderer();
   renderer.setSize(sw, sh);

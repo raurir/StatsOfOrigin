@@ -1,14 +1,33 @@
 function initCountdown() {
   /*
-
   The 2019 State of Origin dates are:
-  unknown
+
+  Wednesday, 5 June 2019
+  8:10pm (AEST)
+  Queensland Queensland colours.svg v New South Wales colours.svg New South Wales
+  Suncorp Stadium, Brisbane
+  Referee: Gerard Sutton, Ashley Klein
+
+  Sunday, 23 June 2019
+  5:50pm (AWST)
+  Queensland Queensland colours.svg v New South Wales colours.svg New South Wales
+  Optus Stadium, Perth
+
+  Game III
+  Wednesday, 10 July 2019
+  8:10pm (AEST)
+  New South Wales New South Wales colours.svg v Queensland colours.svg Queensland
+  ANZ Stadium, Sydney
 
   */
 
   var group = new THREE.Object3D();
 
-  var dates = [new Date(2019, 4, 31, 20, 15)];
+  var dates = [
+    new Date(2019, 5, 5, 20, 10),
+    new Date(2019, 5, 23, 17, 50),
+    new Date(2019, 6, 10, 20, 10)
+  ];
 
   var div = document.createElement("div");
 
