@@ -1,23 +1,33 @@
 function create3d(options) {
-
   var ok = false;
   if (!window.WebGLRenderingContext) {
     // the browser doesn't even know what WebGL is
     // window.location = "http://get.webgl.org";
   } else {
     var canvas = document.createElement("canvas");
-    var context = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+    var context =
+      canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
     if (context) {
       ok = true;
-    } else{
+    } else {
       // browser supports WebGL but initialization failed.
       // window.location = "http://get.webgl.org/troubleshooting";
     }
   }
 
-  if (ok === false) { // return a stub.
-    var func = function(){};
-    return {ok: ok, interactStart: func, interactStop: func, interactMove: func, update: func, showCountdown: func, showState: func, resize: func};
+  if (ok === false) {
+    // return a stub.
+    var func = function() {};
+    return {
+      ok: ok,
+      interactStart: func,
+      interactStop: func,
+      interactMove: func,
+      update: func,
+      showCountdown: func,
+      showState: func,
+      resize: func
+    };
   }
 
   var MODE_COUNTDOWN = "countdown";
@@ -31,12 +41,14 @@ function create3d(options) {
   var yearJump = 5;
   var unis = [];
 
-  var rotationY = 0, rotationX = 0;
+  var rotationY = 0,
+    rotationX = 0;
   var maxHeight = 40;
 
-  var cubes = [[],[]];
+  var cubes = [[], []];
   var areas = [];
-  var sw = window.innerWidth, sh = window.innerHeight;
+  var sw = window.innerWidth,
+    sh = window.innerHeight;
 
   var scene = new THREE.Scene();
 
@@ -58,9 +70,9 @@ function create3d(options) {
   group.add(groupAxisX);
 
   var light = new THREE.AmbientLight(0x404040);
-  scene.add( light );
+  scene.add(light);
 
-  var pointLight =  new THREE.PointLight(0xffffff);//0x662BDE);
+  var pointLight = new THREE.PointLight(0xffffff); //0x662BDE);
   pointLight.position.z = 30;
   scene.add(pointLight);
 
@@ -72,7 +84,6 @@ function create3d(options) {
   resize(sw, sh);
 
   function generateTick(label, major, xd, yd, zd, x, y, z) {
-
     var colours = major ? [0xc0c0c0, 0x505050] : [0x808080, 0x505050];
 
     var dashGeometry = new THREE.BoxGeometry(xd, yd, zd);
@@ -82,13 +93,19 @@ function create3d(options) {
       specular: colours[0],
       shininess: 1,
       shading: THREE.SmoothShading
-    } )
+    });
     var dash = new THREE.Mesh(dashGeometry, dashMaterial);
 
     var textMaterial = new THREE.MeshFaceMaterial([
-      new THREE.MeshPhongMaterial({color: colours[0], shading: THREE.FlatShading}), // front
-      new THREE.MeshPhongMaterial({color: colours[1], shading: THREE.SmoothShading}) // side
-    ] );
+      new THREE.MeshPhongMaterial({
+        color: colours[0],
+        shading: THREE.FlatShading
+      }), // front
+      new THREE.MeshPhongMaterial({
+        color: colours[1],
+        shading: THREE.SmoothShading
+      }) // side
+    ]);
     var textGeometry = new THREE.TextGeometry(label, {
       size: 2,
       height: 1,
@@ -120,16 +137,45 @@ function create3d(options) {
     return generateTick(label, major, 3, 0.3, 0.3, 2, -1, 0);
   }
 
-   // thanks Airtasker! - wrote this function for airtasker payment history.
+  // thanks Airtasker! - wrote this function for airtasker payment history.
   var fixMaxY = function(largest, ticks) {
     var goodTick, num, roundNumbers, tick, _j, _len;
     roundNumbers = [
-      1, 2, 5,
-      10, 20, 30, 40, 50, 60, 75, 80,
-      100, 200, 300, 400, 500, 750, 800,
-      1000, 1250, 1500, 1750,
-      2000, 3000, 4000, 5000, 6000, 7500,
-      1e4, 2e4, 5e4, 1e5, 2e5, 5e5];
+      1,
+      2,
+      5,
+      10,
+      20,
+      30,
+      40,
+      50,
+      60,
+      75,
+      80,
+      100,
+      200,
+      300,
+      400,
+      500,
+      750,
+      800,
+      1000,
+      1250,
+      1500,
+      1750,
+      2000,
+      3000,
+      4000,
+      5000,
+      6000,
+      7500,
+      1e4,
+      2e4,
+      5e4,
+      1e5,
+      2e5,
+      5e5
+    ];
     tick = largest / ticks;
     goodTick = null;
     for (_j = 0, _len = roundNumbers.length; _j < _len; _j++) {
@@ -144,15 +190,14 @@ function create3d(options) {
     return goodTick * ticks;
   };
 
-
   function createMesh(geometry, yearRatio, red, green, blue) {
     var material = new THREE.MeshPhongMaterial({
-      color: red * 255 << 16 | green * 255 << 8 | blue * 255,
+      color: ((red * 255) << 16) | ((green * 255) << 8) | (blue * 255),
       opacity: 0.6,
       specular: 0x404040,
       shininess: 10,
       shading: THREE.FlatShading,
-      transparent: true,
+      transparent: true
       // wireframe: true
     });
 
@@ -189,7 +234,7 @@ function create3d(options) {
         ease: Bounce.easeOut,
         delay: delay
       });
-    };
+    }
     mesh.geometry.verticesNeedUpdate = true;
     TweenMax.to({}, 1.5 + delay, {
       onUpdate: function() {
@@ -198,21 +243,23 @@ function create3d(options) {
     });
   }
 
-
   function getX(year) {
     return (-years.length / 2 + year) * gap;
   }
 
   function renderState(teamIndex, teamData, max, red, green, blue) {
-
     if (years.length !== teamData.length) {
-      return con.warn("years does not equal teamData.length", years.length, teamData.length);
+      return con.warn(
+        "years does not equal teamData.length",
+        years.length,
+        teamData.length
+      );
     }
 
     function getY(year) {
       var val = teamData[year];
       if (!val) val = 0;
-      return max ? val / max * maxHeight : 0;
+      return max ? (val / max) * maxHeight : 0;
     }
 
     var extrudeSettings = { amount: 2, bevelEnabled: false };
@@ -224,7 +271,7 @@ function create3d(options) {
         y0 = getY(i - 1),
         y1 = getY(i),
         shape = new THREE.Shape();
-        // con.log(x0, x1, y0, y1);
+      // con.log(x0, x1, y0, y1);
       shape.moveTo(x0, -0.1);
       shape.lineTo(x0, y0);
       shape.lineTo(x1, y1);
@@ -233,15 +280,12 @@ function create3d(options) {
     }
 
     if (areas[teamIndex]) {
-
       for (var i = 0, il = teamData.length; i < il; i++) {
         var geometry = geometries[i];
         var mesh = areas[teamIndex][i];
         animateMesh(mesh, geometry, i);
       }
-
     } else {
-
       areas[teamIndex] = [];
       for (var i = 0, il = teamData.length; i < il; i++) {
         var geometry = geometries[i];
@@ -250,15 +294,10 @@ function create3d(options) {
         group.add(year);
         areas[teamIndex][i] = year;
       }
-
     }
-
   }
 
-
-
   function update(nsw, qld, max) {
-
     unis = [];
 
     // TweenMax.to(groupAxisY, 0.5, {alpha: 0});
@@ -280,8 +319,9 @@ function create3d(options) {
     for (i = 0, il = ticksVertical; i < il; i++) {
       var perc = i / (il - 1);
       var text = perc * maxY;
-      var y = perc * maxHeight * maxY / max;
-      if (Math.abs(y - maxHeight) > 4) { // don't draw tick near major tick
+      var y = (perc * maxHeight * maxY) / max;
+      if (Math.abs(y - maxHeight) > 4) {
+        // don't draw tick near major tick
         var tickMesh = generateTickY(text, false);
         groupAxisY.add(tickMesh);
         tickMesh.position.y = y;
@@ -294,17 +334,15 @@ function create3d(options) {
         var text = years[yearIndex].year;
         var tickMesh = generateTickX(text, false);
         groupAxisX.add(tickMesh);
-        tickMesh.position.x = getX(yearIndex);//(-years.length / 2 + yearIndex) * gap;
+        tickMesh.position.x = getX(yearIndex); //(-years.length / 2 + yearIndex) * gap;
         ticksX[i] = tickMesh;
       }
     }
 
     groupAxisX.position.y = -0.5;
-    groupAxisY.position.x = years.length / 2 * gap;
-
+    groupAxisY.position.x = (years.length / 2) * gap;
 
     // con.log("ticksVertical", ticksVertical)
-
   }
 
   function clampRotation(r) {
@@ -330,15 +368,15 @@ function create3d(options) {
     group.traverse(function(object) {
       object.visible = doShow;
     });
-  };
+  }
 
   function showAxis(doShow) {
     showGroup(groupAxisX, doShow);
     showGroup(groupAxisY, doShow);
   }
   var rotationYTarget = 0;
-  var rotationQLDMin = tau * 1 / 4;
-  var rotationQLDMax = tau * 3 / 4;
+  var rotationQLDMin = (tau * 1) / 4;
+  var rotationQLDMax = (tau * 3) / 4;
   function showCountdown(doShow) {
     mode = doShow ? MODE_COUNTDOWN : MODE_STAT;
     rotationYTarget = isMaroon(rotationY) ? Math.PI : 0;
@@ -349,10 +387,11 @@ function create3d(options) {
 
   function resize(width, height) {
     var aspect = 9 / 6;
-    var w = width, h = w / aspect;
+    var w = width,
+      h = w / aspect;
     var margin = 0;
     if (h > height) {
-      h = height
+      h = height;
       w = h * aspect;
     }
     margin = (height - h) / 2;
@@ -369,7 +408,6 @@ function create3d(options) {
   }
 
   function render(time) {
-
     var t = time * 0.001;
     pointLight.position.x = Math.sin(t) * 15;
     pointLight.position.y = Math.cos(t) * 15;
@@ -378,11 +416,13 @@ function create3d(options) {
 
     var qldSide = isMaroon(rotationY);
 
-    if (mode === MODE_COUNTDOWN) { // flatten graph to either side in countdown mode.
+    if (mode === MODE_COUNTDOWN) {
+      // flatten graph to either side in countdown mode.
       rotationY -= (rotationY - rotationYTarget) * 0.1;
     }
 
-    if (!interacting) { // flatten graph when interaction stops.
+    if (!interacting) {
+      // flatten graph when interaction stops.
       rotationX -= (rotationX - 0) * 0.1;
     }
 
@@ -402,7 +442,8 @@ function create3d(options) {
 
     groupAxisY.rotation.y = -group.rotation.y;
 
-    groupAxisX.position.z -= (groupAxisX.position.z - (qldSide ? -1 : 1) * 3) * 0.2;
+    groupAxisX.position.z -=
+      (groupAxisX.position.z - (qldSide ? -1 : 1) * 3) * 0.2;
     groupAxisY.position.z = groupAxisX.position.z;
 
     for (var i = 0, il = years.length / yearJump; i < il; i++) {
@@ -414,7 +455,7 @@ function create3d(options) {
 
     renderer.render(scene, camera);
     requestAnimationFrame(render);
-  };
+  }
 
   function init() {
     render(0);
@@ -429,7 +470,6 @@ function create3d(options) {
     update: update,
     showCountdown: showCountdown,
     showState: function() {},
-    resize: resize,
-  }
-
+    resize: resize
+  };
 }
