@@ -70,13 +70,14 @@ function initUI() {
   addEventListener("touchmove", onMove);
 
   var buttons = document.getElementById("buttons");
+  var about = document.getElementById("about");
 
   function createButton(b) {
     var button = document.createElement("div");
     button.innerHTML = b.label;
     button.id = b.id;
     button.className = "button";
-    buttons.appendChild(button);
+    buttons.insertBefore(button, about);
     button.addEventListener("click", function() {
       if (b.id === "countdown") {
         dispatchEvent(new CustomEvent(EVENT_COUNTDOWN_SELECTED));
