@@ -15,7 +15,7 @@ grunt.initConfig(
       tasks: ['stylus:compile']
     javascript:
       files: ["#{__dirname}/js/*.js"]
-      tasks: ['uglify']
+      tasks: ['sync']
   uglify:
     options:
       banner: '/*! StatsOfOrigin <%= grunt.template.today("dd-mm-yyyy") %> (https://github.com/raurir/StatsOfOrigin) */\n'

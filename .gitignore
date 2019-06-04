@@ -1,4 +1,5 @@
 .DS_Store
+bot/bot.css
 data/db
 deploy
 history/*
