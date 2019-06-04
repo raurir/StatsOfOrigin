@@ -6,6 +6,8 @@ function initCountdown() {
 
   */
 
+  var group = new THREE.Object3D();
+
   var dates = [new Date(2019, 4, 31, 20, 15)];
 
   var div = document.createElement("div");
@@ -18,9 +20,16 @@ function initCountdown() {
     if (now < date) {
       end = date;
     }
-    con.log("date", date);
   }
-  con.log("end", end);
+  if (!end) {
+    function noop() {}
+    return {
+      init: noop,
+      group: group,
+      div: div,
+      update: noop
+    };
+  }
 
   var _second = 1000;
   var _minute = _second * 60;
@@ -83,9 +92,6 @@ function initCountdown() {
         .concat("mins")
         .concat(seconds.split(""));
 
-      // arr = seconds.split("")
-      // xPositions = [1,1];
-      // con.log("arr", arr.join(" "));
       if (xPositions.length !== arr.length) {
         con.log(xPositions, arr);
         throw new Error(
@@ -156,8 +162,6 @@ function initCountdown() {
     lastSecond = seconds;
   }
 
-  var group = new THREE.Object3D();
-
   function generateCharacter(glyph) {
     var material = new THREE.MeshFaceMaterial([
       new THREE.MeshPhongMaterial({
@@ -207,6 +211,7 @@ function initCountdown() {
   var meshes = {};
 
   function update(time) {
+    // console.log("update", time);
     if (time > 200) showRemaining();
   }
 
