@@ -11,10 +11,14 @@ const header = ({ title }) => `<html>
   <head>
     <title>${
       title ? `${title} - ` : ``
-    }StatsOfOrigin - State of Origin Statistics</title>
+    }Stats Of Origin - State of Origin Statistics</title>
     <link rel="stylesheet" type="text/css" href='/css/origin.css'/>
     <meta name="viewport" content="initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,width=device-width,height=device-height,user-scalable=yes">
-    <link href='http://fonts.googleapis.com/css?family=Roboto:900,400' rel='stylesheet' type='text/css'>`;
+    <link href='http://fonts.googleapis.com/css?family=Roboto:900,400' rel='stylesheet' type='text/css'>
+  </head>
+  <body>
+    <div id='the-low-down'>
+`;
 
 const footer = ({ local }) => `${
   local
@@ -28,6 +32,7 @@ const footer = ({ local }) => `${
       ga('send', 'pageview');
     </script>`
 }
+    </div>
   </body>
 </html>`;
 
@@ -69,15 +74,18 @@ const generate = async () => {
     const stringObject = string.substr(12);
     // cannot JSON.parse because it's malformed JSON.
     const data = eval(stringObject);
-    const years = await generateYears(data);
-    if (!years) console.log("generate error creating years");
+    const yearRoot = await generateYearRoot(data);
+    if (!yearRoot) console.log("generate error creating yearRoot");
+    const years = await Promise.all(data.map(generateYear));
+    if (!years.every(Boolean))
+      console.log("generate error creating years", years);
     console.log("generate complete");
   } catch (err) {
     console.log("generate error", err);
   }
 };
 
-const generateYears = async data => {
+const generateYearRoot = async data => {
   try {
     const years = data
       .map(({ year, winner }) => {
@@ -93,11 +101,9 @@ const generateYears = async data => {
 
     await writeFileInDir("../deploy/years/", "index.html", html);
 
-    await generateYear(data[0]);
-
     return true;
   } catch (err) {
-    console.log("generateYears error", err);
+    console.log("generateYearRoot error", err);
     return err;
   }
 };
@@ -108,7 +114,8 @@ const generateYear = async data => {
     const { NSW, QLD, winner, matches, year } = data;
     const html = `${header({ title: `Year ${year}` })}
     <div>
-      <h1>${year}</h1>
+      <h1>Stats Of Origin</h1>
+      <h2>${year}</h2>
       <h2>${winner} won (NSW ${NSW}:QLD ${QLD})</h2>
       <h2>Matches</h2>${matches
         .map(match => {
@@ -133,6 +140,9 @@ const generateYear = async data => {
       </div>`;
         })
         .join("")}
+      <div><a href='/years/'>Back to years</a>
+      <div><a href='/years/${Number(year) - 1}'>Prev</a>
+      <div><a href='/years/${Number(year) + 1}'>Next</a>
     </div>
     ${footer({ local })}`;
 
