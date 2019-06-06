@@ -1,3 +1,5 @@
+const { resolve } = require("path");
+
 const robots = require("./robots");
 const sitemap = require("./sitemap");
 const { getPaths, readFile, writeFileInDir } = require("./io");
@@ -20,12 +22,12 @@ if (!Array.prototype.flat) {
 	};
 }
 
-const root = "../deploy/";
+const root = resolve(__dirname + "/../deploy/") + "/";
 const local = false;
 
 const generate = async () => {
 	try {
-		const buffer = await readFile("../js/data.js");
+		const buffer = await readFile(__dirname + "/../js/data.js");
 		const string = buffer.toString();
 		// strip off `var years = `
 		const stringObject = string.substr(12);
@@ -33,7 +35,7 @@ const generate = async () => {
 		const data = eval(stringObject);
 
 		const players = parse(data);
-		// console.log(players.sort());
+		console.log(JSON.stringify(players.sort(), null, " "));
 		return;
 
 		const yearRoot = await generateYearRoot(data);

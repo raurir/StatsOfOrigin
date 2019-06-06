@@ -28,6 +28,7 @@ const writeFileInDir = async (relativeRoot, webPath, data) => {
 		return;
 	}
 	try {
+		const path = fullPath.substr(0, fullPath.lastIndexOf("/") + 1);
 		await mkdir(path);
 		await writeFile(fullPath, data);
 		// console.log("writing:", fullPath);

@@ -79,7 +79,7 @@ const checkTotal = (year, m) => {
 		// console.log("checkTotal undefined:", m);
 		return false;
 	}
-
+	// TODO document value change in years index
 	const valueTry = Number(year.year) < 1983 ? 3 : 4;
 	let total = 0;
 	total += ((m.tries && m.tries.length) || 0) * valueTry;
@@ -95,7 +95,7 @@ const checkTotal = (year, m) => {
 
 const parse = data => {
 	data
-		.splice(0, 40) //
+		// .splice(50, 5)
 		// .filter(year => year.year === "2009")
 		.map(year => {
 			year.matches.map(match => {
@@ -110,7 +110,7 @@ const parse = data => {
 					// console.log("all good");
 				} else {
 					console.log("=======");
-					console.log(year);
+					console.log(year.matches.map(m => m.date));
 					console.log(m);
 				}
 			});
