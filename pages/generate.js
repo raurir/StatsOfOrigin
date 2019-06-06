@@ -27,6 +27,10 @@ const root = "../deploy/";
 const paths = [];
 const local = false;
 
+const robots = `User-agent: *
+Allow: /
+Sitemap: http://www.statsoforigin.com/sitemap.xml`;
+
 const header = ({ title }) => `<html>
 	<head>
 		<title>${
@@ -201,6 +205,7 @@ const generate = async () => {
 		// must run this last because it pushes to `paths`
 		const xml = sitemap(paths);
 		await writeFileInDir(root, "sitemap.xml", xml);
+		await writeFileInDir(root, "robots.txt", robots);
 
 		console.log("generate complete");
 	} catch (err) {
