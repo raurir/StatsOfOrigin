@@ -1,3 +1,5 @@
+const stringSimilarity = require("string-similarity");
+
 const players = [];
 
 const extractPoints = (t, type, attr) => {
@@ -115,6 +117,18 @@ const parse = data => {
 				}
 			});
 		});
+
+	players
+		.sort()
+		.filter(p => /thurston/i.test(p))
+		// .slice(0, 4)
+		.forEach(p => {
+			const matches = stringSimilarity
+				.findBestMatch(p, players)
+				.ratings.filter(match => match.rating > 0.5 && match.rating < 1);
+			if (matches.length) console.log(p, matches);
+		});
+	return [];
 	return players;
 };
 
