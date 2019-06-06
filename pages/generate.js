@@ -25,7 +25,7 @@ if (!Array.prototype.flat) {
 
 const root = "../deploy/";
 const paths = [];
-const local = true;
+const local = false;
 
 const header = ({ title }) => `<html>
 	<head>
@@ -37,13 +37,16 @@ const header = ({ title }) => `<html>
 		<link href='http://fonts.googleapis.com/css?family=Roboto:900,400' rel='stylesheet' type='text/css'>
 	</head>
 	<body>
-		<div id='the-low-down'>
+		<div id='container'>
+			<div id='the-low-down'>
 `;
 
-const footer = ({ local }) => `${
-	local
-		? `<!-- no ga -->`
-		: `<script>
+const footer = ({ local }) => `
+			</div>
+		</div>${
+			local
+				? `<!-- no ga -->`
+				: `<script>
 			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
 			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
@@ -51,8 +54,7 @@ const footer = ({ local }) => `${
 			ga('create', 'UA-63027306-1', 'auto');
 			ga('send', 'pageview');
 		</script>`
-}
-		</div>
+		}
 	</body>
 </html>`;
 
@@ -212,11 +214,17 @@ const generateYearRoot = async data => {
 			.map(({ year, winner }) => {
 				return `<a href='/years/${year}'>${year} ${winner}</a>`;
 			})
-			.join("\n");
+			.join(" | \n");
 
 		const html = `${header({ title: "Years" })}
 		<div>
+			<h1>Years</h1>
+			<h2>State of Origin year by year</h2>
 			${years}
+			<div>
+				<a href="/index.html" class="button">Home</a>
+				<a href="/about.html" class="button">About</a>
+			</div>
 		</div>
 		${footer({ local })}`;
 
@@ -229,7 +237,7 @@ const generateYearRoot = async data => {
 	}
 };
 
-const generateYear = async data => {
+const generateYear = async (data, index, array) => {
 	try {
 		// console.log(JSON.stringify(data, null, " "));
 		const { NSW, QLD, winner, matches, year } = data;
@@ -265,9 +273,21 @@ const generateYear = async data => {
 			</div>`;
 				})
 				.join("")}
-			<div><a href='/years/'>Back to years</a>
-			<div><a href='/years/${Number(year) - 1}'>Prev</a>
-			<div><a href='/years/${Number(year) + 1}'>Next</a>
+			<div>
+				${
+					index > 0
+						? `<a href='/years/${Number(year) -
+								1}/index.html' class="button">Prev</a>`
+						: ``
+				}
+				<a href='/years/' class="button">Back to years</a>
+				${
+					index < array.length - 1
+						? `<a href='/years/${Number(year) +
+								1}/index.html' class="button">Next</a>`
+						: ``
+				}
+			</div>
 		</div>
 		${footer({ local })}`;
 
