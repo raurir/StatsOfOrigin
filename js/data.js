@@ -1237,7 +1237,7 @@ var years = [
       {
         date: "26 May 2004",
         details:
-          "New South Wales 9 (S.Timmins tries;C.Fitzgibbon 2 goals S.Timmins dropkicks)\nQueensland 8 (B.Tate,S.Prince tries)",
+          "New South Wales 9 (S.Timmins tries;C.Fitzgibbon 2 goals;S.Timmins dropkicks)\nQueensland 8 (B.Tate,S.Prince tries)",
         winner: {
           team: "NSW",
           score: 9
@@ -1966,7 +1966,7 @@ var years = [
       {
         date: "31 May 2017",
         details:
-          "New South Wales 28 (James Maloney,Mitchell Pearce,James Tedesco,Andrew Fifita,Jarryd Hayne,tries;James Maloney 4 conversions)\nQueensland 4 (Corey Oates 1 tries;J.Cameron Smith 1 conversion)",
+          "New South Wales 28 (James Maloney,Mitchell Pearce,James Tedesco,Andrew Fifita,Jarryd Hayne,tries;James Maloney 4 conversions)\nQueensland 4 (Corey Oates 1 tries;J.Cameron Smith 1 conversions)",
         winner: {
           team: "NSW",
           score: 28
@@ -1998,7 +1998,7 @@ var years = [
       {
         date: "12 July 2017",
         details:
-          "Queensland 18 (Valentine Holmes 3,Jarrod Wallace tries;Cameron Smith 3 conversions)\nNew South Wales 16 (Josh Dugan tries;James Maloney conversion)",
+          "Queensland 18 (Valentine Holmes 3,Jarrod Wallace tries;Cameron Smith 3 conversions)\nNew South Wales 16 (Josh Dugan tries;James Maloney conversions)",
         winner: {
           team: "QLD",
           score: 22
@@ -2039,7 +2039,7 @@ var years = [
       {
         date: "24 June 2018",
         details:
-          "New South Wales 18 (Josh Addo-Carr,Boyd Cordner,Latrell Mitchell tries;James Maloney 3 conversions)\nQueensland 14 (Valentine Holmes,Dane Gagai,Will Chambers tries;Valentine Holmes 1 conversion)",
+          "New South Wales 18 (Josh Addo-Carr,Boyd Cordner,Latrell Mitchell tries;James Maloney 3 conversions)\nQueensland 14 (Valentine Holmes,Dane Gagai,Will Chambers tries;Valentine Holmes 1 conversions)",
         winner: {
           team: "NSW",
           score: 18
