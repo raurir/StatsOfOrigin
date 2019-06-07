@@ -25,8 +25,11 @@ const extractPoints = (year, match, t, type, attr) => {
 			.flat();
 
 		t[attr].forEach(p => {
-			if (!players.find(player => player.name === p)) {
-				players.push({ name: p, year: year.year });
+			const found = players.find(player => player.name === p);
+			if (found) {
+				found.years.push(year.year);
+			} else {
+				players.push({ name: p, years: [year.year] });
 			}
 		});
 	}
@@ -119,20 +122,28 @@ const parse = data => {
 		});
 
 	const names = players.map(p => p.name);
-	names
-		.sort()
-		.filter(p => /(thurston|smith)/i.test(p))
+	players
+		// .filter(p => /(thurston|smith)/i.test(p))
 		// .slice(0, 4)
 		.forEach((p, i) => {
-			const bestMatches = stringSimilarity.findBestMatch(p, names);
+			const bestMatches = stringSimilarity.findBestMatch(p.name, names);
 			const bestMatchIndex = bestMatches.bestMatchIndex;
+			const mp = players[bestMatchIndex];
 
-			console.log("match for p:", p, "is:", players[bestMatchIndex]);
+			// console.log(
+			// 	"match for p:",
+			// 	p.name,
+			// 	p.years.join(",")
+			// 	// "is:",
+			// 	// mp.name,
+			// 	// mp.years.join(",")
+			// );
 
 			const matches = bestMatches.ratings.filter(
-				match => match.rating > 0.5 && match.rating < 1
+				match => match.rating > 0.7 && match.rating < 1
 			);
-			// if (matches.length) console.log(p, matches);
+			if (matches.length)
+				console.log(p.name, p.years.join(","), matches.length, matches);
 		});
 	return [];
 	return players;

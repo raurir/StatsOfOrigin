@@ -765,7 +765,7 @@ var years = [
       {
         date: "12 June 1995",
         details:
-          "Queensland 24 (B.Dallas,J.Smith,B.Ikin,B.Moore tries;W.Bartrim 4 goals)\nNew South Wales 16 (T.Brasher,A.Muir,R.Wishart tries;R.Wishart 2 goals)",
+          "Queensland 24 (B.Dallas,Jason Smith,B.Ikin,B.Moore tries;W.Bartrim 4 goals)\nNew South Wales 16 (T.Brasher,A.Muir,R.Wishart tries;R.Wishart 2 goals)",
         winner: {
           team: "QLD",
           score: 24
@@ -933,7 +933,7 @@ var years = [
       {
         date: "19 June 1998",
         details:
-          "Queensland 19 (B.Ikin,K.Walters,A.Langer tries;D.Lockyer 2,R.O'Davis goals;J.Smith dropkicks)\nNew South Wales 4 (K.McGuinness tries)",
+          "Queensland 19 (B.Ikin,K.Walters,A.Langer tries;D.Lockyer 2,R.O'Davis goals;Jason Smith dropkicks)\nNew South Wales 4 (K.McGuinness tries)",
         winner: {
           team: "QLD",
           score: 19
@@ -1349,7 +1349,7 @@ var years = [
       {
         date: "24 May 2006",
         details:
-          "New South Wales 17 (B.Finch,M.King,W.Mason tries;B.Hodgson 2 goals;B.Finch dropkicks)\nQueensland 16 (G.Inglis 2,S.Bell tries;J.Thurston 2 goals)",
+          "New South Wales 17 (B.Finch,M.King,W.Mason tries;B.Hodgson 2 goals;B.Finch dropkicks)\nQueensland 16 (Greg Inglis 2,S.Bell tries;J.Thurston 2 goals)",
         winner: {
           team: "NSW",
           score: 17
@@ -1365,7 +1365,7 @@ var years = [
       {
         date: "14 June 2006",
         details:
-          "Queensland 30 (C.Webb,J.Hodges,A.Mogg 2,S Berrigan tries;J.Thurston 5 goals)\nNew South Wales 6 (T.Tahu tries;B.Hodgson goals)",
+          "Queensland 30 (C.Webb,J.Hodges,A.Mogg 2,S.Berrigan tries;J.Thurston 5 goals)\nNew South Wales 6 (T.Tahu tries;B.Hodgson goals)",
         winner: {
           team: "QLD",
           score: 30
@@ -1405,7 +1405,7 @@ var years = [
       {
         date: "23 May 2007",
         details:
-          "Queensland 25 (G.Inglis 2,D.Lockyer,S.Price tries;J.Thurston 4 goals;J.Thurston dropkicks)\nNew South Wales 18 (Cooper,Hayne,N.Hindmarsh tries;Lyon 3 goals)",
+          "Queensland 25 (Greg Inglis 2,D.Lockyer,S.Price tries;J.Thurston 4 goals;J.Thurston dropkicks)\nNew South Wales 18 (Cooper,Hayne,N.Hindmarsh tries;Lyon 3 goals)",
         winner: {
           team: "QLD",
           score: 25
@@ -1421,7 +1421,7 @@ var years = [
       {
         date: "13 June 2007",
         details:
-          "Queensland 10 (G.Inglis,S.Bell tries;J.Thurston goals)\nNew South Wales 6 (B.Stewart tries;J.Lyon goals)",
+          "Queensland 10 (Greg Inglis,S.Bell tries;J.Thurston goals)\nNew South Wales 6 (B.Stewart tries;J.Lyon goals)",
         winner: {
           team: "QLD",
           score: 10
@@ -1517,7 +1517,7 @@ var years = [
       {
         date: "3 June 2009",
         details:
-          "Queensland 28 (B.Slater,G.Inglis 2,J.Thurston,D.Boyd tries;J.Thurston 4 goals)\nNew South Wales 18 (B.Creagh,C.Wing,J.Hayne tries;K.Gidley 3 goals)",
+          "Queensland 28 (B.Slater,Greg Inglis 2,J.Thurston,D.Boyd tries;J.Thurston 4 goals)\nNew South Wales 18 (B.Creagh,C.Wing,J.Hayne tries;K.Gidley 3 goals)",
         winner: {
           team: "QLD",
           score: 28
@@ -1533,7 +1533,7 @@ var years = [
       {
         date: "24 June 2009",
         details:
-          "Queensland 24 (G.Inglis,I.Folau,D.Lockyer,C.Smith tries;J.Thurston 4 goals)\nNew South Wales 14 (J.Hayne 2,D.Williams tries;K.Gidley 1 goals)",
+          "Queensland 24 (Greg Inglis,I.Folau,D.Lockyer,C.Smith tries;J.Thurston 4 goals)\nNew South Wales 14 (J.Hayne 2,D.Williams tries;K.Gidley 1 goals)",
         winner: {
           team: "QLD",
           score: 24
@@ -1573,7 +1573,7 @@ var years = [
       {
         date: "26 May 2010",
         details:
-          "Queensland 28 (B.Slater,D.Boyd,G.Inglis,D.Lockyer,S.Thaiday tries;J.Thurston 4 goals)\nNew South Wales 24 (J.Hayne,A.Watmough,B.Creagh,J.Idris tries;J.Lyon 4 goals)",
+          "Queensland 28 (B.Slater,D.Boyd,Greg Inglis,D.Lockyer,S.Thaiday tries;J.Thurston 4 goals)\nNew South Wales 24 (J.Hayne,A.Watmough,B.Creagh,J.Idris tries;J.Lyon 4 goals)",
         winner: {
           team: "QLD",
           score: 28
@@ -1589,7 +1589,7 @@ var years = [
       {
         date: "16 June 2010",
         details:
-          "Queensland 34 (I.Folau 2,D.Boyd,G.Inglis,W.Tonga,C.Cronk tries;J.Thurston 5 goals)\nNew South Wales 6 (B.White tries;M.Ennis 1 goals)",
+          "Queensland 34 (I.Folau 2,D.Boyd,Greg Inglis,W.Tonga,C.Cronk tries;J.Thurston 5 goals)\nNew South Wales 6 (B.White tries;M.Ennis 1 goals)",
         winner: {
           team: "QLD",
           score: 34
@@ -1661,7 +1661,7 @@ var years = [
       {
         date: "6 July 2011",
         details:
-          "Queensland 34 (G.Inglis 2,C.Smith,B.Slater,S.Thaiday,J.Yow Yeh tries;J.Thurston 4,C.Smith goals)\nNew South Wales 24 (G.Bird,J.Hayne,A.Minichiello,A.Uate tries;J.Soward 4 goals)",
+          "Queensland 34 (Greg Inglis 2,C.Smith,B.Slater,S.Thaiday,J.Yow Yeh tries;J.Thurston 4,C.Smith goals)\nNew South Wales 24 (G.Bird,J.Hayne,A.Minichiello,A.Uate tries;J.Soward 4 goals)",
         winner: {
           team: "QLD",
           score: 34
@@ -1685,7 +1685,7 @@ var years = [
       {
         date: "23 May 2012",
         details:
-          "Queensland 18 (Darius Boyd 2,G.Inglis tries;J.Thurston 3 conversions)\nNew South Wales 10 (A.Uate,M.Jennings tries;Todd Carney conversions)",
+          "Queensland 18 (Darius Boyd 2,Greg Inglis tries;J.Thurston 3 conversions)\nNew South Wales 10 (A.Uate,M.Jennings tries;Todd Carney conversions)",
         winner: {
           team: "QLD",
           score: 18
@@ -1929,7 +1929,7 @@ var years = [
       {
         date: "22 June 2016",
         details:
-          "Queensland 26 (Dane Gagai 3,Corey Oates tries;J.Thurston 5 goals)\nNew South Wales 16 (Frizell,Maloney tries;Maloney 1,Reynolds 3 conversions)",
+          "Queensland 26 (Dane Gagai 3,Corey Oates tries;J.Thurston 5 goals)\nNew South Wales 16 (Frizell,James Maloney tries;James Maloney 1,Reynolds 3 conversions)",
         winner: {
           team: "QLD",
           score: 26
@@ -1945,7 +1945,7 @@ var years = [
       {
         date: "13 July 2016",
         details:
-          "New South Wales 16 (Frizell,Fifita,Jennings tries;Gallen 1,Maloney 2 goals)\nQueensland 26 (Inglis,Cooper,Boyd tries;J.Thurston 1 goals)",
+          "New South Wales 16 (Frizell,Fifita,Jennings tries;P.Gallen 1,James Maloney 2 goals)\nQueensland 26 (Greg Inglis,Cooper,Boyd tries;J.Thurston 1 goals)",
         winner: {
           team: "NSW",
           score: 18
@@ -2025,7 +2025,7 @@ var years = [
       {
         date: "6 June 2018",
         details:
-          "New South Wales 22 (Lattrell Mitchell,James Tedesco,Tom Trbojevic,Josh Addo-Carr tries;James Maloney 2 conversions;James Maloney goals)\nQueensland 12 (Valentine Holmes,Dane Gagai tries;Valentine Holems 2 conversions)",
+          "New South Wales 22 (Latrell Mitchell,James Tedesco,Tom Trbojevic,Josh Addo-Carr tries;James Maloney 2 conversions;James Maloney goals)\nQueensland 12 (Valentine Holmes,Dane Gagai tries;Valentine Holems 2 conversions)",
         winner: {
           team: "NSW",
           score: 22
