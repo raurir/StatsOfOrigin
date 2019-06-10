@@ -4,6 +4,7 @@
   "description": "3d visualiser for the State of Origin",
   "main": "origin.min.js",
   "dependencies": {
+    "enquirer": "^2.3.0",
     "express": "^4.12.4",
     "grunt": "^1.0.4",
     "grunt-autoprefixer": "^3.0.0",

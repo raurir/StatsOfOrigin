@@ -1,4 +1,19 @@
 const stringSimilarity = require("string-similarity");
+const { prompt } = require("enquirer");
+
+const audit = async data => {
+	var d = data.map(v =>
+		Object.assign({}, v, {
+			onCancel: (name, value, prompt) => {
+				console.log(prompt.state.answers);
+			}
+		})
+	);
+	try {
+		const response = await prompt(d);
+		console.log(response);
+	} catch (err) {}
+};
 
 const players = [];
 
@@ -12,8 +27,7 @@ const extractPoints = (year, match, t, type, attr) => {
 			.replace(` ${attr}`, "")
 			.split(",")
 			.map(person => {
-				let lastBit = person.split(" ");
-				lastBit = lastBit[lastBit.length - 1];
+				const lastBit = person.split(" ").pop();
 				const n = Number(lastBit);
 				if (n === Number(lastBit)) {
 					const index = person.lastIndexOf(lastBit) - 1;
@@ -28,8 +42,14 @@ const extractPoints = (year, match, t, type, attr) => {
 			const found = players.find(player => player.name === p);
 			if (found) {
 				found.years.push(year.year);
+				found.years = [...new Set(found.years)]; // remove duplicates :)
+				if (!found[attr]) {
+					found[attr] = 1;
+				} else {
+					found[attr]++;
+				}
 			} else {
-				players.push({ name: p, years: [year.year] });
+				players.push({ name: p, years: [year.year], [attr]: 1 });
 			}
 		});
 	}
@@ -42,19 +62,19 @@ const extract = (year, match, detail) => {
 	if (/Queensland/.test(detail)) {
 		total =
 			match.winner.team === "QLD" ? match.winner.score : match.loser.score;
-		obj.qld = {
+		obj.QLD = {
 			total
 		};
-		t = obj.qld;
+		t = obj.QLD;
 	}
 	if (/New South Wales/.test(detail)) {
 		total =
 			match.winner.team === "NSW" ? match.winner.score : match.loser.score;
-		obj.nsw = {
+		obj.NSW = {
 			total
 		};
 		if (t) throw new Error("duplicate state");
-		t = obj.nsw;
+		t = obj.NSW;
 	}
 	if (total === 0) return obj;
 	if (total === -1) return console.log("total is negative");
@@ -99,53 +119,79 @@ const checkTotal = (year, m) => {
 };
 
 const parse = data => {
-	data
-		// .splice(50, 5)
+	const format = data
+		// .splice(0, 1)
 		// .filter(year => year.year === "2009")
 		.map(year => {
-			year.matches.map(match => {
+			const breakdown = year.matches.map(match => {
 				const { details } = match;
 				let m = {};
 				details.split("\n").forEach(detail => {
 					m = Object.assign({}, m, extract(year, match, detail));
 				});
-				// console.log(year.year, m.nsw, m.qld);
-				if (checkTotal(year, m.nsw) && checkTotal(year, m.qld)) {
+				// console.log(year.year, m.NSW, m.QLD);
+				if (checkTotal(year, m.NSW) && checkTotal(year, m.QLD)) {
 					// good parsing buddy!
 					// console.log("all good");
 				} else {
-					console.log("=======");
+					console.log("=======\nError:");
 					console.log(year.matches.map(m => m.date));
 					console.log(m);
 				}
+				return m;
+				// return match; //Object.assign({}, match, m);
 			});
+			const matches = year.matches.map((match, i) => {
+				return Object.assign(match, breakdown[i]);
+			});
+			// return matches;
+			const m = Object.assign({}, year);
+			m.matches = matches;
+			return m;
 		});
+	// console.log(JSON.stringify(format, null, " "));
+	return format;
 
-	const names = players.map(p => p.name);
-	players
-		// .filter(p => /(thurston|smith)/i.test(p))
+	const names = players.map(p => p.name.replace(/[\.\s/]/g, "_"));
+	// console.log(names.sort());
+	// console.log(names.length);
+	/*
+	// find duplicates and similarities
+	const problems = players
+		// .filter(p => /(smith)/i.test(p.name))
 		// .slice(0, 4)
-		.forEach((p, i) => {
+		.map((p, i) => {
 			const bestMatches = stringSimilarity.findBestMatch(p.name, names);
 			const bestMatchIndex = bestMatches.bestMatchIndex;
 			const mp = players[bestMatchIndex];
 
-			// console.log(
-			// 	"match for p:",
-			// 	p.name,
-			// 	p.years.join(",")
-			// 	// "is:",
-			// 	// mp.name,
-			// 	// mp.years.join(",")
-			// );
-
 			const matches = bestMatches.ratings.filter(
-				match => match.rating > 0.7 && match.rating < 1
+				match => match.rating > 0.4 && match.rating < 1
 			);
-			if (matches.length)
-				console.log(p.name, p.years.join(","), matches.length, matches);
-		});
-	return [];
+			if (matches.length) {
+				return {
+					type: "confirm",
+					name: p.name.replace(/\./g, "_"),
+					message: `${p.name}:${p.years.join(",")} \n\t${matches
+						.map(match => {
+							// console.log(match.target);
+							// return match.target;
+							const pm = players.find(pm => pm.name === match.target);
+							return `${pm.name}:${pm.years.join(",")}`;
+						})
+						.join("\n\t")}`
+				};
+			} else {
+				return false;
+			}
+		})
+		.filter(Boolean);
+
+	audit(problems);
+	*/
+
+	players.sort((a, b) => (a.tries || 0) - (b.tries || 0));
+
 	return players;
 };
 
