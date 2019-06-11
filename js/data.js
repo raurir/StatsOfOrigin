@@ -2076,5 +2076,31 @@ var years = [
     ],
     winner: "NSW",
     year: "2018"
+  },
+  {
+    inprogress: true,
+    NSW: 0,
+    QLD: 1,
+    matches: [
+      {
+        date: "5 June 2019",
+        details:
+          "Queensland 18 (Dane Gagai 2, Corey Oates tries;Kalyn Ponga 2 conversions;Kalyn Ponga goals)\nNew South Wales 14(Josh Morris,Jake Trbojevic tries;Nathan Cleary 2 conversions;Nathan Cleary goals)",
+        winner: {
+          team: "QLD",
+          score: 18
+        },
+        loser: {
+          team: "NSW",
+          score: 14
+        },
+        referee: "Gerard Sutton,Ashley Klein",
+        ground: "Suncorp Stadium,Brisbane",
+        crowd: "52,191",
+        man_of_match: "Dane Gagai"
+      }
+    ],
+    winner: null,
+    year: "2019"
   }
 ];
