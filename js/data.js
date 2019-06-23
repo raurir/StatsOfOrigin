@@ -2079,7 +2079,7 @@ var years = [
   },
   {
     inprogress: true,
-    NSW: 0,
+    NSW: 1,
     QLD: 1,
     matches: [
       {
@@ -2093,6 +2093,23 @@ var years = [
         loser: {
           team: "NSW",
           score: 14
+        },
+        referee: "Gerard Sutton,Ashley Klein",
+        ground: "Suncorp Stadium,Brisbane",
+        crowd: "52,191",
+        man_of_match: "Dane Gagai"
+      },
+      {
+        date: "23 June 2019",
+        details:
+          "New South Wales 38(Tom Trbojevic 3,Josh Addo-Carr 2, Frizell tries;James Maloney 5 conversions;James Maloney 2 goals)\nQueensland 6 (Will Chambers tries;Kalyn Ponga conversions)",
+        winner: {
+          team: "NSW",
+          score: 38
+        },
+        loser: {
+          team: "QLD",
+          score: 6
         },
         referee: "Gerard Sutton,Ashley Klein",
         ground: "Suncorp Stadium,Brisbane",

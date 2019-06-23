@@ -36,10 +36,28 @@ const generate = async () => {
 		// cannot JSON.parse because it's malformed JSON.
 		const data1 = eval(stringObject);
 
-		// const players = parse(data1);
+		const players = parse(data1);
 		// console.log(JSON.stringify(players.sort(), null, " "));
 		// return;
-		const data = parse(data1);
+		// const data = parse(data1);
+
+		// const best = data1.reduce((acc, y) => {
+		// 	const delta = y.matches.map(game => {
+		// 		const { winner, loser } = game;
+		// 		// console.log(game);
+		// 		return { y, delta: winner.score - loser.score };
+		// 	});
+		// 	return acc.concat(delta);
+		// }, []);
+
+		// console.log(
+		// 	JSON.stringify(
+		// 		best.sort((a, b) => a.delta - b.delta).slice(-3),
+		// 		null,
+		// 		" "
+		// 	)
+		// );
+		return;
 
 		const yearRoot = await generateYearsIndex(data);
 		if (!yearRoot) console.log("generate error creating yearRoot");
