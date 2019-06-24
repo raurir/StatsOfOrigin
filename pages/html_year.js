@@ -57,7 +57,9 @@ module.exports = async (data, index, array) => {
 		<div>
 			<h1>Stats Of Origin</h1>
 			<h2>${year}</h2>
-			<h2>${winner} won (NSW ${NSW}:QLD ${QLD})</h2>
+			<h2>${
+				winner ? `${winner} won` : `Series in progress`
+			} (NSW ${NSW}:QLD ${QLD})</h2>
 			<h2>Matches</h2>
 			<div style='display:flex;'>
 				${matches.map(renderMatch).join("")}

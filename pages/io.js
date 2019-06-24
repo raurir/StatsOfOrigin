@@ -17,6 +17,7 @@ const writeFileInDir = async (relativeRoot, webPath, data) => {
 		const stati = await stat(fullPath);
 		// console.log(stati.atime, stati.mtime, stati.ctime);
 		if (existing.toString() === data.toString()) {
+			console.log("existing");
 			addToPaths(webPath, format(stati.mtime));
 			return true;
 		}
@@ -31,6 +32,7 @@ const writeFileInDir = async (relativeRoot, webPath, data) => {
 	// attempt to write to file
 	try {
 		await writeFile(fullPath, data);
+		console.log("written path", fullPath);
 		addToPaths(webPath);
 		return true;
 	} catch (err) {
@@ -50,7 +52,7 @@ const writeFileInDir = async (relativeRoot, webPath, data) => {
 	// attempt to create folder and write to file
 	try {
 		const path = fullPath.substr(0, fullPath.lastIndexOf("/") + 1);
-		console.log("path", path);
+		console.log("creating path", path);
 		await mkdir(path);
 		await writeFile(fullPath, data);
 		addToPaths(webPath);

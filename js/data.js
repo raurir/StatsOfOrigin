@@ -1929,7 +1929,7 @@ var years = [
       {
         date: "22 June 2016",
         details:
-          "Queensland 26 (Dane Gagai 3,Corey Oates tries;Johnathan Thurston 5 goals)\nNew South Wales 16 (Frizell,James Maloney tries;James Maloney 1,Reynolds 3 conversions)",
+          "Queensland 26 (Dane Gagai 3,Corey Oates tries;Johnathan Thurston 5 goals)\nNew South Wales 16 (Tyson Frizell,James Maloney tries;James Maloney 1,Reynolds 3 conversions)",
         winner: {
           team: "QLD",
           score: 26
@@ -1945,7 +1945,7 @@ var years = [
       {
         date: "13 July 2016",
         details:
-          "New South Wales 16 (Frizell,Andrew Fifita,Michael Jennings tries;Paul Gallen 1,James Maloney 2 goals)\nQueensland 26 (Greg Inglis,Gavin Cooper,Darius Boyd tries;Johnathan Thurston 1 goals)",
+          "New South Wales 16 (Tyson Frizell,Andrew Fifita,Michael Jennings tries;Paul Gallen 1,James Maloney 2 goals)\nQueensland 26 (Greg Inglis,Gavin Cooper,Darius Boyd tries;Johnathan Thurston 1 goals)",
         winner: {
           team: "NSW",
           score: 18
@@ -2102,7 +2102,7 @@ var years = [
       {
         date: "23 June 2019",
         details:
-          "New South Wales 38(Tom Trbojevic 3,Josh Addo-Carr 2, Frizell tries;James Maloney 5 conversions;James Maloney 2 goals)\nQueensland 6 (Will Chambers tries;Kalyn Ponga conversions)",
+          "New South Wales 38(Tom Trbojevic 3,Josh Addo-Carr 2, Tyson Frizell tries;James Maloney 3, Nathan Cleary 2 conversions;James Maloney 2 goals)\nQueensland 6 (Will Chambers tries;Kalyn Ponga conversions)",
         winner: {
           team: "NSW",
           score: 38
@@ -2112,9 +2112,9 @@ var years = [
           score: 6
         },
         referee: "Gerard Sutton,Ashley Klein",
-        ground: "Suncorp Stadium,Brisbane",
-        crowd: "52,191",
-        man_of_match: "Dane Gagai"
+        ground: "Optus Stadium,Perth",
+        crowd: "59,721",
+        man_of_match: "Jake Trbojevic"
       }
     ],
     winner: null,

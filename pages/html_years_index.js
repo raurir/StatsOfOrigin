@@ -5,7 +5,7 @@ module.exports = async data => {
 	try {
 		const years = data
 			.map(({ year, winner }) => {
-				return `<a href='/years/${year}'>${year} ${winner}</a>`;
+				return `<a href='/years/${year}'>${year} ${winner ? winner : ""}</a>`;
 			})
 			.join(" | \n");
 

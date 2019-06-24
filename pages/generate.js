@@ -34,9 +34,9 @@ const generate = async () => {
 		// strip off `var years = `
 		const stringObject = string.substr(12);
 		// cannot JSON.parse because it's malformed JSON.
-		const data1 = eval(stringObject);
+		const data = eval(stringObject);
 
-		const players = parse(data1);
+		const players = parse(data);
 		// console.log(JSON.stringify(players.sort(), null, " "));
 		// return;
 		// const data = parse(data1);
@@ -57,7 +57,7 @@ const generate = async () => {
 		// 		" "
 		// 	)
 		// );
-		return;
+		// return;
 
 		const yearRoot = await generateYearsIndex(data);
 		if (!yearRoot) console.log("generate error creating yearRoot");
