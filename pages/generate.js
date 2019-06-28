@@ -5,6 +5,7 @@ const sitemap = require("./sitemap");
 const { getPaths, readFile, writeFileInDir } = require("./io");
 const parse = require("./players");
 
+const generateAbout = require("./html_about");
 const generateYear = require("./html_year");
 const generateYearsIndex = require("./html_years_index");
 
@@ -59,6 +60,8 @@ const generate = async () => {
 		// );
 		// return;
 
+		const about = await generateAbout();
+		if (!about) console.log("generate error creating about");
 		const yearRoot = await generateYearsIndex(data);
 		if (!yearRoot) console.log("generate error creating yearRoot");
 		const years = await Promise.all(
@@ -71,6 +74,7 @@ const generate = async () => {
 
 		// must run this last because it pushes to `paths`
 		const paths = getPaths();
+		console.log(paths);
 		const xml = sitemap(paths);
 		await writeFileInDir(deployRoot, "sitemap.xml", xml);
 		await writeFileInDir(deployRoot, "robots.txt", robots);
