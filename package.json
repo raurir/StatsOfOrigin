@@ -23,7 +23,7 @@
   "scripts": {
     "build": "grunt build",
     "develop": "grunt watch",
-    "server": "cd deploy && python -m SimpleHTTPServer 5000"
+    "server": "http-server deploy"
   },
   "repository": {
     "type": "git",

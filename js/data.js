@@ -2078,8 +2078,8 @@ var years = [
     year: "2018"
   },
   {
-    inprogress: true,
-    NSW: 1,
+    // inprogress: true,
+    NSW: 2,
     QLD: 1,
     matches: [
       {
@@ -2102,7 +2102,7 @@ var years = [
       {
         date: "23 June 2019",
         details:
-          "New South Wales 38(Tom Trbojevic 3,Josh Addo-Carr 2, Tyson Frizell tries;James Maloney 3, Nathan Cleary 2 conversions;James Maloney 2 goals)\nQueensland 6 (Will Chambers tries;Kalyn Ponga conversions)",
+          "New South Wales 38(Tom Trbojevic 3,Josh Addo-Carr 2,Tyson Frizell tries;James Maloney 3,Nathan Cleary 2 conversions;James Maloney 2 goals)\nQueensland 6 (Will Chambers tries;Kalyn Ponga conversions)",
         winner: {
           team: "NSW",
           score: 38
@@ -2115,9 +2115,26 @@ var years = [
         ground: "Optus Stadium,Perth",
         crowd: "59,721",
         man_of_match: "Jake Trbojevic"
+      },
+      {
+        date: "10 July 2019",
+        details:
+          "New South Wales 26(James Tedesco 2,Paul Vaughan,Damien Cook tries;James Maloney 4 conversions;James Maloney goals)\nQueensland 20 (Felise Kaufusi,Josh McGuire,Josh Papalii tries;Ethan Lowe 3 goals;Ethan Lowe conversions)",
+        winner: {
+          team: "NSW",
+          score: 26
+        },
+        loser: {
+          team: "QLD",
+          score: 20
+        },
+        referee: "Gerard Sutton,Ashley Klein",
+        ground: "ANZ Stadium,Sydney",
+        crowd: "82,565",
+        man_of_match: "James Tedesco"
       }
     ],
-    winner: null,
+    winner: "NSW",
     year: "2019"
   }
 ];
