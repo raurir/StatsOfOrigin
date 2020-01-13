@@ -566,10 +566,10 @@ encodeurl@~1.0.2:
   resolved "https://registry.yarnpkg.com/encodeurl/-/encodeurl-1.0.2.tgz#ad3ff4c86ec2d029322f5a02c3a9a606c95b3f59"
   integrity sha1-rT/0yG7C0CkyL1oCw6mmBslbP1k=
 
-enquirer@^2.3.1:
-  version "2.3.1"
-  resolved "https://registry.yarnpkg.com/enquirer/-/enquirer-2.3.1.tgz#f1bf52ea38470525f41412d723a62ba6868559c6"
-  integrity sha512-7slmHsJY+mvnIrzD0Z0FfTFLmVJuIzRNCW72X9s35BshOoC+MI4jLJ8aPyAC/BelAirXBZB+Mu1wSqP0wpW4Kg==
+enquirer@^2.3.3:
+  version "2.3.3"
+  resolved "https://registry.yarnpkg.com/enquirer/-/enquirer-2.3.3.tgz#3c64ae4fbb59055f8ce6654bca774aa44b0db067"
+  integrity sha512-RlJRAB0CHO1wk17ZI+xAEmcVgxz9brGeHaJnzPTzj9FQHDGFTnEFwlWChzgLNgXvR8e9KCjA8B6Q54234XlWKA==
   dependencies:
     ansi-colors "^3.2.1"
 
