@@ -15,7 +15,7 @@
     "grunt-sync": "^0.8.1",
     "mongodb": "^3.2.5",
     "promise": "~8.0.3",
-    "request": "^2.88.0",
+    "request": "^2.88.2",
     "string-similarity": "^3.0.0",
     "twitter": "^1.7.1",
     "underscore": "~1.9.1"
