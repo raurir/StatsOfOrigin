@@ -2600,10 +2600,10 @@ underscore.string@~3.3.4:
     sprintf-js "^1.0.3"
     util-deprecate "^1.0.2"
 
-underscore@~1.9.1:
-  version "1.9.1"
-  resolved "https://registry.yarnpkg.com/underscore/-/underscore-1.9.1.tgz#06dce34a0e68a7babc29b365b8e74b8925203961"
-  integrity sha512-5/4etnCkd9c8gwgowi5/om/mYO5ajCaOgdzj/oW+0eQV9WxKBDZw5+ycmKmeaTXjInS/W0BzpGLo2xR2aBwZdg==
+underscore@~1.10.1:
+  version "1.10.1"
+  resolved "https://registry.yarnpkg.com/underscore/-/underscore-1.10.1.tgz#c56f8e088b2ecfdb67fe8efb173dc8bf871930bf"
+  integrity sha512-F3pVQ4LXjynIZ3k3RXX/aOc2ygsNuo7KIYANTS9RcR8LXSooYBEtbg3hCGhOgRr5+em9eluV2wUwcgVa984eIw==
 
 union-value@^1.0.0:
   version "1.0.0"
