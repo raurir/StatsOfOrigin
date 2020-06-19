@@ -14,7 +14,7 @@
     "grunt-contrib-watch": "^1.1.0",
     "grunt-sync": "^0.8.2",
     "mongodb": "^3.2.5",
-    "promise": "~8.0.3",
+    "promise": "~8.1.0",
     "request": "^2.88.0",
     "string-similarity": "^4.0.1",
     "twitter": "^1.7.1",
