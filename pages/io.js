@@ -17,7 +17,7 @@ const writeFileInDir = async (relativeRoot, webPath, data) => {
     const stati = await stat(fullPath);
     // console.log(stati.atime, stati.mtime, stati.ctime);
     if (existing.toString() === data.toString()) {
-      console.log("existing");
+      // console.log("existing");
       addToPaths(webPath, format(stati.mtime));
       return true;
     }
@@ -32,7 +32,7 @@ const writeFileInDir = async (relativeRoot, webPath, data) => {
   // attempt to write to file
   try {
     await writeFile(fullPath, data);
-    console.log("written path", fullPath);
+    // console.log("written path", fullPath);
     addToPaths(webPath);
     return true;
   } catch (err) {
@@ -63,7 +63,7 @@ const writeFileInDir = async (relativeRoot, webPath, data) => {
   }
 };
 
-const format = d =>
+const format = (d) =>
   ["" + d.getFullYear(), "0" + (d.getMonth() + 1), "0" + d.getDate()]
     .map((c, i) => c.slice(-[4, 2, 2][i]))
     .join("-");
@@ -71,12 +71,12 @@ const today = format(new Date());
 
 const getPaths = () => paths;
 const addToPaths = (path, lastmod = today) => {
-  console.log("addToPaths", path);
+  // console.log("addToPaths", path);
   paths.push({ path, lastmod });
 };
 
 module.exports = {
   getPaths,
   readFile,
-  writeFileInDir
+  writeFileInDir,
 };

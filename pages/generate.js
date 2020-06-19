@@ -74,7 +74,7 @@ const generate = async () => {
 
 		// must run this last because it pushes to `paths`
 		const paths = getPaths();
-		console.log(paths);
+		console.log(paths.map(({ path, lastmod }) => path));
 		const xml = sitemap(paths);
 		await writeFileInDir(deployRoot, "sitemap.xml", xml);
 		await writeFileInDir(deployRoot, "robots.txt", robots);
