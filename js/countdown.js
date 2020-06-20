@@ -217,7 +217,6 @@ function initCountdown() {
   var meshes = {};
 
   function update(time) {
-    // console.log("update", time);
     if (time > 200) showRemaining();
   }
 
