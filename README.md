@@ -26,8 +26,9 @@ PS. Maroon rhymes with moon, not moan.
 
 ```
 mkdir deploy
-./compilephp.sh
 yarn build
 yarn develop
 yarn server
 ```
+
+### DO use `localdev.html` when developing!!

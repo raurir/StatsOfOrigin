@@ -21,7 +21,7 @@
     "underscore": "~1.10.2"
   },
   "scripts": {
-    "build": "grunt build",
+    "build": "grunt build && node pages/generate.js && ./compilephp.sh",
     "develop": "grunt watch",
     "server": "http-server deploy"
   },

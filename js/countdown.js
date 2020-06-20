@@ -1,32 +1,19 @@
 function initCountdown() {
   /*
-  The 2019 State of Origin dates are:
+  The 2020 State of Origin dates are:
 
-  Wednesday, 5 June 2019
-  8:10pm (AEST)
-  Queensland Queensland colours.svg v New South Wales colours.svg New South Wales
-  Suncorp Stadium, Brisbane
-  Referee: Gerard Sutton, Ashley Klein
-
-  Sunday, 23 June 2019
-  5:50pm (AWST)
-  Queensland Queensland colours.svg v New South Wales colours.svg New South Wales
-  Optus Stadium, Perth
-
-  Game III
-  Wednesday, 10 July 2019
-  8:10pm (AEST)
-  New South Wales New South Wales colours.svg v Queensland colours.svg Queensland
-  ANZ Stadium, Sydney
+  Wednesday, Nov 4
+  Wednesday, Nov 11
+  Wednesday, Nov 18
 
   */
 
   var group = new THREE.Object3D();
 
   var dates = [
-    new Date(2019, 5, 5, 20, 10),
-    new Date(2019, 5, 23, 17, 50),
-    new Date(2019, 6, 10, 20, 10)
+    new Date(2020, 10, 4, 20, 10), // don't know times for 2020 yet.
+    new Date(2020, 10, 11, 20, 10),
+    new Date(2020, 10, 18, 20, 10),
   ];
 
   var div = document.createElement("div");
@@ -46,7 +33,7 @@ function initCountdown() {
       init: noop,
       group: group,
       div: div,
-      update: noop
+      update: noop,
     };
   }
 
@@ -140,7 +127,7 @@ function initCountdown() {
           onComplete: function() {
             // con.log("this", mesh);
             symbol.used = false;
-          }
+          },
         });
       }
 
@@ -185,12 +172,12 @@ function initCountdown() {
     var material = new THREE.MeshFaceMaterial([
       new THREE.MeshPhongMaterial({
         color: 0xffffff,
-        shading: THREE.FlatShading
+        shading: THREE.FlatShading,
       }), // front
       new THREE.MeshPhongMaterial({
         color: 0x505050,
-        shading: THREE.MeshLambertMaterial
-      }) // side
+        shading: THREE.MeshLambertMaterial,
+      }), // side
     ]);
     if (glyph === 10) glyph = ":";
 
@@ -200,7 +187,7 @@ function initCountdown() {
       curveSegments: 3,
       font: font,
       material: 0,
-      extrudeMaterial: 1
+      extrudeMaterial: 1,
     });
     geometry.computeBoundingBox();
     geometry.computeVertexNormals();
@@ -225,12 +212,11 @@ function initCountdown() {
     "days",
     "hrs",
     "mins",
-    "secs"
+    "secs",
   ];
   var meshes = {};
 
   function update(time) {
-    // console.log("update", time);
     if (time > 200) showRemaining();
   }
 
@@ -243,7 +229,7 @@ function initCountdown() {
         meshes[str][i] = {
           chr: str,
           mesh: mesh,
-          used: false
+          used: false,
         };
         mesh.position.set(0, offScreenY, 0);
         group.add(mesh);
@@ -255,6 +241,6 @@ function initCountdown() {
     init: init,
     group: group,
     div: div,
-    update: update
+    update: update,
   };
 }

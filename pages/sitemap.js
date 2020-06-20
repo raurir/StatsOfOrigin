@@ -26,9 +26,9 @@
   </url>
 </urlset>`;
 
-const static = [{ path: "index.html", lastmod: "2019-06-06" }];
+const static = [{ path: "index.html", lastmod: "2020-06-19" }];
 
-const sitemap = urls => `<?xml version="1.0" encoding="UTF-8"?>
+const sitemap = (urls) => `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls
   .map(item)
   .join("")}
@@ -40,4 +40,4 @@ const item = ({ path, lastmod }) => `
     <lastmod>${lastmod}</lastmod>
   </url>`;
 
-module.exports = data => sitemap(static.concat(data));
+module.exports = (data) => sitemap(static.concat(data));

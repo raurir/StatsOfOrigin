@@ -1,7 +1,7 @@
 <?PHP
 $title = "";
 include "header.php";
-if ($local) { ?>
+if ($local) {?>
     <script src="lib/three.min.js"></script>
     <script src="lib/d3.min.js"></script>
     <script src="lib/TweenMax.min.js"></script>
@@ -11,11 +11,11 @@ if ($local) { ?>
     <script src="js/svg.js"></script>
     <script src="js/countdown.js"></script>
     <script src="js/webgl.js"></script>
-<?PHP } else { ?>
+<?PHP } else {?>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r77/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenMax.min.js"></script>
-<?PHP } ?>
+<?PHP }?>
 
 <!--
 Made by Rauri Rochford
@@ -30,7 +30,7 @@ Open source at: https://github.com/raurir/StatsOfOrigin
 <!--       <div id='orientation'>Rotate device</div> -->
       <div id='header'>
         <div id='debug'></div>
-        <h1>Stats Of Origin - State of Origin Statistics 1982 - 2019</h1>
+        <h1>Stats Of Origin - State of Origin Statistics 1982 - 2020</h1>
         <h4 id='stat'></h4>
       </div>
       <div class='button-show-state button' id='show-NSW'>NSW</div>
@@ -91,11 +91,11 @@ Open source at: https://github.com/raurir/StatsOfOrigin
 
 <?PHP
 if ($local) {
-?>
+	?>
     <script src="js/origin.js"></script>
 <?PHP
 } else {
-?>
+	?>
     <script src="js/origin.min.js"></script>
 <?PHP
 }
