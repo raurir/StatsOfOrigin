@@ -16,7 +16,7 @@
     "mongodb": "^3.6.3",
     "promise": "~8.1.0",
     "request": "^2.88.0",
-    "string-similarity": "^4.0.2",
+    "string-similarity": "^4.0.3",
     "twitter": "^1.7.1",
     "underscore": "~1.11.0"
   },
