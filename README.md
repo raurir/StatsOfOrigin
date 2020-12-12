@@ -20,7 +20,7 @@ Built with [Three JS](http://threejs.org/) using WebGL. There is also a SVG rend
 There is a /bot folder which was an attempt at playing with twitter interactions and all that kind of jazz.
 Uses [TwitterSocialBot](https://github.com/raurir/TwitterSocialBot)
 
-PS. Maroon rhymes with moon, not moan.
+PS. Maroon rhymes with moon, not moan. - reference Maurice Dwyer.
 
 ## Developing
 
