@@ -1,0 +1,20 @@
+version: 2
+updates:
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "19:00"
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: underscore
+    versions:
+    - 1.12.1
+    - 1.13.0
+  - dependency-name: grunt-cli
+    versions:
+    - 1.4.1
+  - dependency-name: mongodb
+    versions:
+    - 3.6.4
+    - 3.6.5
