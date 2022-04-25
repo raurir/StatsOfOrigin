@@ -18,7 +18,7 @@
     "request": "^2.88.0",
     "string-similarity": "^4.0.4",
     "twitter": "^1.7.1",
-    "underscore": "~1.13.1"
+    "underscore": "~1.13.3"
   },
   "scripts": {
     "build": "grunt build && node pages/generate.js && ./compilephp.sh",
